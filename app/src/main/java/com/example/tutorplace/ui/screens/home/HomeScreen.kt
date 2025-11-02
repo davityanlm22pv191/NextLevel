@@ -29,6 +29,7 @@ import com.example.tutorplace.ui.screens.home.presentation.HomeState
 import com.example.tutorplace.ui.screens.home.presentation.HomeViewModel
 import com.example.tutorplace.ui.screens.home.ui.FortuneWheelShortItem
 import com.example.tutorplace.ui.screens.home.ui.FortuneWheelShortItemSkeleton
+import com.example.tutorplace.ui.screens.home.ui.mytraining.MyTrainingEmptyItem
 import com.example.tutorplace.ui.theme.ScreenColor
 
 @Composable
@@ -43,6 +44,9 @@ fun HomeScreen(navController: NavHostController) {
 		onProfileClicked = { viewModel.onEvent(UI.ProfileClicked) },
 		onFortuneWheelClicked = { viewModel.onEvent(UI.FortuneWheelClicked) },
 		onFortuneWheelInformationClicked = { viewModel.onEvent(UI.FortuneWheelInformationClicked) },
+		onCatalogClicked = {
+			// TODO TP-22  CALL MAIN VIEW MODEL FOR SWITCH TAB TO CATALOG
+		}
 	)
 }
 
@@ -54,6 +58,7 @@ private fun HomeScreen(
 	onProfileClicked: () -> Unit,
 	onFortuneWheelClicked: () -> Unit,
 	onFortuneWheelInformationClicked: () -> Unit,
+	onCatalogClicked: () -> Unit
 ) {
 	Scaffold(
 		topBar = {
@@ -69,9 +74,9 @@ private fun HomeScreen(
 				isArrowVisible = false,
 				isLoading = state.profileShortInfo == null,
 				onBackClicked = {},
-				onNotificationClicked = { onNotificationClicked },
-				onSearchClicked = { onSearchClicked },
-				onProfileClicked = { onProfileClicked }
+				onNotificationClicked = { onNotificationClicked() },
+				onSearchClicked = { onSearchClicked() },
+				onProfileClicked = { onProfileClicked() }
 			)
 		},
 		containerColor = ScreenColor,
@@ -101,6 +106,12 @@ private fun HomeScreen(
 						FortuneWheelShortItemSkeleton(modifier = Modifier.padding(top = 8.dp))
 					}
 				}
+			}
+			item {
+				MyTrainingEmptyItem(
+					modifier = Modifier.padding(top = 8.dp),
+					onCatalogClick = { onCatalogClicked() }
+				)
 			}
 		}
 	}
@@ -142,5 +153,6 @@ private fun HomePreview() {
 		onProfileClicked = {},
 		onFortuneWheelClicked = {},
 		onFortuneWheelInformationClicked = {},
+		onCatalogClicked = {}
 	)
 }

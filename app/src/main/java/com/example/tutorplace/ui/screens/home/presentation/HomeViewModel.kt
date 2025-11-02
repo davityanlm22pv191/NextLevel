@@ -2,8 +2,10 @@ package com.example.tutorplace.ui.screens.home.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.example.tutorplace.data.fortunewheel.FortuneWheelService
+import com.example.tutorplace.data.mycourses.MyCoursesService
 import com.example.tutorplace.data.profile.storage.ProfileStorage
 import com.example.tutorplace.ui.base.BaseViewModel
+import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain.FortuneWheelFailed
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain.FortuneWheelLoaded
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain.FortuneWheelLoading
@@ -22,25 +24,43 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
 	private val profileStorage: ProfileStorage,
 	private val fortuneWheelService: FortuneWheelService,
+	private val myCoursesService: MyCoursesService,
 ) : BaseViewModel<HomeEvent, HomeState, HomeEffect>() {
+
+	// Квадратные превью курсов
+	// https://iili.io/KLGeEua.png
+	// https://iili.io/KLMMUs1.png
+	// https://iili.io/KLMW6Av.png
+	// https://iili.io/KLMjuF1.png
+	// https://iili.io/KLMwO5g.png
+
+	// https://iili.io/KLM3TNt.png
+	// https://iili.io/KLMfdR2.png
+	// https://iili.io/KLMqVYx.png
+	// https://iili.io/KLMCGOQ.png
+	// https://iili.io/KLMxJHb.png
+	// https://iili.io/KLMzcQV.png
+	// https://iili.io/KLMISVV.png
+	// https://iili.io/KLM7Qbn.png
+	// https://iili.io/KLMazGf.png
+	// https://iili.io/KLMl2eI.png
+
 
 	init {
 		collectProfileShortInfo()
 		loadFortuneWheelLastRotation()
+		loadMyCourses()
 	}
 
 	override fun initialState() = HomeState()
 
 	override fun onEvent(event: HomeEvent) = when (event) {
 		is UI -> onUiEvent(event)
-		is HomeEvent.Domain -> onDomainEvent(event)
+		is Domain -> onDomainEvent(event)
 	}
 
-	private fun onDomainEvent(event: HomeEvent.Domain) = when (event) {
-		is FortuneWheelFailed,
-		is FortuneWheelLoaded,
-		is FortuneWheelLoading,
-		is SetProfileInfo -> setState(HomeReducer.reduce(state.value, event))
+	private fun onDomainEvent(event: Domain) {
+		setState(HomeReducer.reduce(state.value, event))
 	}
 
 	private fun onUiEvent(event: UI) = when (event) {
@@ -67,6 +87,18 @@ class HomeViewModel @Inject constructor(
 				onDomainEvent(FortuneWheelLoaded(response.body()!!.lastSpinTime))
 			} else {
 				onDomainEvent(FortuneWheelFailed(Throwable(response.message())))
+			}
+		}
+	}
+
+	private fun loadMyCourses() {
+		viewModelScope.launch {
+			onDomainEvent(Domain.MyCoursesLoading)
+			val response = myCoursesService.getMyCourses()
+			if (response.isSuccessful) {
+				onDomainEvent(Domain.MyCoursesLoaded(response.body()!!.courses))
+			} else {
+				onDomainEvent(Domain.MyCoursesFailed(Throwable(response.message())))
 			}
 		}
 	}

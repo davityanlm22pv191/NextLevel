@@ -1,6 +1,7 @@
 package com.example.tutorplace.network
 
 import com.example.tutorplace.data.fortunewheel.FortuneWheelService
+import com.example.tutorplace.data.mycourses.MyCoursesService
 import com.example.tutorplace.data.onboarding.OnboardingService
 import com.example.tutorplace.data.profile.ProfileService
 import dagger.Module
@@ -26,5 +27,10 @@ object ApiDataModule {
 	@Provides
 	fun provideFortuneWheelService(retrofit: Retrofit): FortuneWheelService {
 		return retrofit.create(FortuneWheelService::class.java)
+	}
+
+	@Provides
+	fun provideMyCoursesService(retrofit: Retrofit): MyCoursesService {
+		return retrofit.create(MyCoursesService::class.java)
 	}
 }

@@ -13,6 +13,9 @@ object HomeReducer : BaseReducer<HomeState, HomeEvent> {
 			is HomeEvent.Domain.FortuneWheelLoading -> reduceFortuneWheelLoading(oldState)
 			is HomeEvent.Domain.FortuneWheelFailed -> reduceFortuneWheelFailed(oldState, event)
 			is HomeEvent.Domain.FortuneWheelLoaded -> reduceFortuneWheelLoaded(oldState, event)
+			is HomeEvent.Domain.MyCoursesLoading -> reduceMyCoursesLoading(oldState)
+			is HomeEvent.Domain.MyCoursesFailed -> reduceMyCoursesFailed(oldState, event)
+			is HomeEvent.Domain.MyCoursesLoaded -> reduceMyCoursesLoaded(oldState, event)
 		}
 		is HomeEvent.UI -> oldState
 	}
@@ -26,9 +29,7 @@ object HomeReducer : BaseReducer<HomeState, HomeEvent> {
 		)
 	}
 
-	private fun reduceFortuneWheelLoading(
-		oldState: HomeState,
-	): HomeState {
+	private fun reduceFortuneWheelLoading(oldState: HomeState): HomeState {
 		return oldState.copy(fortuneWheelLastRotation = oldState.fortuneWheelLastRotation.loading())
 	}
 
@@ -39,5 +40,23 @@ object HomeReducer : BaseReducer<HomeState, HomeEvent> {
 		return oldState.copy(
 			fortuneWheelLastRotation = oldState.fortuneWheelLastRotation.loaded(event.lastRotation)
 		)
+	}
+
+	private fun reduceMyCoursesFailed(
+		oldState: HomeState,
+		event: HomeEvent.Domain.MyCoursesFailed
+	): HomeState {
+		return oldState.copy(myCourses = oldState.myCourses.failure(event.throwable))
+	}
+
+	private fun reduceMyCoursesLoading(oldState: HomeState): HomeState {
+		return oldState.copy(myCourses = oldState.myCourses.loading())
+	}
+
+	private fun reduceMyCoursesLoaded(
+		oldState: HomeState,
+		event: HomeEvent.Domain.MyCoursesLoaded
+	): HomeState {
+		return oldState.copy(myCourses = oldState.myCourses.loaded(event.courses))
 	}
 }
