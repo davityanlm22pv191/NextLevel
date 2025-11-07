@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.screens.home.ui
+package com.example.tutorplace.ui.screens.home.ui.fortunewheel
 
 import android.os.Build
 import androidx.annotation.RequiresApi

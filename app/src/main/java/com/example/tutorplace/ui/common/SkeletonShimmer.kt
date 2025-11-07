@@ -66,7 +66,6 @@ fun SkeletonShimmer(
 	// (иначе drawWithCache иногда не сработает).
 	Box(
 		modifier = modifier
-			.graphicsLayer(alpha = 0.99f)
 			.drawWithCache {
 				// ⚙️ drawWithCache позволяет кэшировать всё, что не меняется каждый кадр.
 				// Здесь мы создаём лямбду onDrawWithContent, которая вызывается при каждой отрисовке.
@@ -80,7 +79,7 @@ fun SkeletonShimmer(
 					// → shimmer виден только на серых Box, а не на фоне.
 					drawRect(
 						brush = brush,
-						blendMode = BlendMode.SrcAtop
+						blendMode = BlendMode.Color
 					)
 				}
 			}

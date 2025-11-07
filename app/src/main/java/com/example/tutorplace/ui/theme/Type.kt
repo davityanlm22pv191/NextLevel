@@ -47,6 +47,10 @@ val Typography = Typography(
 	),
 	headlineMedium = TextStyle(
 		fontSize = 20.sp
+	),
+	headlineSmall = TextStyle(
+		fontSize = 16.sp,
+		lineHeight = 22.sp
 	)
 
 	/* Other default text styles to override

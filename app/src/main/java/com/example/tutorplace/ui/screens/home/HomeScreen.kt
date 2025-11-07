@@ -20,15 +20,23 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.tutorplace.R
+import com.example.tutorplace.data.common.Sort
+import com.example.tutorplace.data.common.SortOrder
+import com.example.tutorplace.data.common.SortType
 import com.example.tutorplace.navigation.Destinations.FortuneWheelFlow
+import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.SQUARE
+import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleAndSort
+import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleAndSortSkeleton
+import com.example.tutorplace.ui.common.sectiontitle.model.SectionSortInfo
+import com.example.tutorplace.ui.common.sectiontitle.model.SectionTitle
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
 import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.model.FortuneWheelParams
 import com.example.tutorplace.ui.screens.home.presentation.HomeEffect
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI
 import com.example.tutorplace.ui.screens.home.presentation.HomeState
 import com.example.tutorplace.ui.screens.home.presentation.HomeViewModel
-import com.example.tutorplace.ui.screens.home.ui.FortuneWheelShortItem
-import com.example.tutorplace.ui.screens.home.ui.FortuneWheelShortItemSkeleton
+import com.example.tutorplace.ui.screens.home.ui.fortunewheel.FortuneWheelShortItem
+import com.example.tutorplace.ui.screens.home.ui.fortunewheel.FortuneWheelShortItemSkeleton
 import com.example.tutorplace.ui.screens.home.ui.mytraining.MyTrainingEmptyItem
 import com.example.tutorplace.ui.theme.ScreenColor
 
@@ -86,32 +94,65 @@ private fun HomeScreen(
 				.fillMaxSize()
 				.padding(paddingValues)
 		) {
-			item {
+			item(key = "FortuneWheelShort") {
 				val isFortuneWheelSectionReady =
 					!state.fortuneWheelLastRotation.isLoading && state.fortuneWheelLastRotation.throwable == null
 				AnimatedContent(
+					modifier = Modifier.padding(top = 8.dp),
 					targetState = isFortuneWheelSectionReady,
 					transitionSpec = {
 						fadeIn(animationSpec = tween(durationMillis = 500)) togetherWith
 								fadeOut(animationSpec = tween(durationMillis = 500))
-					}) {
-					if (it) {
+					}) { isSectionReady ->
+					if (isSectionReady) {
 						FortuneWheelShortItem(
-							modifier = Modifier.padding(top = 8.dp),
 							lastRotationTime = state.fortuneWheelLastRotation.data,
 							onInformationClick = { onFortuneWheelInformationClicked() },
 							onItemClick = { onFortuneWheelClicked() }
 						)
 					} else {
-						FortuneWheelShortItemSkeleton(modifier = Modifier.padding(top = 8.dp))
+						FortuneWheelShortItemSkeleton()
 					}
 				}
 			}
-			item {
-				MyTrainingEmptyItem(
+			item("MyTraining") {
+				val isMyTrainingSectionReady =
+					!state.myCourses.isLoading && state.myCourses.throwable == null && state.myCourses.data != null
+				AnimatedContent(
 					modifier = Modifier.padding(top = 8.dp),
-					onCatalogClick = { onCatalogClicked() }
-				)
+					targetState = isMyTrainingSectionReady,
+					transitionSpec = {
+						fadeIn(animationSpec = tween(durationMillis = 500)) togetherWith
+								fadeOut(animationSpec = tween(durationMillis = 500))
+					}) { isSectionReady ->
+					when {
+						!isSectionReady -> CardPagerWithTitleAndSortSkeleton(
+							shape = SQUARE,
+							withSort = true
+						)
+						isSectionReady && !state.myCourses.data.isNullOrEmpty() -> CardPagerWithTitleAndSort(
+							sectionTitle = SectionTitle.Clickable(
+								text = stringResource(R.string.home_my_training_section_title),
+								onClick = {}
+							),
+							sort = SectionSortInfo(
+								selectedSort = Sort(
+									SortType.DATE_ADDED,
+									order = SortOrder.DESC
+								),
+								sorts = listOf(),
+								onClick = {}
+							),
+							courses = state.myCourses.data,
+							shape = SQUARE,
+							onCourseClick = {} // TODO
+						)
+						isSectionReady && state.myCourses.data?.isEmpty() == true -> MyTrainingEmptyItem(
+							onCatalogClick = { onCatalogClicked() }
+						)
+					}
+				}
+
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.screens.home.ui
+package com.example.tutorplace.ui.screens.home.ui.fortunewheel
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -19,6 +19,16 @@
 	<string name="common_your_sex">Ваш пол</string>
 	<string name="common_phone_number">Номер телефона</string>
 	<string name="common_overflow_count">99+</string>
+	<string name="common_splash_format">%1$s/%2$s</string>
+	<string name="common_sort_progress">По прогрессу</string>
+	<string name="common_sort_date_added">По дате добавления</string>
+
+	<plurals name="common_days_format">
+		<item quantity="one">%s день</item>
+		<item quantity="two">%s дня</item>
+		<item quantity="few">%s дня</item>
+		<item quantity="many">%s дней</item>
+	</plurals>
 
 	<!-- 	Common Auth -->
 	<string name="common_auth_your_email">Ваша электронная почта</string>
@@ -107,13 +117,13 @@
 	<string name="home_my_training_empty_title">Здесь будут находиться ваши курсы</string>
 	<string name="home_my_training_empty_description">Выбирай направление, получай новые навыки и востребованную профессию вместе с нами</string>
 	<string name="home_my_training_empty_button_title">Каталог курсов</string>
+	<string name="home_my_training_section_title">Мое обучение</string>
 
 	<!-- 	Fortune Wheel -->
 	<string name="fortune_wheel">Колесо фортуны</string>
 	<string name="fortune_wheel_try_your_luck">Испытай свою удачу!</string>
 	<string name="fortune_wheel_free_spin_through">Бесплатное\nвращение\nчерез</string>
 	<string name="fortune_wheel_play">Играть</string>
-
 	<string name="fortune_wheel_information_description">Колесо фортуны — ваше вознаграждение за время проведённое с пользой!</string>
 	<string name="fortune_wheel_information_you_may_try_you_luck">Здесь вы сможете испытать свою удачу,\nи забрать ценные призы</string>
 	<string name="fortune_wheel_information_you_may_try_you_luck_span">забрать ценные призы</string>
