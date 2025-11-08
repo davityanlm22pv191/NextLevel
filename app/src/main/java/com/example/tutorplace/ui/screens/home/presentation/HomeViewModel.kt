@@ -11,8 +11,10 @@ import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain.Fort
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain.FortuneWheelLoading
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain.SetProfileInfo
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI
+import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI.CatalogClicked
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI.FortuneWheelClicked
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI.FortuneWheelInformationClicked
+import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI.MyCoursesClicked
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI.NotificationClicked
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI.ProfileClicked
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI.SearchClicked
@@ -69,6 +71,8 @@ class HomeViewModel @Inject constructor(
 		is SearchClicked -> sendEffect(HomeEffect.NavigateToSearchScreen)
 		is FortuneWheelClicked -> sendEffect(HomeEffect.NavigateToFortuneWheelScreen)
 		is FortuneWheelInformationClicked -> sendEffect(HomeEffect.NavigateToFortuneWheelInformationBottomSheet)
+		is CatalogClicked -> sendEffect(HomeEffect.NavigateToCatalogTab)
+		is MyCoursesClicked -> sendEffect(HomeEffect.NavigateToMyCoursesTab)
 	}
 
 	private fun collectProfileShortInfo() {

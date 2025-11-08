@@ -19,12 +19,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tutorplace.ui.common.SkeletonShimmer
 import com.example.tutorplace.ui.theme.GreyD5
 import com.example.tutorplace.ui.theme.GreyF8
+import com.example.tutorplace.ui.theme.PurpleDE
 import com.example.tutorplace.ui.theme.Typography
 import com.example.tutorplace.ui.theme.White
 
@@ -33,7 +35,7 @@ fun FortuneWheelShortItemSkeleton(modifier: Modifier = Modifier) {
 	SkeletonShimmer(
 		modifier = modifier
 			.fillMaxWidth()
-			.background(GreyD5.copy(alpha = 0.6f))
+			.background(Brush.linearGradient(colors = listOf(GreyD5, PurpleDE)))
 	) {
 		Column(
 			modifier = Modifier

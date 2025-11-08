@@ -1,10 +1,6 @@
 package com.example.tutorplace.ui.screens.home
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,11 +18,15 @@ import androidx.navigation.NavHostController
 import com.example.tutorplace.R
 import com.example.tutorplace.data.common.Sort
 import com.example.tutorplace.data.common.SortOrder
-import com.example.tutorplace.data.common.SortType
+import com.example.tutorplace.data.common.SortType.DATE_ADDED
+import com.example.tutorplace.navigation.Destinations
 import com.example.tutorplace.navigation.Destinations.FortuneWheelFlow
+import com.example.tutorplace.navigation.tabs.ktx.navigateTo
+import com.example.tutorplace.navigation.tabs.ktx.switchTab
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.SQUARE
 import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleAndSort
 import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleAndSortSkeleton
+import com.example.tutorplace.ui.common.itemWithSkeleton
 import com.example.tutorplace.ui.common.sectiontitle.model.SectionSortInfo
 import com.example.tutorplace.ui.common.sectiontitle.model.SectionTitle
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
@@ -37,14 +37,14 @@ import com.example.tutorplace.ui.screens.home.presentation.HomeState
 import com.example.tutorplace.ui.screens.home.presentation.HomeViewModel
 import com.example.tutorplace.ui.screens.home.ui.fortunewheel.FortuneWheelShortItem
 import com.example.tutorplace.ui.screens.home.ui.fortunewheel.FortuneWheelShortItemSkeleton
-import com.example.tutorplace.ui.screens.home.ui.mytraining.MyTrainingEmptyItem
+import com.example.tutorplace.ui.screens.home.ui.mycourses.MyCoursesEmptyItem
 import com.example.tutorplace.ui.theme.ScreenColor
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
 	val viewModel = hiltViewModel<HomeViewModel>()
 	val state by viewModel.state.collectAsState()
-	ObserveViewModelEvents(viewModel, navController)
+	ObserveViewModelEffects(viewModel, navController)
 	HomeScreen(
 		state = state,
 		onNotificationClicked = { viewModel.onEvent(UI.NotificationClicked) },
@@ -52,9 +52,8 @@ fun HomeScreen(navController: NavHostController) {
 		onProfileClicked = { viewModel.onEvent(UI.ProfileClicked) },
 		onFortuneWheelClicked = { viewModel.onEvent(UI.FortuneWheelClicked) },
 		onFortuneWheelInformationClicked = { viewModel.onEvent(UI.FortuneWheelInformationClicked) },
-		onCatalogClicked = {
-			// TODO TP-22  CALL MAIN VIEW MODEL FOR SWITCH TAB TO CATALOG
-		}
+		onMyCoursesClicked = { viewModel.onEvent(UI.MyCoursesClicked) },
+		onCatalogClicked = { viewModel.onEvent(UI.CatalogClicked) }
 	)
 }
 
@@ -66,12 +65,12 @@ private fun HomeScreen(
 	onProfileClicked: () -> Unit,
 	onFortuneWheelClicked: () -> Unit,
 	onFortuneWheelInformationClicked: () -> Unit,
+	onMyCoursesClicked: () -> Unit,
 	onCatalogClicked: () -> Unit
 ) {
 	Scaffold(
 		topBar = {
 			ToolbarHeader(
-				modifier = Modifier,
 				screenName = stringResource(R.string.home_screen_name),
 				unreadEmailCount = state.profileShortInfo?.unreadMessageCount ?: 0,
 				profileImageUrl = state.profileShortInfo?.profileThumbUrl.orEmpty(),
@@ -94,91 +93,69 @@ private fun HomeScreen(
 				.fillMaxSize()
 				.padding(paddingValues)
 		) {
-			item(key = "FortuneWheelShort") {
-				val isFortuneWheelSectionReady =
-					!state.fortuneWheelLastRotation.isLoading && state.fortuneWheelLastRotation.throwable == null
-				AnimatedContent(
-					modifier = Modifier.padding(top = 8.dp),
-					targetState = isFortuneWheelSectionReady,
-					transitionSpec = {
-						fadeIn(animationSpec = tween(durationMillis = 500)) togetherWith
-								fadeOut(animationSpec = tween(durationMillis = 500))
-					}) { isSectionReady ->
-					if (isSectionReady) {
-						FortuneWheelShortItem(
-							lastRotationTime = state.fortuneWheelLastRotation.data,
-							onInformationClick = { onFortuneWheelInformationClicked() },
-							onItemClick = { onFortuneWheelClicked() }
-						)
-					} else {
-						FortuneWheelShortItemSkeleton()
-					}
+			itemWithSkeleton(
+				key = "FortuneWheelShort",
+				dataInfo = state.fortuneWheelLastRotation,
+				paddingValues = PaddingValues(top = 8.dp),
+				content = {
+					FortuneWheelShortItem(
+						lastRotationTime = state.fortuneWheelLastRotation.data,
+						onInformationClick = { onFortuneWheelInformationClicked() },
+						onItemClick = { onFortuneWheelClicked() }
+					)
+				},
+				skeletonContent = { FortuneWheelShortItemSkeleton() }
+			)
+			itemWithSkeleton(
+				key = "MyCourses",
+				dataInfo = state.myCourses,
+				paddingValues = PaddingValues(top = 8.dp),
+				content = {
+					CardPagerWithTitleAndSort(
+						sectionTitle = SectionTitle.Clickable(
+							text = stringResource(R.string.home_my_courses_section_title),
+							onClick = { onMyCoursesClicked() }
+						),
+						sort = SectionSortInfo(
+							selectedSort = Sort(type = DATE_ADDED, order = SortOrder.DESC),
+							sorts = listOf(),
+							onClick = {}
+						),
+						courses = state.myCourses.data ?: emptyList(),
+						shape = SQUARE,
+						onCourseClick = {}
+					)
+				},
+				skeletonContent = {
+					CardPagerWithTitleAndSortSkeleton(shape = SQUARE, withSort = true)
+				},
+				emptyStateContent = {
+					MyCoursesEmptyItem(onCatalogClick = { onCatalogClicked() })
 				}
-			}
-			item("MyTraining") {
-				val isMyTrainingSectionReady =
-					!state.myCourses.isLoading && state.myCourses.throwable == null && state.myCourses.data != null
-				AnimatedContent(
-					modifier = Modifier.padding(top = 8.dp),
-					targetState = isMyTrainingSectionReady,
-					transitionSpec = {
-						fadeIn(animationSpec = tween(durationMillis = 500)) togetherWith
-								fadeOut(animationSpec = tween(durationMillis = 500))
-					}) { isSectionReady ->
-					when {
-						!isSectionReady -> CardPagerWithTitleAndSortSkeleton(
-							shape = SQUARE,
-							withSort = true
-						)
-						isSectionReady && !state.myCourses.data.isNullOrEmpty() -> CardPagerWithTitleAndSort(
-							sectionTitle = SectionTitle.Clickable(
-								text = stringResource(R.string.home_my_training_section_title),
-								onClick = {}
-							),
-							sort = SectionSortInfo(
-								selectedSort = Sort(
-									SortType.DATE_ADDED,
-									order = SortOrder.DESC
-								),
-								sorts = listOf(),
-								onClick = {}
-							),
-							courses = state.myCourses.data,
-							shape = SQUARE,
-							onCourseClick = {} // TODO
-						)
-						isSectionReady && state.myCourses.data?.isEmpty() == true -> MyTrainingEmptyItem(
-							onCatalogClick = { onCatalogClicked() }
-						)
-					}
-				}
-
-			}
+			)
 		}
 	}
 }
 
 @Composable
-private fun ObserveViewModelEvents(
+private fun ObserveViewModelEffects(
 	viewModel: HomeViewModel,
 	navController: NavHostController
 ) {
 	LaunchedEffect(Unit) {
 		viewModel.effect.collect { effect ->
 			when (effect) {
-				HomeEffect.NavigateToMail -> navController
-				HomeEffect.NavigateToProfile -> navController
-				HomeEffect.NavigateToSearchScreen -> navController
-				HomeEffect.NavigateToFortuneWheelInformationBottomSheet -> navController.navigate(
-					FortuneWheelFlow.FortuneWheel(
-						FortuneWheelParams(isShouldShowInformation = true)
-					).route
+				HomeEffect.NavigateToMail,
+				HomeEffect.NavigateToProfile,
+				HomeEffect.NavigateToSearchScreen -> {}
+				HomeEffect.NavigateToFortuneWheelInformationBottomSheet -> navController.navigateTo(
+					FortuneWheelFlow.FortuneWheel(FortuneWheelParams(isShouldShowInformation = true))
 				)
-				HomeEffect.NavigateToFortuneWheelScreen -> navController.navigate(
-					FortuneWheelFlow.FortuneWheel(
-						FortuneWheelParams(isShouldShowInformation = false)
-					).route
+				HomeEffect.NavigateToFortuneWheelScreen -> navController.navigateTo(
+					FortuneWheelFlow.FortuneWheel(FortuneWheelParams(isShouldShowInformation = false))
 				)
+				HomeEffect.NavigateToCatalogTab -> navController.switchTab(Destinations.Catalog.route)
+				HomeEffect.NavigateToMyCoursesTab -> navController.switchTab(Destinations.MyCourses.route)
 			}
 		}
 	}
@@ -194,6 +171,7 @@ private fun HomePreview() {
 		onProfileClicked = {},
 		onFortuneWheelClicked = {},
 		onFortuneWheelInformationClicked = {},
+		onMyCoursesClicked = {},
 		onCatalogClicked = {}
 	)
 }

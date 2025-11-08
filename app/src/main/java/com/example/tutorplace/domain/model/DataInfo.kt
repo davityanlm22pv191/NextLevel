@@ -4,7 +4,13 @@ data class DataInfo<T>(
 	val data: T,
 	val isLoading: Boolean = false,
 	val throwable: Throwable? = null,
-)
+) {
+	val isLoaded: Boolean
+		get() = !isLoading && throwable == null && data != null
+
+	val isEmptyState: Boolean
+		get() = isLoaded && (data is Collection<*> && data.isEmpty())
+}
 
 fun <T> DataInfo<T>.loaded(data: T): DataInfo<T> {
 	return this.copy(

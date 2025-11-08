@@ -78,7 +78,7 @@ fun CourseCardsPager(
 				}
 			}
 		}
-		if (courses.size > 2) {
+		if (courses.size != 1) {
 			DotsIndicator(
 				totalDots = courses.size,
 				selectedIndex = currentIndex.value

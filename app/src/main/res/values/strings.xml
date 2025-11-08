@@ -114,10 +114,10 @@
 
 	<!-- 	Home -->
 	<string name="home_screen_name">Дом</string>
-	<string name="home_my_training_empty_title">Здесь будут находиться ваши курсы</string>
-	<string name="home_my_training_empty_description">Выбирай направление, получай новые навыки и востребованную профессию вместе с нами</string>
-	<string name="home_my_training_empty_button_title">Каталог курсов</string>
-	<string name="home_my_training_section_title">Мое обучение</string>
+	<string name="home_my_courses_empty_title">Здесь будут находиться ваши курсы</string>
+	<string name="home_my_courses_empty_description">Выбирай направление, получай новые навыки и востребованную профессию вместе с нами</string>
+	<string name="home_my_courses_empty_button_title">Каталог курсов</string>
+	<string name="home_my_courses_section_title">Мое обучение</string>
 
 	<!-- 	Fortune Wheel -->
 	<string name="fortune_wheel">Колесо фортуны</string>

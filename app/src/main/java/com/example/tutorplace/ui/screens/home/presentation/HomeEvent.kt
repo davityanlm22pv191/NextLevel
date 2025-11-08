@@ -24,5 +24,7 @@ sealed interface HomeEvent : BaseEvent {
 		data object ProfileClicked : UI
 		data object FortuneWheelClicked: UI
 		data object FortuneWheelInformationClicked: UI
+		data object MyCoursesClicked: UI
+		data object CatalogClicked: UI
 	}
 }

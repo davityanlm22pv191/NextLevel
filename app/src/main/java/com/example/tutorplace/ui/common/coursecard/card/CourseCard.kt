@@ -18,9 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.graphics.vector.VectorPainter
+import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -32,7 +32,9 @@ import com.example.tutorplace.R
 import com.example.tutorplace.data.mycourses.course.Course
 import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.Green22
-import com.example.tutorplace.ui.theme.GreyD5
+import com.example.tutorplace.ui.theme.PurpleCC
+import com.example.tutorplace.ui.theme.PurpleDE
+import com.example.tutorplace.ui.theme.Red1D
 import com.example.tutorplace.ui.theme.Typography
 import com.example.tutorplace.ui.theme.White
 import kotlin.math.roundToInt
@@ -55,8 +57,16 @@ fun CourseCard(
 			modifier = Modifier.matchParentSize(),
 			model = course.coverUrl,
 			contentDescription = null,
-			placeholder = ColorPainter(GreyD5),
-			error = ColorPainter(Black16)
+			placeholder = BrushPainter(
+				Brush.linearGradient(
+					colors = listOf(
+						Black16,
+						PurpleCC,
+						PurpleDE
+					),
+				)
+			),
+			error = BrushPainter(Brush.linearGradient(colors = listOf(Black16, PurpleCC, Red1D)))
 		)
 		Column(
 			modifier = Modifier.padding(16.dp),

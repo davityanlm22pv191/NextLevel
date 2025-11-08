@@ -16,13 +16,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tutorplace.R
 import com.example.tutorplace.ui.common.SkeletonShimmer
 import com.example.tutorplace.ui.theme.Black16Alpha30
-import com.example.tutorplace.ui.theme.GreyD5Alpha30
+import com.example.tutorplace.ui.theme.GreyD5
+import com.example.tutorplace.ui.theme.PurpleDE
 
 @Composable
 fun CardSkeleton(
@@ -34,7 +36,10 @@ fun CardSkeleton(
 			modifier = modifier
 				.width(if (shape == CourseCardShapeType.SQUARE) 175.dp else 340.dp)
 				.height(200.dp)
-				.background(color = GreyD5Alpha30, shape = RoundedCornerShape(20.dp))
+				.background(
+					brush = Brush.linearGradient(colors = listOf(GreyD5, PurpleDE)),
+					shape = RoundedCornerShape(20.dp)
+				)
 				.padding(16.dp),
 		) {
 			Box(

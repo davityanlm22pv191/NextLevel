@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.screens.home.ui.mytraining
+package com.example.tutorplace.ui.screens.home.ui.mycourses
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -20,7 +20,7 @@ import com.example.tutorplace.ui.theme.Typography
 import com.example.tutorplace.ui.theme.White
 
 @Composable
-fun MyTrainingEmptyItem(
+fun MyCoursesEmptyItem(
 	modifier: Modifier = Modifier,
 	onCatalogClick: () -> Unit
 ) {
@@ -31,13 +31,13 @@ fun MyTrainingEmptyItem(
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
 		Text(
-			text = stringResource(R.string.home_my_training_empty_title),
+			text = stringResource(R.string.home_my_courses_empty_title),
 			style = Typography.headlineLarge.copy(color = Black16),
 			textAlign = TextAlign.Center
 		)
 		Text(
 			modifier = Modifier.padding(top = 8.dp),
-			text = stringResource(R.string.home_my_training_empty_description),
+			text = stringResource(R.string.home_my_courses_empty_description),
 			style = Typography.labelMedium.copy(color = Black16),
 			textAlign = TextAlign.Center
 		)
@@ -45,7 +45,7 @@ fun MyTrainingEmptyItem(
 			modifier = Modifier
 				.fillMaxWidth()
 				.padding(top = 16.dp),
-			text = stringResource(R.string.home_my_training_empty_button_title),
+			text = stringResource(R.string.home_my_courses_empty_button_title),
 			isLoading = false,
 			isEnabled = true,
 			onClick = { onCatalogClick() }
@@ -55,6 +55,6 @@ fun MyTrainingEmptyItem(
 
 @Preview
 @Composable
-private fun MyTrainingEmptyItemPreview() {
-	MyTrainingEmptyItem(onCatalogClick = {})
+private fun MyCoursesEmptyItemPreview() {
+	MyCoursesEmptyItem(onCatalogClick = {})
 }
