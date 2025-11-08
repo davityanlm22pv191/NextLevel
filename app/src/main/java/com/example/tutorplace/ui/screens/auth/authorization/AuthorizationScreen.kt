@@ -32,28 +32,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection.Ltr
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.tutorplace.R
-import com.example.tutorplace.navigation.Destinations
-import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
+import com.example.tutorplace.ui.common.AuthSectionDivider
 import com.example.tutorplace.ui.common.PurpleButton
+import com.example.tutorplace.ui.common.YandexButton
 import com.example.tutorplace.ui.common.header.Header
 import com.example.tutorplace.ui.common.header.HeaderLogoType
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
 import com.example.tutorplace.ui.common.textfield.EmailTextField
 import com.example.tutorplace.ui.common.textfield.PasswordTextField
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToHome
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToRegistration
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToRestorePassword
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToSupport
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.EmailChanged
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.PasswordChanged
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationNavigator
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationState
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationViewModel
-import com.example.tutorplace.ui.common.AuthSectionDivider
-import com.example.tutorplace.ui.common.YandexButton
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.Typography
@@ -61,8 +55,8 @@ import com.example.tutorplace.ui.theme.Typography
 @Composable
 fun AuthorizationScreen(navController: NavHostController) {
 	val viewModel = hiltViewModel<AuthorizationViewModel>()
+	LaunchedEffect(Unit) { viewModel.attachNavigator(AuthorizationNavigator(navController)) }
 	val state by viewModel.state.collectAsState()
-	ObserveViewModelEvents(viewModel, navController)
 	AuthorizationScreen(
 		state,
 		onEmailChanged = { email -> viewModel.onEvent(EmailChanged(email)) },
@@ -214,29 +208,6 @@ private fun SupportSection(onSupportClick: () -> Unit, onRegisterClick: () -> Un
 			),
 			textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
 		)
-	}
-}
-
-@Composable
-private fun ObserveViewModelEvents(
-	viewModel: AuthorizationViewModel,
-	navController: NavController
-) {
-	LaunchedEffect(Unit) {
-		viewModel.effect.collect { effect ->
-			when (effect) {
-				is NavigateToHome -> navController.navigate(
-					Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = false)).route
-				) {
-					popUpTo(Destinations.AuthorizationFlow.FLOW_ROUTE) {
-						inclusive = true
-					}
-				}
-				is NavigateToRestorePassword -> navController.navigate(Destinations.AuthorizationFlow.RestorePassword.route)
-				is NavigateToRegistration -> navController.navigate(Destinations.AuthorizationFlow.Registration.route)
-				is NavigateToSupport -> Unit
-			}
-		}
 	}
 }
 

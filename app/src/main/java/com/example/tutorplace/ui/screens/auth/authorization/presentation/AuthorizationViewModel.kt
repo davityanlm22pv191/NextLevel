@@ -3,6 +3,7 @@ package com.example.tutorplace.ui.screens.auth.authorization.presentation
 import androidx.lifecycle.viewModelScope
 import com.example.tutorplace.domain.usecases.auth.AuthorizeUseCase
 import com.example.tutorplace.helpers.FormatHelper
+import com.example.tutorplace.navigation.ViewModelNavigator
 import com.example.tutorplace.ui.base.BaseViewModel
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.CheckEnteredValues
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.EnterToProfileRequested
@@ -15,6 +16,12 @@ class AuthorizationViewModel @Inject constructor(
 	private val authorizeUseCase: AuthorizeUseCase,
 ) : BaseViewModel<AuthorizationEvent, AuthorizationState, AuthorizationEffect>() {
 
+	private var navigator: AuthorizationNavigator? = null
+
+	fun attachNavigator(navigator: AuthorizationNavigator) {
+		this.navigator = navigator
+	}
+
 	override fun initialState() = AuthorizationState()
 
 	override fun onEvent(event: AuthorizationEvent) {
@@ -22,11 +29,15 @@ class AuthorizationViewModel @Inject constructor(
 	}
 
 	fun onRestoreClicked() {
-		sendEffect(AuthorizationEffect.NavigateToRestorePassword)
+		navigator?.navigateToRestorePassword()
 	}
 
 	fun onRegistrationClicked() {
-		sendEffect(AuthorizationEffect.NavigateToRegistration)
+		navigator?.navigateToRegistration()
+	}
+
+	fun onSupportClicked() {
+		navigator?.navigateToSupport()
 	}
 
 	fun onEnterClicked() {
@@ -40,12 +51,14 @@ class AuthorizationViewModel @Inject constructor(
 				password = state.value.password
 			)
 			if (isAuthorizedSuccess) {
-				sendEffect(AuthorizationEffect.NavigateToHome)
+				navigator?.navigateToHome()
 			}
 		}
 	}
 
-	fun onSupportClicked() = Unit
 
-	fun onYandexClicked() = Unit
+
+	fun onYandexClicked() {
+		navigator?.navigateToYandexAuthorization()
+	}
 }
