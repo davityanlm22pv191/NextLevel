@@ -1,3 +1,4 @@
+
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.kotlin.android)
@@ -21,8 +22,17 @@ android {
 	}
 
 	buildTypes {
-		release {
+
+		debug {
 			isMinifyEnabled = false
+			proguardFiles(
+				getDefaultProguardFile("proguard-android-optimize.txt"),
+				"proguard-rules.pro"
+			)
+		}
+
+		release {
+			isMinifyEnabled = true
 			proguardFiles(
 				getDefaultProguardFile("proguard-android-optimize.txt"),
 				"proguard-rules.pro"
@@ -40,6 +50,7 @@ android {
 		compose = true
 		buildConfig = true
 	}
+
 	defaultConfig {
 		buildConfigField(
 			"String",
