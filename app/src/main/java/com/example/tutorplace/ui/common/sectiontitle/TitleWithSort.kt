@@ -63,7 +63,7 @@ fun SectionTitleWithSort(
 @Composable
 private fun SectionTitle(sectionTitle: SectionTitle) {
 	val isTapDetected = remember { mutableStateOf(false) }
-	val iconOffsetX = animateDpAsState(if (isTapDetected.value) (-10).dp else 0.dp)
+	val iconOffsetX = animateDpAsState(if (isTapDetected.value) (-6).dp else 0.dp)
 	Row(
 		modifier = Modifier.pointerInput(Unit) {
 			if (sectionTitle is SectionTitle.Clickable) {

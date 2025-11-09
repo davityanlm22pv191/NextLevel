@@ -4,7 +4,7 @@ import androidx.navigation.NavHostController
 import com.example.tutorplace.navigation.Destinations
 import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
 import com.example.tutorplace.navigation.ViewModelNavigator
-import com.example.tutorplace.navigation.tabs.ktx.navigateTo
+import com.example.tutorplace.navigation.ktx.navigateTo
 
 class AuthorizationNavigator(
 	private val navController: NavHostController

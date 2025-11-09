@@ -2,14 +2,12 @@ package com.example.tutorplace.ui.screens.auth.authorization
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
@@ -18,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection.Ltr
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.tutorplace.R
 import com.example.tutorplace.ui.common.AuthSectionDivider
@@ -55,8 +53,9 @@ import com.example.tutorplace.ui.theme.Typography
 @Composable
 fun AuthorizationScreen(navController: NavHostController) {
 	val viewModel = hiltViewModel<AuthorizationViewModel>()
-	LaunchedEffect(Unit) { viewModel.attachNavigator(AuthorizationNavigator(navController)) }
-	val state by viewModel.state.collectAsState()
+	val navigator = remember(navController) { AuthorizationNavigator(navController) }
+	LaunchedEffect(Unit) { viewModel.attachNavigator(navigator) }
+	val state by viewModel.state.collectAsStateWithLifecycle()
 	AuthorizationScreen(
 		state,
 		onEmailChanged = { email -> viewModel.onEvent(EmailChanged(email)) },
@@ -84,7 +83,9 @@ private fun AuthorizationScreen(
 	val passwordFocusRequester = remember { FocusRequester() }
 	val scrollState = rememberScrollState()
 	Scaffold(
-		modifier = Modifier.fillMaxSize(),
+		modifier = Modifier
+			.fillMaxSize()
+			.imePadding(),
 		containerColor = ScreenColor
 	) { paddingValues ->
 		Column(
@@ -96,8 +97,7 @@ private fun AuthorizationScreen(
 					end = paddingValues.calculateEndPadding(Ltr),
 					bottom = paddingValues.calculateBottomPadding() + 16.dp
 				)
-				.verticalScroll(scrollState)
-				.windowInsetsPadding(WindowInsets.ime),
+				.verticalScroll(scrollState),
 			horizontalAlignment = Alignment.CenterHorizontally
 		) {
 			Header(

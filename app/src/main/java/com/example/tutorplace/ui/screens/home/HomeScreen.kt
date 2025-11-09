@@ -7,22 +7,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.tutorplace.R
 import com.example.tutorplace.data.common.Sort
 import com.example.tutorplace.data.common.SortOrder
 import com.example.tutorplace.data.common.SortType.DATE_ADDED
-import com.example.tutorplace.navigation.Destinations
-import com.example.tutorplace.navigation.Destinations.FortuneWheelFlow
-import com.example.tutorplace.navigation.tabs.ktx.navigateTo
-import com.example.tutorplace.navigation.tabs.ktx.switchTab
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.SQUARE
 import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleAndSort
 import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleAndSortSkeleton
@@ -30,9 +27,8 @@ import com.example.tutorplace.ui.common.itemWithSkeleton
 import com.example.tutorplace.ui.common.sectiontitle.model.SectionSortInfo
 import com.example.tutorplace.ui.common.sectiontitle.model.SectionTitle
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
-import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.model.FortuneWheelParams
-import com.example.tutorplace.ui.screens.home.presentation.HomeEffect
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI
+import com.example.tutorplace.ui.screens.home.presentation.HomeNavigator
 import com.example.tutorplace.ui.screens.home.presentation.HomeState
 import com.example.tutorplace.ui.screens.home.presentation.HomeViewModel
 import com.example.tutorplace.ui.screens.home.ui.fortunewheel.FortuneWheelShortItem
@@ -43,8 +39,9 @@ import com.example.tutorplace.ui.theme.ScreenColor
 @Composable
 fun HomeScreen(navController: NavHostController) {
 	val viewModel = hiltViewModel<HomeViewModel>()
-	val state by viewModel.state.collectAsState()
-	ObserveViewModelEffects(viewModel, navController)
+	val state by viewModel.state.collectAsStateWithLifecycle()
+	val navigator = remember(navController) { HomeNavigator(navController) }
+	LaunchedEffect(Unit) { viewModel.attachNavigator(navigator) }
 	HomeScreen(
 		state = state,
 		onNotificationClicked = { viewModel.onEvent(UI.NotificationClicked) },
@@ -133,30 +130,6 @@ private fun HomeScreen(
 					MyCoursesEmptyItem(onCatalogClick = { onCatalogClicked() })
 				}
 			)
-		}
-	}
-}
-
-@Composable
-private fun ObserveViewModelEffects(
-	viewModel: HomeViewModel,
-	navController: NavHostController
-) {
-	LaunchedEffect(Unit) {
-		viewModel.effect.collect { effect ->
-			when (effect) {
-				HomeEffect.NavigateToMail,
-				HomeEffect.NavigateToProfile,
-				HomeEffect.NavigateToSearchScreen -> {}
-				HomeEffect.NavigateToFortuneWheelInformationBottomSheet -> navController.navigateTo(
-					FortuneWheelFlow.FortuneWheel(FortuneWheelParams(isShouldShowInformation = true))
-				)
-				HomeEffect.NavigateToFortuneWheelScreen -> navController.navigateTo(
-					FortuneWheelFlow.FortuneWheel(FortuneWheelParams(isShouldShowInformation = false))
-				)
-				HomeEffect.NavigateToCatalogTab -> navController.switchTab(Destinations.Catalog.route)
-				HomeEffect.NavigateToMyCoursesTab -> navController.switchTab(Destinations.MyCourses.route)
-			}
 		}
 	}
 }

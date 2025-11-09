@@ -1,4 +1,4 @@
-package com.example.tutorplace.navigation.tabs.ktx
+package com.example.tutorplace.navigation.ktx
 
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -14,4 +14,11 @@ fun NavHostController.switchTab(route: String) {
 
 fun NavHostController.navigateTo(destination: Destinations) {
 	navigate(destination.route)
+}
+
+fun NavHostController.navigateTo(vararg destinations: Destinations) {
+	destinations.forEach { destination ->
+		navigate(destination.route)
+
+	}
 }
