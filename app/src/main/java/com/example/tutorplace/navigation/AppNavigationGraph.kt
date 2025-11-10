@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.tutorplace.ui.base.main.MainScreen
+import com.example.tutorplace.ui.screens.main.MainScreen
 import com.example.tutorplace.ui.screens.onboarding.OnboardingScreen
 
 @Composable
