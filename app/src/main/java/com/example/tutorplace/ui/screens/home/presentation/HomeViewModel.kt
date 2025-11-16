@@ -47,6 +47,11 @@ class HomeViewModel @Inject constructor(
 	// https://iili.io/KLMazGf.png
 	// https://iili.io/KLMl2eI.png
 
+	private var navigator: HomeNavigator? = null
+
+	fun attachNavigator(navigator: HomeNavigator) {
+		this.navigator = navigator
+	}
 
 	init {
 		collectProfileShortInfo()
@@ -65,14 +70,16 @@ class HomeViewModel @Inject constructor(
 		setState(HomeReducer.reduce(state.value, event))
 	}
 
-	private fun onUiEvent(event: UI) = when (event) {
-		is NotificationClicked -> sendEffect(HomeEffect.NavigateToMail)
-		is ProfileClicked -> sendEffect(HomeEffect.NavigateToProfile)
-		is SearchClicked -> sendEffect(HomeEffect.NavigateToSearchScreen)
-		is FortuneWheelClicked -> sendEffect(HomeEffect.NavigateToFortuneWheelScreen)
-		is FortuneWheelInformationClicked -> sendEffect(HomeEffect.NavigateToFortuneWheelInformationBottomSheet)
-		is CatalogClicked -> sendEffect(HomeEffect.NavigateToCatalogTab)
-		is MyCoursesClicked -> sendEffect(HomeEffect.NavigateToMyCoursesTab)
+	private fun onUiEvent(event: UI) {
+		when (event) {
+			is NotificationClicked -> navigator?.navigateToMail()
+			is ProfileClicked -> navigator?.navigateToProfile()
+			is SearchClicked -> navigator?.navigateToSearch()
+			is FortuneWheelClicked -> navigator?.navigateToFortuneWheelScreen()
+			is FortuneWheelInformationClicked -> navigator?.navigateToFortuneWheelInformationBottomSheet()
+			is CatalogClicked -> navigator?.switchToCatalogTab()
+			is MyCoursesClicked -> navigator?.switchToMyCoursesTab()
+		}
 	}
 
 	private fun collectProfileShortInfo() {

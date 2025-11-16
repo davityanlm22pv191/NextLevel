@@ -14,6 +14,12 @@ class RegistrationViewModel @Inject constructor(
 	private val registerUseCase: RegisterUseCase,
 ) : BaseViewModel<RegistrationEvent, RegistrationState, RegistrationEffect>() {
 
+	private var navigator: RegistrationNavigator? = null
+
+	fun attachNavigator(navigator: RegistrationNavigator) {
+		this.navigator = navigator
+	}
+
 	override fun initialState() = RegistrationState()
 
 	override fun onEvent(event: RegistrationEvent) = when (event) {
@@ -47,13 +53,21 @@ class RegistrationViewModel @Inject constructor(
 				secondStep.password
 			)
 			if (isRegisterSuccess) {
-				sendEffect(RegistrationEffect.NavigateToHome)
+				navigator?.navigateToHome()
 			}
 		}
 		return@with
 	}
 
-	fun onOfferClicked() = Unit
-	fun onTermsClicked() = Unit
-	fun onYandexClicked() = Unit
+	fun onOfferClicked() {
+		navigator?.navigateToOffer()
+	}
+
+	fun onTermsClicked() {
+		navigator?.navigateToTerms()
+	}
+
+	fun onYandexClicked() {
+		navigator?.navigateToYandexAuthorization()
+	}
 }

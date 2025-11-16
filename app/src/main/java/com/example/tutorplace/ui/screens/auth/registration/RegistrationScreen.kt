@@ -27,11 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection.Ltr
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.tutorplace.R
-import com.example.tutorplace.navigation.Destinations
-import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
 import com.example.tutorplace.ui.common.AuthSectionDivider
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.YandexButton
@@ -44,13 +41,13 @@ import com.example.tutorplace.ui.common.textfield.NameTextField
 import com.example.tutorplace.ui.common.textfield.PasswordTextField
 import com.example.tutorplace.ui.common.textfield.PhoneTextField
 import com.example.tutorplace.ui.common.textfield.TelegramTextField
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEffect
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.ConfirmPasswordChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.EmailChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.NameChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.PasswordChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.PhoneChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.TelegramChanged
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationNavigator
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState.RegistrationStep.FirstStep
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState.RegistrationStep.SecondStep
@@ -64,7 +61,7 @@ import com.example.tutorplace.ui.theme.Typography
 fun RegistrationScreen(navController: NavHostController) {
 	val viewModel = hiltViewModel<RegistrationViewModel>()
 	val state by viewModel.state.collectAsState()
-	ObserveViewModelEvents(viewModel, navController)
+	LaunchedEffect(Unit) { viewModel.attachNavigator(RegistrationNavigator(navController)) }
 	RegistrationScreen(
 		state,
 		onFirstStepClicked = { viewModel.onFirstStepClicked() },
@@ -122,13 +119,7 @@ private fun RegistrationScreen(
 				logo = HeaderLogoType.Image(R.drawable.ic_tutor_place_lettering_logo),
 				title = stringResource(R.string.registration_title),
 				description = null,
-				onBackButtonClicked = {
-					when (state.currentStep) {
-						FirstStep::class -> null
-						SecondStep::class -> onFirstStepClicked()
-						else -> null
-					}
-				}
+				onBackButtonClicked = { onFirstStepClicked() }.takeIf { state.currentStep != FirstStep::class }
 			)
 			AnimatedContent(
 				modifier = Modifier.padding(top = 18.dp),
@@ -273,24 +264,6 @@ private fun YandexButtonWithTerms(
 		),
 		textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
 	)
-}
-
-@Composable
-private fun ObserveViewModelEvents(
-	viewModel: RegistrationViewModel,
-	navController: NavController
-) {
-	LaunchedEffect(Unit) {
-		viewModel.effect.collect { effect ->
-			when (effect) {
-				RegistrationEffect.NavigateToHome -> navController.navigate(
-					Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = true)).route
-				) {
-					popUpTo(Destinations.AuthorizationFlow.FLOW_ROUTE) { inclusive = true }
-				}
-			}
-		}
-	}
 }
 
 @Preview

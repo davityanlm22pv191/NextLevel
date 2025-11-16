@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection.Ltr
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.tutorplace.R
 import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.common.PurpleButton
@@ -38,8 +38,8 @@ import com.example.tutorplace.ui.common.header.HeaderLogoType
 import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
 import com.example.tutorplace.ui.common.textfield.EmailTextField
-import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEffect.NavigateToAuthorization
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailChanged
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordNavigator
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordState
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordViewModel
 import com.example.tutorplace.ui.theme.BlackAlpha04
@@ -48,10 +48,10 @@ import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.Typography
 
 @Composable
-fun RestorePasswordScreen(navController: NavController) {
+fun RestorePasswordScreen(navController: NavHostController) {
 	val viewModel = hiltViewModel<RestorePasswordViewModel>()
 	val state by viewModel.state.collectAsState()
-	ObserveViewModelEvent(viewModel, navController)
+	LaunchedEffect(Unit) { viewModel.attachNavigator(RestorePasswordNavigator(navController)) }
 	RestorePasswordScreen(
 		state,
 		onBackButtonClicked = { viewModel.backClicked() },
@@ -166,20 +166,6 @@ private fun DoYouHaveAnAccountSection(onAuthorizedClicked: () -> Unit) {
 	)
 }
 
-@Composable
-private fun ObserveViewModelEvent(
-	viewModel: RestorePasswordViewModel,
-	navController: NavController
-) {
-	LaunchedEffect(Unit) {
-		viewModel.effect.collect { effect ->
-			when (effect) {
-				is NavigateToAuthorization -> navController.popBackStack()
-			}
-		}
-	}
-}
-
 @Preview
 @Composable
 private fun RestorePasswordScreenPreview() {
@@ -208,7 +194,7 @@ private fun RestorePasswordScreenWithValuePreview() {
 
 @Preview
 @Composable
-private fun RestorePasswordScreenSendedPreview() {
+private fun RestorePasswordScreenSentPreview() {
 	RestorePasswordScreen(
 		state = RestorePasswordState(email = "example@mail.com", isEmailSent = true),
 		onBackButtonClicked = {},

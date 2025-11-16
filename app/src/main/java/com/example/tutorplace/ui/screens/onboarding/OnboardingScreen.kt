@@ -31,17 +31,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.tutorplace.R
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.TransparentButton
 import com.example.tutorplace.ui.common.header.Header
 import com.example.tutorplace.ui.common.header.HeaderLogoType.Image
 import com.example.tutorplace.ui.common.header.HeaderLogoType.Text
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEffect.Hide
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NextStepClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.SkipButtonClicked
+import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingNavigator
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.TELL_US_ABOUT_INTERESTS
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingViewModel
@@ -60,16 +60,10 @@ import com.example.tutorplace.ui.theme.Transparent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OnboardingScreen(navController: NavController) {
+fun OnboardingScreen(navController: NavHostController) {
 	val viewModel = hiltViewModel<OnboardingViewModel>()
 	val state by viewModel.state.collectAsState()
-	LaunchedEffect(Unit) {
-		viewModel.effect.collect { effect ->
-			when (effect) {
-				is Hide -> navController.popBackStack()
-			}
-		}
-	}
+	LaunchedEffect(Unit) { viewModel.attachNavigator(OnboardingNavigator(navController)) }
 	OnboardingScreen(
 		state,
 		OnboardingUiState(state, viewModel),

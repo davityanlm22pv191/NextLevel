@@ -21,6 +21,12 @@ class RestorePasswordViewModel @Inject constructor(
 	private val authService: AuthService,
 ) : BaseViewModel<RestorePasswordEvent, RestorePasswordState, RestorePasswordEffect>() {
 
+	private var navigator: RestorePasswordNavigator? = null
+
+	fun attachNavigator(navigator: RestorePasswordNavigator) {
+		this.navigator = navigator
+	}
+
 	private val timer = MutableStateFlow(60)
 	private var timerJob: Job? = null
 
@@ -31,11 +37,11 @@ class RestorePasswordViewModel @Inject constructor(
 	}
 
 	fun authorizeClicked() {
-		sendEffect(RestorePasswordEffect.NavigateToAuthorization)
+		navigator?.exit()
 	}
 
 	fun backClicked() {
-		sendEffect(RestorePasswordEffect.NavigateToAuthorization)
+		navigator?.exit()
 	}
 
 	fun restoreClicked() {

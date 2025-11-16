@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.base.main
+package com.example.tutorplace.ui.screens.main
 
 import android.Manifest
 import android.os.Build
@@ -21,7 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tutorplace.navigation.Destinations
 import com.example.tutorplace.navigation.Destinations.MainScreen.MainScreenParams
 import com.example.tutorplace.navigation.tabs.TabsNavHost
-import com.example.tutorplace.ui.base.main.presentation.MainScreenViewModel
+import com.example.tutorplace.ui.screens.main.presentation.MainScreenViewModel
 import com.example.tutorplace.ui.common.RequestPermission
 import com.example.tutorplace.ui.common.bottomnavbar.BottomNavigationBar
 import com.example.tutorplace.ui.common.bottomnavbar.BottomTabBarItem

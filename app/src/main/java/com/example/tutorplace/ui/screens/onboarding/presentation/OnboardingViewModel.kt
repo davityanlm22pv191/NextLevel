@@ -31,8 +31,14 @@ class OnboardingViewModel @Inject constructor(
 	// https://iili.io/Kkri8V2.png
 	// https://iili.io/KkriSPS.png
 
+	private var navigator: OnboardingNavigator? = null
+
 	init {
 		loadGiftProductName()
+	}
+
+	fun attachNavigator(navigator: OnboardingNavigator) {
+		this.navigator = navigator
 	}
 
 	override fun initialState() = OnboardingState(step = Step.CONGRATULATIONS)
@@ -46,7 +52,7 @@ class OnboardingViewModel @Inject constructor(
 		when (state.value.step) {
 			Step.PROVIDE_DETAILS -> processProvideDetailsStep()
 			Step.TELL_US_ABOUT_INTERESTS -> processTellUsAboutInterestsStep()
-			Step.SPEND_YOUR_TIME_PRODUCTIVELY -> sendEffect(OnboardingEffect.Hide)
+			Step.SPEND_YOUR_TIME_PRODUCTIVELY -> navigator?.exit()
 			Step.HELP_YOU_STAY -> processHelpYouStayStep()
 			else -> if (!state.value.onboardingInfo.isLoading) {
 				setState(OnboardingReducer.reduce(state.value, NextStepClicked))

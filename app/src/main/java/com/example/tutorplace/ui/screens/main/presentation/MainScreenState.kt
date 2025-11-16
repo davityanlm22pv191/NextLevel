@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.base.main.presentation
+package com.example.tutorplace.ui.screens.main.presentation
 
 import com.example.tutorplace.ui.base.BaseState
 
