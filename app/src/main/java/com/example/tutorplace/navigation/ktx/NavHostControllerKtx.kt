@@ -17,8 +17,5 @@ fun NavHostController.navigateTo(destination: Destinations) {
 }
 
 fun NavHostController.navigateTo(vararg destinations: Destinations) {
-	destinations.forEach { destination ->
-		navigate(destination.route)
-
-	}
+	destinations.forEach { destination -> navigate(destination.route) }
 }

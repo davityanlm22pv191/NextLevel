@@ -7,7 +7,7 @@ import com.example.tutorplace.navigation.ViewModelNavigator
 
 class RegistrationNavigator(
 	private val navController: NavHostController
-): ViewModelNavigator(navController) {
+) : ViewModelNavigator(navController) {
 
 	fun navigateToHome() {
 		navController.navigate(
