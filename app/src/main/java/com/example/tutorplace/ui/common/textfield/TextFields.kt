@@ -288,6 +288,13 @@ fun TelegramTextField(
 			)
 		},
 		onValueChange = { onValueChanged(it) },
+		prefix = {
+			Text(
+				text = "@",
+				style = Typography.labelMedium,
+				color = Black16
+			)
+		},
 		singleLine = true,
 		textStyle = Typography.labelMedium.copy(color = Black16),
 		colors = outlinedTextFieldColors,
@@ -340,7 +347,7 @@ private fun TextFieldsPreview() {
 		)
 		TelegramTextField(
 			modifier = Modifier.padding(horizontal = 16.dp),
-			value = "@someTelegramAddress",
+			value = "someTelegramAddress",
 			label = stringResource(R.string.registration_your_telegram),
 			isError = false,
 			onValueChanged = {},
