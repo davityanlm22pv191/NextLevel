@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.tutorplace.data.mycourses.course.Course
+import com.example.tutorplace.data.courses.course.Course
 import com.example.tutorplace.ui.common.coursecard.card.CourseCard
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.LARGE

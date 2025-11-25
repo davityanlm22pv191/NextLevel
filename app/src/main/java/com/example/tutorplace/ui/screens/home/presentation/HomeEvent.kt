@@ -1,6 +1,6 @@
 package com.example.tutorplace.ui.screens.home.presentation
 
-import com.example.tutorplace.data.mycourses.course.Course
+import com.example.tutorplace.data.courses.course.Course
 import com.example.tutorplace.data.profile.model.ProfileShortInfo
 import com.example.tutorplace.ui.base.BaseEvent
 import java.time.LocalDateTime
@@ -13,18 +13,22 @@ sealed interface HomeEvent : BaseEvent {
 		data class FortuneWheelLoaded(val lastRotation: LocalDateTime) : Domain
 		data class FortuneWheelFailed(val throwable: Throwable) : Domain
 
-		data object MyCoursesLoading: Domain
+		data object MyCoursesLoading : Domain
 		data class MyCoursesLoaded(val courses: List<Course>) : Domain
 		data class MyCoursesFailed(val throwable: Throwable) : Domain
+
+		data object SpeciallyForYouLoading : Domain
+		data class SpeciallyForLoaded(val courses: List<Course>) : Domain
+		data class SpeciallyForFailed(val throwable: Throwable) : Domain
 	}
 
 	sealed interface UI : HomeEvent {
 		data object NotificationClicked : UI
 		data object SearchClicked : UI
 		data object ProfileClicked : UI
-		data object FortuneWheelClicked: UI
-		data object FortuneWheelInformationClicked: UI
-		data object MyCoursesClicked: UI
-		data object CatalogClicked: UI
+		data object FortuneWheelClicked : UI
+		data object FortuneWheelInformationClicked : UI
+		data object MyCoursesClicked : UI
+		data object CatalogClicked : UI
 	}
 }

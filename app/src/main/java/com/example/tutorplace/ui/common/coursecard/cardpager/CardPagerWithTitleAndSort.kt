@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.example.tutorplace.data.common.Sort
 import com.example.tutorplace.data.common.SortOrder.DESC
 import com.example.tutorplace.data.common.SortType.DATE_ADDED
-import com.example.tutorplace.data.mycourses.course.Course
+import com.example.tutorplace.data.courses.course.Course
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.LARGE
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.SQUARE

@@ -28,6 +28,7 @@
 		<item quantity="two">%s дня</item>
 		<item quantity="few">%s дня</item>
 		<item quantity="many">%s дней</item>
+		<item quantity="other">%s дня</item>
 	</plurals>
 
 	<!-- 	Common Auth -->
@@ -118,6 +119,7 @@
 	<string name="home_my_courses_empty_description">Выбирай направление, получай новые навыки и востребованную профессию вместе с нами</string>
 	<string name="home_my_courses_empty_button_title">Каталог курсов</string>
 	<string name="home_my_courses_section_title">Мое обучение</string>
+	<string name="home_specially_for_you">Специально для вас</string>
 
 	<!-- 	Fortune Wheel -->
 	<string name="fortune_wheel">Колесо фортуны</string>
