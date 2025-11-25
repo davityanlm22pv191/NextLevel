@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.tutorplace.R
-import com.example.tutorplace.data.mycourses.course.Course
+import com.example.tutorplace.data.courses.course.Course
 import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.Green22
 import com.example.tutorplace.ui.theme.PurpleCC

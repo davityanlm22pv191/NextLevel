@@ -1,8 +1,8 @@
 package com.example.tutorplace.ui.screens.home.presentation
 
 import androidx.lifecycle.viewModelScope
+import com.example.tutorplace.data.courses.CoursesService
 import com.example.tutorplace.data.fortunewheel.FortuneWheelService
-import com.example.tutorplace.data.mycourses.MyCoursesService
 import com.example.tutorplace.data.profile.storage.ProfileStorage
 import com.example.tutorplace.ui.base.BaseViewModel
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain
@@ -26,7 +26,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
 	private val profileStorage: ProfileStorage,
 	private val fortuneWheelService: FortuneWheelService,
-	private val myCoursesService: MyCoursesService,
+	private val coursesService: CoursesService,
 ) : BaseViewModel<HomeEvent, HomeState, HomeEffect>() {
 
 	// Квадратные превью курсов
@@ -57,6 +57,7 @@ class HomeViewModel @Inject constructor(
 		collectProfileShortInfo()
 		loadFortuneWheelLastRotation()
 		loadMyCourses()
+		loadSpeciallyForYou()
 	}
 
 	override fun initialState() = HomeState()
@@ -105,9 +106,21 @@ class HomeViewModel @Inject constructor(
 	private fun loadMyCourses() {
 		viewModelScope.launch {
 			onDomainEvent(Domain.MyCoursesLoading)
-			val response = myCoursesService.getMyCourses()
+			val response = coursesService.getMyCourses()
 			if (response.isSuccessful) {
 				onDomainEvent(Domain.MyCoursesLoaded(response.body()!!.courses))
+			} else {
+				onDomainEvent(Domain.MyCoursesFailed(Throwable(response.message())))
+			}
+		}
+	}
+
+	private fun loadSpeciallyForYou() {
+		viewModelScope.launch {
+			onDomainEvent(Domain.MyCoursesLoading)
+			val response = coursesService.getSpeciallyForYou()
+			if (response.isSuccessful) {
+				onDomainEvent(Domain.SpeciallyForLoaded(response.body()!!.courses))
 			} else {
 				onDomainEvent(Domain.MyCoursesFailed(Throwable(response.message())))
 			}

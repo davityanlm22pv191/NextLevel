@@ -20,6 +20,7 @@ import com.example.tutorplace.R
 import com.example.tutorplace.data.common.Sort
 import com.example.tutorplace.data.common.SortOrder
 import com.example.tutorplace.data.common.SortType.DATE_ADDED
+import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.LARGE
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.SQUARE
 import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleAndSort
 import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleAndSortSkeleton
@@ -129,6 +130,25 @@ private fun HomeScreen(
 				emptyStateContent = {
 					MyCoursesEmptyItem(onCatalogClick = { onCatalogClicked() })
 				}
+			)
+			itemWithSkeleton(
+				key = "SpeciallyForYou",
+				dataInfo = state.speciallyForYou,
+				paddingValues = PaddingValues(top = 8.dp),
+				content = {
+					CardPagerWithTitleAndSort(
+						modifier = Modifier,
+						sectionTitle = SectionTitle.NonClickable(text = stringResource(R.string.home_specially_for_you)),
+						sort = null,
+						courses = state.speciallyForYou.data ?: emptyList(),
+						shape = LARGE,
+						onCourseClick = {}
+					)
+				},
+				skeletonContent = {
+					CardPagerWithTitleAndSortSkeleton(shape = LARGE, withSort = false)
+				},
+				emptyStateContent = {}
 			)
 		}
 	}

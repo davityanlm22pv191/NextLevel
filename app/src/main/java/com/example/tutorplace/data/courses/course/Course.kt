@@ -1,4 +1,4 @@
-package com.example.tutorplace.data.mycourses.course
+package com.example.tutorplace.data.courses.course
 
 data class Course(
 	val id: String,

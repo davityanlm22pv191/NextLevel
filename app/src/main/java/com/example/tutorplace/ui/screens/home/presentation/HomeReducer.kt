@@ -16,6 +16,9 @@ object HomeReducer : BaseReducer<HomeState, HomeEvent> {
 			is HomeEvent.Domain.MyCoursesLoading -> reduceMyCoursesLoading(oldState)
 			is HomeEvent.Domain.MyCoursesFailed -> reduceMyCoursesFailed(oldState, event)
 			is HomeEvent.Domain.MyCoursesLoaded -> reduceMyCoursesLoaded(oldState, event)
+			is HomeEvent.Domain.SpeciallyForYouLoading -> reduceSpeciallyForYouLoading(oldState)
+			is HomeEvent.Domain.SpeciallyForLoaded -> reduceSpeciallyForYouLoaded(oldState, event)
+			is HomeEvent.Domain.SpeciallyForFailed -> reduceSpeciallyForYouFailed(oldState, event)
 		}
 		is HomeEvent.UI -> oldState
 	}
@@ -58,5 +61,23 @@ object HomeReducer : BaseReducer<HomeState, HomeEvent> {
 		event: HomeEvent.Domain.MyCoursesLoaded
 	): HomeState {
 		return oldState.copy(myCourses = oldState.myCourses.loaded(event.courses))
+	}
+
+	private fun reduceSpeciallyForYouFailed(
+		oldState: HomeState,
+		event: HomeEvent.Domain.SpeciallyForFailed
+	): HomeState {
+		return oldState.copy(myCourses = oldState.speciallyForYou.failure(event.throwable))
+	}
+
+	private fun reduceSpeciallyForYouLoading(oldState: HomeState): HomeState {
+		return oldState.copy(speciallyForYou = oldState.speciallyForYou.loading())
+	}
+
+	private fun reduceSpeciallyForYouLoaded(
+		oldState: HomeState,
+		event: HomeEvent.Domain.SpeciallyForLoaded
+	): HomeState {
+		return oldState.copy(speciallyForYou = oldState.speciallyForYou.loaded(event.courses))
 	}
 }
