@@ -1,0 +1,112 @@
+package com.example.tutorplace.ui.screens.coursedetailed.ui
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.tutorplace.R
+import com.example.tutorplace.data.courses.course.CourseDetailed
+import com.example.tutorplace.ui.common.PurpleGradientButton
+import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType
+import com.example.tutorplace.ui.common.coursecard.card.RatingWithCourseDuration
+import com.example.tutorplace.ui.theme.Black
+import com.example.tutorplace.ui.theme.Black34
+import com.example.tutorplace.ui.theme.PurpleDE
+import com.example.tutorplace.ui.theme.Typography
+import com.example.tutorplace.ui.theme.White
+
+@Composable
+fun CourseDetailedShortInfo(
+	course: CourseDetailed,
+	onStartLessonClicked: () -> Unit,
+	onMaterialsClicked: () -> Unit
+) {
+	Column(
+		modifier = Modifier
+			.fillMaxWidth()
+			.clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
+			.background(
+				brush = Brush.verticalGradient(colors = listOf(Black, Black34)),
+				shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
+			)
+			.padding(16.dp),
+	) {
+		Text(
+			text = course.name,
+			style = Typography.headlineLarge.copy(color = White),
+		)
+		Text(
+			modifier = Modifier.padding(top = 8.dp),
+			text = course.description,
+			style = Typography.labelMedium.copy(color = White),
+		)
+		RatingWithCourseDuration(
+			modifier = Modifier.padding(top = 8.dp),
+			shape = CourseCardShapeType.LARGE,
+			rate = course.rate,
+			duration = course.currentDayCount,
+		)
+		Row(
+			modifier = Modifier.padding(top = 28.dp),
+			verticalAlignment = Alignment.CenterVertically
+		) {
+			PurpleGradientButton(
+				modifier = Modifier
+					.width(138.dp)
+					.height(48.dp),
+				text = stringResource(R.string.course_detailed_start_lesson),
+				onClick = { onStartLessonClicked() }
+			)
+			Spacer(Modifier.weight(1f))
+			Text(
+				text = stringResource(R.string.course_detailed_materials),
+				style = Typography.labelMedium.copy(color = White),
+				textAlign = TextAlign.End,
+			)
+			Icon(
+				modifier = Modifier
+					.padding(start = 8.dp)
+					.width(50.dp)
+					.height(50.dp)
+					.background(
+						color = White.copy(alpha = 0.05f),
+						shape = RoundedCornerShape(12.dp)
+					)
+					.clip(RoundedCornerShape(12.dp))
+					.clickable(onClick = { onMaterialsClicked() })
+					.padding(4.dp),
+				painter = painterResource(R.drawable.ic_folder),
+				contentDescription = null,
+				tint = PurpleDE
+			)
+		}
+	}
+}
+
+@Composable
+@Preview
+private fun CourseDetailedShortInfoPreview() {
+	CourseDetailedShortInfo(
+		course = CourseDetailed.MOCK,
+		onStartLessonClicked = {},
+		onMaterialsClicked = {}
+	)
+}

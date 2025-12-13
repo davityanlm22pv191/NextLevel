@@ -1,5 +1,6 @@
 package com.example.tutorplace.ui.common
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,12 +17,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tutorplace.ui.theme.GreyAC
 import com.example.tutorplace.ui.theme.GreyF8
 import com.example.tutorplace.ui.theme.PurpleCC
+import com.example.tutorplace.ui.theme.PurpleD6
+import com.example.tutorplace.ui.theme.PurpleD8
 import com.example.tutorplace.ui.theme.Transparent
 import com.example.tutorplace.ui.theme.Typography
 import com.example.tutorplace.ui.theme.White
@@ -82,6 +86,33 @@ fun TransparentButton(
 	)
 }
 
+@Composable
+fun PurpleGradientButton(
+	modifier: Modifier = Modifier,
+	text: String,
+	onClick: () -> Unit
+) {
+	Surface(
+		modifier = modifier
+			.height(50.dp)
+			.background(
+				brush = Brush.verticalGradient(colors = listOf(PurpleD6, PurpleD8)),
+				shape = RoundedCornerShape(12.dp)
+			),
+		onClick = { onClick() },
+		shape = RoundedCornerShape(12.dp),
+		color = Transparent,
+		content = {
+			Text(
+				modifier = Modifier.wrapContentSize(),
+				text = text,
+				style = Typography.bodyMedium.copy(color = White),
+				textAlign = TextAlign.Center
+			)
+		}
+	)
+}
+
 @Preview(backgroundColor = 0xFFFFFFFF, showBackground = true)
 @Composable
 private fun PurpleButtonPreview() {
@@ -112,6 +143,12 @@ private fun PurpleButtonPreview() {
 				.width(320.dp)
 				.height(50.dp),
 			text = "Пропустить",
+		) { }
+		PurpleGradientButton(
+			modifier = Modifier
+				.width(138.dp)
+				.height(48.dp),
+			text = "Начать урок"
 		) { }
 	}
 }

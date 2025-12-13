@@ -51,7 +51,8 @@ fun HomeScreen(navController: NavHostController) {
 		onFortuneWheelClicked = { viewModel.onEvent(UI.FortuneWheelClicked) },
 		onFortuneWheelInformationClicked = { viewModel.onEvent(UI.FortuneWheelInformationClicked) },
 		onMyCoursesClicked = { viewModel.onEvent(UI.MyCoursesClicked) },
-		onCatalogClicked = { viewModel.onEvent(UI.CatalogClicked) }
+		onCatalogClicked = { viewModel.onEvent(UI.CatalogClicked) },
+		onCourseClicked = { courseId -> viewModel.onEvent(UI.CourseClicked(courseId)) }
 	)
 }
 
@@ -64,7 +65,8 @@ private fun HomeScreen(
 	onFortuneWheelClicked: () -> Unit,
 	onFortuneWheelInformationClicked: () -> Unit,
 	onMyCoursesClicked: () -> Unit,
-	onCatalogClicked: () -> Unit
+	onCatalogClicked: () -> Unit,
+	onCourseClicked: (courseId: String) -> Unit,
 ) {
 	Scaffold(
 		topBar = {
@@ -121,7 +123,7 @@ private fun HomeScreen(
 						),
 						courses = state.myCourses.data ?: emptyList(),
 						shape = SQUARE,
-						onCourseClick = {}
+						onCourseClick = { course -> onCourseClicked(course.id) }
 					)
 				},
 				skeletonContent = {
@@ -142,7 +144,7 @@ private fun HomeScreen(
 						sort = null,
 						courses = state.speciallyForYou.data ?: emptyList(),
 						shape = LARGE,
-						onCourseClick = {}
+						onCourseClick = { course -> onCourseClicked(course.id) }
 					)
 				},
 				skeletonContent = {
@@ -165,6 +167,7 @@ private fun HomePreview() {
 		onFortuneWheelClicked = {},
 		onFortuneWheelInformationClicked = {},
 		onMyCoursesClicked = {},
-		onCatalogClicked = {}
+		onCatalogClicked = {},
+		onCourseClicked = {}
 	)
 }

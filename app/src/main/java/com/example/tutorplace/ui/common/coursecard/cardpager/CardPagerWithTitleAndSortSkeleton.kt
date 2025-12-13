@@ -93,7 +93,8 @@ fun CardPagerWithTitleAndSortSkeleton(
 				modifier = Modifier.fillMaxWidth(),
 				state = lazyListState,
 				horizontalArrangement = Arrangement.spacedBy(8.dp),
-				contentPadding = PaddingValues(horizontal = 16.dp)
+				contentPadding = PaddingValues(horizontal = 16.dp),
+				overscrollEffect = null
 			) {
 				(1..SKELETON_CARD_COUNT).forEach { index ->
 					item(key = index) { CardSkeleton(shape = shape) }

@@ -5,6 +5,7 @@ import com.example.tutorplace.navigation.Destinations
 import com.example.tutorplace.navigation.ViewModelNavigator
 import com.example.tutorplace.navigation.ktx.navigateTo
 import com.example.tutorplace.navigation.ktx.switchTab
+import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
 
 class HomeNavigator(
 	private val navController: NavHostController
@@ -33,5 +34,11 @@ class HomeNavigator(
 
 	fun switchToMyCoursesTab() {
 		navController.switchTab(Destinations.MyCourses.route)
+	}
+
+	fun navigateToCourseDetailed(courseId: String) {
+		navController.navigateTo(
+			Destinations.CourseDetailed(CourseDetailedParams(courseId))
+		)
 	}
 }

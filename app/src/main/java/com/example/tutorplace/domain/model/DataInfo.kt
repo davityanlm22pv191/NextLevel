@@ -2,7 +2,7 @@ package com.example.tutorplace.domain.model
 
 data class DataInfo<T>(
 	val data: T,
-	val isLoading: Boolean = false,
+	val isLoading: Boolean = true,
 	val throwable: Throwable? = null,
 ) {
 	val isLoaded: Boolean
