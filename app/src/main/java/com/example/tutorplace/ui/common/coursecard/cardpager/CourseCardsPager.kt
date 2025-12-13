@@ -70,7 +70,8 @@ fun CourseCardsPager(
 			modifier = Modifier.fillMaxWidth(),
 			state = lazyListState,
 			horizontalArrangement = Arrangement.spacedBy(8.dp),
-			contentPadding = paddingValues
+			contentPadding = paddingValues,
+			overscrollEffect = null,
 		) {
 			courses.forEach { course ->
 				item(key = course.id) {

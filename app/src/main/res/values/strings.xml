@@ -135,4 +135,7 @@
 	<string name="fortune_wheel_information_additional_description_span">проходя уроки, выполняя задания и прокачивая свой уровень</string>
 	<string name="fortune_wheel_information_more_about_promotion">Подробнее об условиях акции</string>
 
+	<!-- Course Detailed -->
+	<string name="course_detailed_title">Курс</string>
+
 </resources>

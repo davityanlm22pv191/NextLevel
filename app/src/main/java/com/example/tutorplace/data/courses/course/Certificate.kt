@@ -7,7 +7,7 @@ data class Certificate(
 	companion object {
 		val MOCK: Certificate
 			get() = Certificate(
-				progress = Progress(1, 21),
+				progress = Progress(current = 1, target = 21),
 				coverUrl = "https://example.com/certificates/cert_123"
 			)
 	}
