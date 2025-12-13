@@ -1,5 +1,7 @@
 package com.example.tutorplace.navigation
 
+import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
+
 sealed class Destinations(open val route: String) {
 
 	sealed class AuthorizationFlow(override val route: String) : Destinations(route) {
@@ -43,5 +45,15 @@ sealed class Destinations(open val route: String) {
 		object FortuneWheel : FortuneWheelFlow("fortune_wheel")
 
 		object FortuneWheelInformation : FortuneWheelFlow("fortune_wheel_information")
+	}
+
+	data class CourseDetailed(val params: CourseDetailedParams) : Destinations(route = params.toRoute()) {
+		companion object {
+			private const val ROUTE = "course_detailed"
+			const val DEFAULT_ROUTE = "$ROUTE?courseId={courseId}"
+
+			private fun CourseDetailedParams.toRoute() =
+				"$ROUTE?courseId=${courseId}"
+		}
 	}
 }

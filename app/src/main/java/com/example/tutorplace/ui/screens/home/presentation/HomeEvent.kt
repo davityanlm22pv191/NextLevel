@@ -30,5 +30,6 @@ sealed interface HomeEvent : BaseEvent {
 		data object FortuneWheelInformationClicked : UI
 		data object MyCoursesClicked : UI
 		data object CatalogClicked : UI
+		data class CourseClicked(val courseId: String): UI
 	}
 }

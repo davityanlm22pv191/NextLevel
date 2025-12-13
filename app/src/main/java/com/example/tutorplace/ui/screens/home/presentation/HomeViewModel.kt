@@ -12,6 +12,7 @@ import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain.Fort
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain.SetProfileInfo
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI.CatalogClicked
+import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI.CourseClicked
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI.FortuneWheelClicked
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI.FortuneWheelInformationClicked
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI.MyCoursesClicked
@@ -80,6 +81,7 @@ class HomeViewModel @Inject constructor(
 			is FortuneWheelInformationClicked -> navigator?.navigateToFortuneWheelInformationBottomSheet()
 			is CatalogClicked -> navigator?.switchToCatalogTab()
 			is MyCoursesClicked -> navigator?.switchToMyCoursesTab()
+			is CourseClicked -> navigator?.navigateToCourseDetailed(event.courseId)
 		}
 	}
 
