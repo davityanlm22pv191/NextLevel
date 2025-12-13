@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,7 +36,6 @@ import com.example.tutorplace.ui.theme.PurpleDE
 import com.example.tutorplace.ui.theme.Red1D
 import com.example.tutorplace.ui.theme.Typography
 import com.example.tutorplace.ui.theme.White
-import kotlin.math.roundToInt
 
 @Composable
 fun CourseCard(
@@ -85,41 +83,7 @@ fun CourseCard(
 				text = course.name,
 				style = Typography.labelMedium.copy(color = White),
 			)
-			Row(
-				modifier = Modifier.padding(
-					top = 8.dp.takeIf { shape == CourseCardShapeType.LARGE } ?: 4.dp
-				),
-				verticalAlignment = Alignment.CenterVertically
-			) {
-				Text(
-					modifier = Modifier.padding(end = 4.dp),
-					text = course.rate.toString().replace('.', ','),
-					style = Typography.labelMedium.copy(color = White),
-				)
-				(1..course.rate.roundToInt()).forEach { _ ->
-					Icon(
-						painter = painterResource(id = R.drawable.ic_star),
-						contentDescription = null,
-						tint = Color.Unspecified
-					)
-				}
-				if (shape == CourseCardShapeType.LARGE) {
-					Icon(
-						modifier = Modifier.padding(horizontal = 7.dp),
-						painter = painterResource(R.drawable.ic_dot),
-						contentDescription = null,
-						tint = Color.Unspecified
-					)
-					Text(
-						text = pluralStringResource(
-							R.plurals.common_days_format,
-							course.duration,
-							course.duration
-						),
-						style = Typography.labelMedium.copy(color = White)
-					)
-				}
-			}
+			RatingWithCourseDuration(shape = shape, rate = course.rate, duration = course.duration)
 			Spacer(modifier = Modifier.weight(1f))
 			if (course.progress != null) {
 				Row(

@@ -137,5 +137,7 @@
 
 	<!-- Course Detailed -->
 	<string name="course_detailed_title">Курс</string>
+	<string name="course_detailed_start_lesson">Начать урок</string>
+	<string name="course_detailed_materials">Материалы\nк курсу</string>
 
 </resources>
