@@ -1,9 +1,7 @@
 package com.example.tutorplace.navigation
 
-import androidx.navigation.NavHostController
-
 abstract class ViewModelNavigator(
-	private val navController: NavHostController
+	private val navigator: Navigator
 ) {
-	open fun exit() = navController.popBackStack()
+	open fun exit() = navigator.goBack()
 }

@@ -15,11 +15,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
+
 import com.example.tutorplace.R
 import com.example.tutorplace.data.common.Sort
 import com.example.tutorplace.data.common.SortOrder
 import com.example.tutorplace.data.common.SortType.DATE_ADDED
+import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.LARGE
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.SQUARE
 import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleAndSort
@@ -38,10 +39,10 @@ import com.example.tutorplace.ui.screens.home.ui.mycourses.MyCoursesEmptyItem
 import com.example.tutorplace.ui.theme.ScreenColor
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<HomeViewModel>()
 	val state by viewModel.state.collectAsStateWithLifecycle()
-	val navigator = remember(navController) { HomeNavigator(navController) }
+	val navigator = remember(navigator) { HomeNavigator(navigator) }
 	LaunchedEffect(Unit) { viewModel.attachNavigator(navigator) }
 	HomeScreen(
 		state = state,

@@ -13,12 +13,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.example.tutorplace.R
 import com.example.tutorplace.data.courses.course.CourseDetailed
 import com.example.tutorplace.data.profile.model.ProfileShortInfo
 import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.domain.model.loaded
+import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.itemWithSkeleton
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
 import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
@@ -30,7 +30,7 @@ import com.example.tutorplace.ui.theme.Black
 import com.example.tutorplace.ui.theme.ScreenColor
 
 @Composable
-fun CourseDetailedScreen(navController: NavHostController, params: CourseDetailedParams) {
+fun CourseDetailedScreen(navigator: Navigator, params: CourseDetailedParams) {
 	val viewModel = hiltViewModel<CourseDetailedViewModel>()
 	LaunchedEffect(params.courseId) {
 		viewModel.onEvent(CourseDetailedEvent.AttachParams(params))
@@ -39,7 +39,7 @@ fun CourseDetailedScreen(navController: NavHostController, params: CourseDetaile
 	CourseDetailedScreen(
 		state.profileShortInfo,
 		state.courseDetailed,
-		onBackButtonClicked = { navController.popBackStack() },
+		onBackButtonClicked = { navigator.goBack() },
 		onNotificationClicked = {},
 		onSearchClicked = {},
 		onProfileClicked = {}

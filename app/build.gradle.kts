@@ -3,7 +3,9 @@ plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.kotlin.android)
 	alias(libs.plugins.kotlin.compose)
+	id("org.jetbrains.kotlin.plugin.serialization")
 	id("com.google.devtools.ksp")
+	id("org.jetbrains.kotlin.plugin.parcelize")
 	id("com.google.dagger.hilt.android")
 }
 
@@ -90,6 +92,10 @@ dependencies {
 	// Navigation for Compose
 	implementation(libs.androidx.navigation.compose)
 
+	// Navigation 3
+	implementation(libs.androidx.navigation3.ui)
+	implementation(libs.androidx.navigation3.runtime)
+
 	// Lifecycle & MVI helpers
 	implementation(libs.androidx.lifecycle.viewmodel.compose)
 	implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -116,4 +122,7 @@ dependencies {
 
 	// Coil
 	implementation(libs.coil)
+
+	// Serializer
+	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 }

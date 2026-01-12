@@ -1,15 +1,13 @@
 package com.example.tutorplace.ui.screens.home.presentation
 
-import androidx.navigation.NavHostController
 import com.example.tutorplace.navigation.Destinations
+import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.navigation.ViewModelNavigator
-import com.example.tutorplace.navigation.ktx.navigateTo
-import com.example.tutorplace.navigation.ktx.switchTab
 import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
 
 class HomeNavigator(
-	private val navController: NavHostController
-) : ViewModelNavigator(navController) {
+	private val navigator: Navigator
+) : ViewModelNavigator(navigator) {
 
 	fun navigateToMail() = Unit
 
@@ -18,26 +16,24 @@ class HomeNavigator(
 	fun navigateToSearch() = Unit
 
 	fun navigateToFortuneWheelScreen() {
-		navController.navigateTo(Destinations.FortuneWheelFlow.FortuneWheel)
+		navigator.navigate(Destinations.FortuneWheel)
 	}
 
 	fun navigateToFortuneWheelInformationBottomSheet() {
-		navController.navigateTo(
-			Destinations.FortuneWheelFlow.FortuneWheel,
-			Destinations.FortuneWheelFlow.FortuneWheelInformation
-		)
+		navigator.navigate(Destinations.FortuneWheel)
+		navigator.navigate(Destinations.FortuneWheelInformation)
 	}
 
 	fun switchToCatalogTab() {
-		navController.switchTab(Destinations.Catalog.route)
+		navigator.navigate(Destinations.Catalog)
 	}
 
 	fun switchToMyCoursesTab() {
-		navController.switchTab(Destinations.MyCourses.route)
+		navigator.navigate(Destinations.MyCourses)
 	}
 
 	fun navigateToCourseDetailed(courseId: String) {
-		navController.navigateTo(
+		navigator.navigate(
 			Destinations.CourseDetailed(CourseDetailedParams(courseId))
 		)
 	}

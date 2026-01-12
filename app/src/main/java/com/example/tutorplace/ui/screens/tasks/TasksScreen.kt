@@ -8,14 +8,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.screens.tasks.presentation.TasksNavigator
 import com.example.tutorplace.ui.screens.tasks.presentation.TasksViewModel
 
 @Composable
-fun TasksScreen(navController: NavHostController) {
+fun TasksScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<TasksViewModel>()
-	LaunchedEffect(Unit) { viewModel.setNavigator(TasksNavigator(navController)) }
+	LaunchedEffect(Unit) { viewModel.attachNavigator(TasksNavigator(navigator)) }
 	TasksScreen()
 }
 

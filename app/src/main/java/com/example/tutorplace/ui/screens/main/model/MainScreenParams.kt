@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.screens.coursedetailed.model
+package com.example.tutorplace.ui.screens.main.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Parcelize
-data class CourseDetailedParams(
-	val courseId: String,
+data class MainScreenParams(
+	val isShouldShowOnboarding: Boolean = false
 ) : Parcelable

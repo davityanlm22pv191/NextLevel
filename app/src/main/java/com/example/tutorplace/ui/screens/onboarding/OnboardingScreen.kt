@@ -31,8 +31,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.tutorplace.R
+import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.TransparentButton
 import com.example.tutorplace.ui.common.header.Header
@@ -60,14 +60,14 @@ import com.example.tutorplace.ui.theme.Transparent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OnboardingScreen(navController: NavHostController) {
+fun OnboardingScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<OnboardingViewModel>()
 	val state by viewModel.state.collectAsState()
-	LaunchedEffect(Unit) { viewModel.attachNavigator(OnboardingNavigator(navController)) }
+	LaunchedEffect(Unit) { viewModel.attachNavigator(OnboardingNavigator(navigator)) }
 	OnboardingScreen(
 		state,
 		OnboardingUiState(state, viewModel),
-		onDismissRequest = { navController.popBackStack() },
+		onDismissRequest = { navigator.goBack() },
 		onPreviousStepClicked = { viewModel.onEvent(OnboardingEvent.PreviousStepClicked) },
 		onNextStepClicked = { viewModel.onEvent(NextStepClicked) },
 		onSkipClicked = { viewModel.onEvent(SkipButtonClicked) }

@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection.Ltr
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.tutorplace.R
+import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.AuthSectionDivider
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.YandexButton
@@ -58,10 +58,10 @@ import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.Typography
 
 @Composable
-fun RegistrationScreen(navController: NavHostController) {
+fun RegistrationScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<RegistrationViewModel>()
 	val state by viewModel.state.collectAsState()
-	LaunchedEffect(Unit) { viewModel.attachNavigator(RegistrationNavigator(navController)) }
+	LaunchedEffect(Unit) { viewModel.attachNavigator(RegistrationNavigator(navigator)) }
 	RegistrationScreen(
 		state,
 		onFirstStepClicked = { viewModel.onFirstStepClicked() },
@@ -76,7 +76,7 @@ fun RegistrationScreen(navController: NavHostController) {
 		onYandexClicked = { viewModel.onYandexClicked() },
 		onOfferClicked = { viewModel.onOfferClicked() },
 		onTermsClicked = { viewModel.onTermsClicked() },
-		onSignUpClicked = { navController.popBackStack() }
+		onSignUpClicked = { navigator.goBack() }
 	)
 }
 

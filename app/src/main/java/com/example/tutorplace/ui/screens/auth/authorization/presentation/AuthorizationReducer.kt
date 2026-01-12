@@ -2,10 +2,7 @@ package com.example.tutorplace.ui.screens.auth.authorization.presentation
 
 import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.base.BaseReducer
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.CheckEnteredValues
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.EmailChanged
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.EnterToProfileRequested
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.PasswordChanged
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.*
 
 object AuthorizationReducer : BaseReducer<AuthorizationState, AuthorizationEvent> {
 
@@ -17,6 +14,11 @@ object AuthorizationReducer : BaseReducer<AuthorizationState, AuthorizationEvent
 		is PasswordChanged -> reducePasswordChanged(event, oldState)
 		is CheckEnteredValues -> reduceCheckEnteredValues(oldState)
 		is EnterToProfileRequested -> oldState.copy(isLoading = true)
+		is EnterClicked,
+		is RegistrationClicked,
+		is RestorePasswordClicked,
+		is SupportClicked,
+		is YandexAuthorizationClicked -> oldState
 	}
 
 	private fun reduceEmailChanged(

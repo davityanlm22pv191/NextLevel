@@ -11,15 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import com.example.tutorplace.navigation.Navigator
+
 import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.presentation.FortuneWheelNavigator
 import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.presentation.FortuneWheelViewModel
 
 @Composable
-fun FortuneWheelScreen(navController: NavHostController) {
+fun FortuneWheelScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<FortuneWheelViewModel>()
 	val state = viewModel.state.collectAsState()
-	LaunchedEffect(Unit) { viewModel.attachNavigator(FortuneWheelNavigator(navController)) }
+	LaunchedEffect(Unit) { viewModel.attachNavigator(FortuneWheelNavigator(navigator)) }
 	FortuneWheelScreen()
 }
 

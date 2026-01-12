@@ -1,59 +1,67 @@
 package com.example.tutorplace.navigation
 
+import android.os.Parcelable
+import androidx.navigation3.runtime.NavKey
 import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
+import com.example.tutorplace.ui.screens.main.model.MainScreenParams
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
-sealed class Destinations(open val route: String) {
+sealed interface Destinations : NavKey, Parcelable {
 
-	sealed class AuthorizationFlow(override val route: String) : Destinations(route) {
-		companion object {
-			const val FLOW_ROUTE = "authorization_flow"
-		}
+	@Serializable
+	@Parcelize
+	data object Auth : Destinations
 
-		object Auth : AuthorizationFlow("auth")
+	@Serializable
+	@Parcelize
+	data object RestorePassword : Destinations
 
-		object RestorePassword : AuthorizationFlow("restore_password")
+	@Serializable
+	@Parcelize
+	data object Registration : Destinations
 
-		object Registration : AuthorizationFlow("registration")
-	}
+	@Serializable
+	@Parcelize
+	data object Catalog : Destinations
 
-	object Catalog : Destinations("catalog")
-	object MyCourses : Destinations("my_courses")
-	object Home : Destinations("home")
-	object Tasks : Destinations("tasks")
+	@Serializable
+	@Parcelize
+	data object MyCourses : Destinations
 
-	data class MainScreen(val params: MainScreenParams) : Destinations(route = params.toRoute()) {
-		companion object {
-			private const val ROUTE = "main"
-			const val DEFAULT_ROUTE = "$ROUTE?isShouldShowOnboarding={isShouldShowOnboarding}"
+	@Serializable
+	@Parcelize
+	data object Home : Destinations
 
-			private fun MainScreenParams.toRoute() =
-				"$ROUTE?isShouldShowOnboarding=${isShouldShowOnboarding}"
-		}
+	@Serializable
+	@Parcelize
+	data object Tasks : Destinations
 
-		data class MainScreenParams(
-			val isShouldShowOnboarding: Boolean = false
-		)
-	}
+	@Serializable
+	@Parcelize
+	data class MainScreen(val params: MainScreenParams) : Destinations
 
-	object Onboarding : Destinations("onboarding")
+	@Serializable
+	@Parcelize
+	data object Onboarding : Destinations
 
-	sealed class FortuneWheelFlow(override val route: String) : Destinations(route) {
-		companion object {
-			const val FLOW_ROUTE = "fortune_wheel_flow"
-		}
+	@Serializable
+	@Parcelize
+	data object FortuneWheel : Destinations
 
-		object FortuneWheel : FortuneWheelFlow("fortune_wheel")
+	@Serializable
+	@Parcelize
+	data object FortuneWheelInformation : Destinations
 
-		object FortuneWheelInformation : FortuneWheelFlow("fortune_wheel_information")
-	}
+	@Serializable
+	@Parcelize
+	data class CourseDetailed(val params: CourseDetailedParams) : Destinations
 
-	data class CourseDetailed(val params: CourseDetailedParams) : Destinations(route = params.toRoute()) {
-		companion object {
-			private const val ROUTE = "course_detailed"
-			const val DEFAULT_ROUTE = "$ROUTE?courseId={courseId}"
+	@Serializable
+	@Parcelize
+	data object Support : Destinations
 
-			private fun CourseDetailedParams.toRoute() =
-				"$ROUTE?courseId=${courseId}"
-		}
-	}
+	@Serializable
+	@Parcelize
+	data object YandexAuthorization : Destinations
 }

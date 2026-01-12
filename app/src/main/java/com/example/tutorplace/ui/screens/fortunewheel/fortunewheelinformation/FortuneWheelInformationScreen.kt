@@ -22,8 +22,9 @@ import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
+
 import com.example.tutorplace.R
+import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.TransparentButton
 import com.example.tutorplace.ui.common.header.Header
@@ -44,10 +45,10 @@ import com.example.tutorplace.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FortuneWheelInformationScreen(navController: NavHostController) {
+fun FortuneWheelInformationScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<FortuneWheelInformationViewModel>()
 	LaunchedEffect(Unit) {
-		viewModel.attachNavigator(FortuneWheelInformationNavigator(navController))
+		viewModel.attachNavigator(FortuneWheelInformationNavigator(navigator))
 	}
 	FortuneWheelInformationScreen(
 		onDismissRequest = { viewModel.onEvent(BackClick) },

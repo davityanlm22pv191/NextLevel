@@ -1,6 +1,7 @@
 package com.example.tutorplace.ui.screens.tasks.presentation
 
-import androidx.navigation.NavHostController
+
+import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.navigation.ViewModelNavigator
 
-class TasksNavigator(navController: NavHostController) : ViewModelNavigator(navController)
+class TasksNavigator(navigator: Navigator) : ViewModelNavigator(navigator)

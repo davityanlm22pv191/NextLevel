@@ -30,8 +30,9 @@ import androidx.compose.ui.unit.LayoutDirection.Ltr
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.example.tutorplace.R
+import com.example.tutorplace.navigation.Destinations
+import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.AuthSectionDivider
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.YandexButton
@@ -41,35 +42,46 @@ import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
 import com.example.tutorplace.ui.common.textfield.EmailTextField
 import com.example.tutorplace.ui.common.textfield.PasswordTextField
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToHome
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToRegistration
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToRestorePassword
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToSupport
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToYandexAuthorization
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.EmailChanged
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.EnterClicked
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.PasswordChanged
-import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationNavigator
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.RegistrationClicked
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.RestorePasswordClicked
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.SupportClicked
+import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.YandexAuthorizationClicked
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationState
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationViewModel
+import com.example.tutorplace.ui.screens.main.model.MainScreenParams
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.Typography
+import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun AuthorizationScreen(navController: NavHostController) {
+fun AuthorizationScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<AuthorizationViewModel>()
-	val navigator = remember(navController) { AuthorizationNavigator(navController) }
-	LaunchedEffect(Unit) { viewModel.attachNavigator(navigator) }
 	val state by viewModel.state.collectAsStateWithLifecycle()
-	AuthorizationScreen(
+	CollectEffects(viewModel.effect, navigator)
+	AuthorizationContent(
 		state,
 		onEmailChanged = { email -> viewModel.onEvent(EmailChanged(email)) },
 		onPasswordChanged = { password -> viewModel.onEvent(PasswordChanged(password)) },
-		onRestoreClicked = { viewModel.onRestoreClicked() },
-		onEnterClicked = { viewModel.onEnterClicked() },
-		onYandexClicked = { viewModel.onYandexClicked() },
-		onSupportClicked = { viewModel.onSupportClicked() },
-		onRegistrationClicked = { viewModel.onRegistrationClicked() }
+		onRestoreClicked = { viewModel.onEvent(RestorePasswordClicked) },
+		onEnterClicked = { viewModel.onEvent(EnterClicked) },
+		onYandexClicked = { viewModel.onEvent(YandexAuthorizationClicked) },
+		onSupportClicked = { viewModel.onEvent(SupportClicked) },
+		onRegistrationClicked = { viewModel.onEvent(RegistrationClicked) }
 	)
 }
 
 @Composable
-private fun AuthorizationScreen(
+private fun AuthorizationContent(
 	state: AuthorizationState,
 	onEmailChanged: (email: String) -> Unit,
 	onPasswordChanged: (password: String) -> Unit,
@@ -211,10 +223,30 @@ private fun SupportSection(onSupportClick: () -> Unit, onRegisterClick: () -> Un
 	}
 }
 
+@Composable
+private fun CollectEffects(
+	effects: Flow<AuthorizationEffect>,
+	navigator: Navigator,
+) {
+	LaunchedEffect(Unit) {
+		effects.collect { effect ->
+			when (effect) {
+				NavigateToHome -> navigator.navigate(
+					Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = false))
+				)
+				NavigateToRegistration -> navigator.navigate(Destinations.Registration)
+				NavigateToRestorePassword -> navigator.navigate(Destinations.RestorePassword)
+				NavigateToSupport -> navigator.navigate(Destinations.Support)
+				NavigateToYandexAuthorization -> navigator.navigate(Destinations.YandexAuthorization)
+			}
+		}
+	}
+}
+
 @Preview
 @Composable
-private fun AuthorizationScreenPreview() {
-	AuthorizationScreen(
+private fun AuthorizationContentPreview() {
+	AuthorizationContent(
 		state = AuthorizationState(),
 		onEmailChanged = {},
 		onPasswordChanged = {},
