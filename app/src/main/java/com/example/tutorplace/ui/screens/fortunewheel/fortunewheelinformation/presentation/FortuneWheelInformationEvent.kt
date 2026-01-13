@@ -4,6 +4,5 @@ import com.example.tutorplace.ui.base.BaseEvent
 
 sealed interface FortuneWheelInformationEvent : BaseEvent {
 	data object NextClick : FortuneWheelInformationEvent
-	data object BackClick : FortuneWheelInformationEvent
 	data object MoreAboutPromotionClick: FortuneWheelInformationEvent
 }
