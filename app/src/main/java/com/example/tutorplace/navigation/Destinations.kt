@@ -11,7 +11,7 @@ sealed interface Destinations : NavKey, Parcelable {
 
 	@Serializable
 	@Parcelize
-	data object Auth : Destinations
+	data object Authorization : Destinations
 
 	@Serializable
 	@Parcelize

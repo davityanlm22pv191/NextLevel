@@ -231,7 +231,7 @@ private fun CollectEffects(
 	LaunchedEffect(Unit) {
 		effects.collect { effect ->
 			when (effect) {
-				NavigateToHome -> navigator.navigate(
+				NavigateToHome -> navigator.navigateAndClearBackStack(
 					Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = false))
 				)
 				NavigateToRegistration -> navigator.navigate(Destinations.Registration)

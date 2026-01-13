@@ -55,7 +55,7 @@ class SplashActivity : ComponentActivity() {
 
 	private fun handlingViewModelEffect(effect: SplashActivityEffect) {
 		val startRoute = when (effect) {
-			NavigateToAuthFlow -> Destinations.Auth
+			NavigateToAuthFlow -> Destinations.Authorization
 			NavigateToMain -> Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = false))
 		}
 		val intent = Intent(this, MainActivity::class.java).apply {

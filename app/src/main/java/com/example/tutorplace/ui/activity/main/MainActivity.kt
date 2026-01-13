@@ -20,10 +20,10 @@ class MainActivity : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		val startDestination = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-			intent.getParcelableExtra("start_route", NavKey::class.java) ?: Destinations.Auth
+			intent.getParcelableExtra("start_route", NavKey::class.java) ?: Destinations.Authorization
 		} else {
-			@Suppress("DEPRECATION") // remove when SDK will more 33 (SDK 33)
-			intent.getParcelableExtra("start_route") ?: Destinations.Auth
+			@Suppress("DEPRECATION") // remove when SDK will more 33 (SDK 33, Android 13)
+			intent.getParcelableExtra("start_route") ?: Destinations.Authorization
 		}
 		enableEdgeToEdge()
 		setContent {

@@ -30,14 +30,14 @@ fun AppNavigationGraph(startRoute: NavKey) {
 	val navigationState = rememberNavigationState(
 		startRoute = startRoute,
 		topLevelRoutes = setOf(
-			Destinations.Auth,
+			Destinations.Authorization,
 			Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = false))
 		)
 	)
 	val navigator = remember { Navigator(navigationState) }
 	val entryProvider = entryProvider<NavKey> {
 		entry<Destinations.MainScreen> { mainScreen -> MainScreen(navigator, mainScreen.params) }
-		entry<Destinations.Auth> { AuthorizationScreen(navigator) }
+		entry<Destinations.Authorization> { AuthorizationScreen(navigator) }
 		entry<Destinations.RestorePassword> { RestorePasswordScreen(navigator) }
 		entry<Destinations.Registration> { RegistrationScreen(navigator) }
 		entry<Destinations.Onboarding>(metadata = DialogSceneStrategy.dialog()) {
