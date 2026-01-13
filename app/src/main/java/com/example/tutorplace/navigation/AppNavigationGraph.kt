@@ -22,6 +22,7 @@ import com.example.tutorplace.ui.screens.main.MainScreen
 import com.example.tutorplace.ui.screens.main.model.MainScreenParams
 import com.example.tutorplace.ui.screens.mycourses.MyCoursesScreen
 import com.example.tutorplace.ui.screens.onboarding.OnboardingScreen
+import com.example.tutorplace.ui.screens.stub.StubScreen
 import com.example.tutorplace.ui.screens.tasks.TasksScreen
 
 @Composable
@@ -51,8 +52,8 @@ fun AppNavigationGraph(startRoute: NavKey) {
 		entry<Destinations.Home> { HomeScreen(navigator) }
 		entry<Destinations.MyCourses> { MyCoursesScreen(navigator) }
 		entry<Destinations.Tasks> { TasksScreen(navigator) }
-		entry<Destinations.Support> {}
-		entry<Destinations.YandexAuthorization> {}
+		entry<Destinations.Support> { StubScreen() }
+		entry<Destinations.YandexAuthorization> { StubScreen() }
 	}
 
 	NavDisplay(
