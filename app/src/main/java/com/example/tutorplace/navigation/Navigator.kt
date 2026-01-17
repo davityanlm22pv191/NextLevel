@@ -1,8 +1,14 @@
 package com.example.tutorplace.navigation
 
+import android.content.Context
+import android.os.Build
 import androidx.navigation3.runtime.NavKey
+import com.example.tutorplace.helpers.VibrationHelper
 
-class Navigator(val state: NavigationState) {
+class Navigator(
+	val state: NavigationState,
+	private val context: Context,
+) {
 
 	fun navigate(route: NavKey) {
 		if (route in state.backStacks.keys) {
@@ -17,8 +23,12 @@ class Navigator(val state: NavigationState) {
 		val currentStack = state.backStacks[state.topLevelRoute]
 			?: error("Stack for ${state.topLevelRoute} not found")
 		while (currentStack.size > 1) {
-			currentStack.removeFirst()
+			currentStack.removeAt(0)
 		}
+	}
+
+	fun navigate(vararg routes: NavKey) {
+		routes.forEach { navKey -> navigate(navKey) }
 	}
 
 	fun goBack() {
@@ -31,5 +41,6 @@ class Navigator(val state: NavigationState) {
 		} else {
 			currentStack.removeLastOrNull()
 		}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) VibrationHelper.performTick(context)
 	}
 }

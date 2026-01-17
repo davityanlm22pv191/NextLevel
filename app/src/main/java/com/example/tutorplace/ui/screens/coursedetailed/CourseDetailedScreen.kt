@@ -36,7 +36,8 @@ fun CourseDetailedScreen(navigator: Navigator, params: CourseDetailedParams) {
 		viewModel.onEvent(CourseDetailedEvent.AttachParams(params))
 	}
 	val state by viewModel.state.collectAsStateWithLifecycle()
-	CourseDetailedScreen(
+
+	CourseDetailedContent(
 		state.profileShortInfo,
 		state.courseDetailed,
 		onBackButtonClicked = { navigator.goBack() },
@@ -47,7 +48,7 @@ fun CourseDetailedScreen(navigator: Navigator, params: CourseDetailedParams) {
 }
 
 @Composable
-private fun CourseDetailedScreen(
+private fun CourseDetailedContent(
 	profileShortInfo: DataInfo<ProfileShortInfo?>,
 	courseDetailed: DataInfo<CourseDetailed?>,
 	onBackButtonClicked: () -> Unit,
@@ -101,8 +102,8 @@ private fun CourseDetailedScreen(
 
 @Preview
 @Composable
-private fun CourseDetailedScreenPreview() {
-	CourseDetailedScreen(
+private fun CourseDetailedContentPreview() {
+	CourseDetailedContent(
 		profileShortInfo = CourseDetailedState().profileShortInfo,
 		courseDetailed = CourseDetailedState().courseDetailed.loaded(CourseDetailed.MOCK),
 		onBackButtonClicked = {},

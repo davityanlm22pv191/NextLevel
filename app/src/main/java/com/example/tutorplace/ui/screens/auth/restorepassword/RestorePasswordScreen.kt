@@ -16,7 +16,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -29,7 +28,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection.Ltr
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-
 import com.example.tutorplace.R
 import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.navigation.Navigator
@@ -40,7 +38,8 @@ import com.example.tutorplace.ui.common.spannabletext.SpanClickableText
 import com.example.tutorplace.ui.common.spannabletext.SpanLinkData
 import com.example.tutorplace.ui.common.textfield.EmailTextField
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailChanged
-import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordNavigator
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.RestoreClicked
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.RetrySendClicked
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordState
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordViewModel
 import com.example.tutorplace.ui.theme.BlackAlpha04
@@ -52,19 +51,18 @@ import com.example.tutorplace.ui.theme.Typography
 fun RestorePasswordScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<RestorePasswordViewModel>()
 	val state by viewModel.state.collectAsState()
-	LaunchedEffect(Unit) { viewModel.attachNavigator(RestorePasswordNavigator(navigator)) }
-	RestorePasswordScreen(
+	RestorePasswordContent(
 		state,
-		onBackButtonClicked = { viewModel.backClicked() },
+		onBackButtonClicked = { navigator.goBack() },
 		onEmailChanged = { value -> viewModel.onEvent(EmailChanged(value)) },
-		onRestorePasswordClicked = { viewModel.restoreClicked() },
-		onRetrySendClicked = { viewModel.retrySendClicked() },
-		onAuthorizeClicked = { viewModel.authorizeClicked() }
+		onRestorePasswordClicked = { viewModel.onEvent(RestoreClicked) },
+		onRetrySendClicked = { viewModel.onEvent(RetrySendClicked) },
+		onAuthorizeClicked = { navigator.goBack() }
 	)
 }
 
 @Composable
-private fun RestorePasswordScreen(
+private fun RestorePasswordContent(
 	state: RestorePasswordState,
 	onBackButtonClicked: () -> Unit,
 	onEmailChanged: (email: String) -> Unit,
@@ -169,8 +167,8 @@ private fun DoYouHaveAnAccountSection(onAuthorizedClicked: () -> Unit) {
 
 @Preview
 @Composable
-private fun RestorePasswordScreenPreview() {
-	RestorePasswordScreen(
+private fun RestorePasswordContentPreview() {
+	RestorePasswordContent(
 		state = RestorePasswordState(),
 		onBackButtonClicked = {},
 		onEmailChanged = {},
@@ -182,8 +180,8 @@ private fun RestorePasswordScreenPreview() {
 
 @Preview
 @Composable
-private fun RestorePasswordScreenWithValuePreview() {
-	RestorePasswordScreen(
+private fun RestorePasswordContentWithValuePreview() {
+	RestorePasswordContent(
 		state = RestorePasswordState(email = "example@mail.com"),
 		onBackButtonClicked = {},
 		onEmailChanged = {},
@@ -195,8 +193,8 @@ private fun RestorePasswordScreenWithValuePreview() {
 
 @Preview
 @Composable
-private fun RestorePasswordScreenSentPreview() {
-	RestorePasswordScreen(
+private fun RestorePasswordContentSentPreview() {
+	RestorePasswordContent(
 		state = RestorePasswordState(email = "example@mail.com", isEmailSent = true),
 		onBackButtonClicked = {},
 		onEmailChanged = {},

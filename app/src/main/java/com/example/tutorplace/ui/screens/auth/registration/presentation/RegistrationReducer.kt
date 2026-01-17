@@ -33,6 +33,7 @@ object RegistrationReducer : BaseReducer<RegistrationState, RegistrationEvent> {
 		is PasswordChanged -> reducePasswordChanged(oldState, event)
 		is ConfirmPasswordChanged -> reduceConfirmPasswordChanged(oldState, event)
 		is RegisterRequested -> oldState.copy(isLoading = true)
+		else -> oldState
 	}
 
 	private fun reduceDomainEvent(

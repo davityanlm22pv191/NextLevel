@@ -1,6 +1,9 @@
 package com.example.tutorplace.ui.common
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +18,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -38,11 +43,15 @@ fun PurpleButton(
 	isEnabled: Boolean = true,
 	onClick: () -> Unit
 ) {
+	val interactionSource = remember { MutableInteractionSource() }
+	val isPressed by interactionSource.collectIsPressedAsState()
+	val radius by animateDpAsState(if (isPressed) 16.dp else 12.dp, label = "radius")
 	Button(
 		modifier = modifier.height(50.dp),
+		interactionSource = interactionSource,
 		onClick = { if (!isLoading) onClick() },
 		enabled = isEnabled,
-		shape = RoundedCornerShape(12.dp),
+		shape = RoundedCornerShape(radius),
 		colors = ButtonColors(
 			containerColor = PurpleCC,
 			contentColor = White,

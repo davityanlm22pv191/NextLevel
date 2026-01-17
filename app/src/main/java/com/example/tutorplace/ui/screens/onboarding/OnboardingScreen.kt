@@ -21,7 +21,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -41,7 +40,6 @@ import com.example.tutorplace.ui.common.header.HeaderLogoType.Text
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.NextStepClicked
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingEvent.SkipButtonClicked
-import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingNavigator
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState.Step.TELL_US_ABOUT_INTERESTS
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingViewModel
@@ -63,8 +61,7 @@ import com.example.tutorplace.ui.theme.Transparent
 fun OnboardingScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<OnboardingViewModel>()
 	val state by viewModel.state.collectAsState()
-	LaunchedEffect(Unit) { viewModel.attachNavigator(OnboardingNavigator(navigator)) }
-	OnboardingScreen(
+	OnboardingContent(
 		state,
 		OnboardingUiState(state, viewModel),
 		onDismissRequest = { navigator.goBack() },
@@ -76,7 +73,7 @@ fun OnboardingScreen(navigator: Navigator) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun OnboardingScreen(
+private fun OnboardingContent(
 	state: OnboardingState,
 	uiState: OnboardingUiState,
 	onDismissRequest: () -> Unit,
@@ -164,9 +161,9 @@ private fun OnboardingScreen(
 
 @Preview
 @Composable
-fun OnboardingScreenCongratulationsPreview() {
+fun OnboardingContentCongratulationsPreview() {
 	val state = OnboardingState(step = OnboardingState.Step.CONGRATULATIONS)
-	OnboardingScreen(
+	OnboardingContent(
 		state,
 		uiState = OnboardingUiState(
 			header = Image(R.drawable.ic_tutor_place_logo),
@@ -187,9 +184,9 @@ fun OnboardingScreenCongratulationsPreview() {
 
 @Preview
 @Composable
-fun OnboardingScreenWelcomePreview() {
+fun OnboardingContentWelcomePreview() {
 	val state = OnboardingState(step = OnboardingState.Step.WELCOME)
-	OnboardingScreen(
+	OnboardingContent(
 		state,
 		uiState = OnboardingUiState(
 			header = Image(R.drawable.ic_tutor_place_logo),
@@ -210,9 +207,9 @@ fun OnboardingScreenWelcomePreview() {
 
 @Preview
 @Composable
-fun OnboardingScreenProvideDetailsPreview() {
+fun OnboardingContentProvideDetailsPreview() {
 	val state = OnboardingState(step = OnboardingState.Step.PROVIDE_DETAILS)
-	OnboardingScreen(
+	OnboardingContent(
 		state,
 		uiState = OnboardingUiState(
 			header = Text(R.string.onboarding_provide_details_logo),
@@ -242,9 +239,9 @@ fun OnboardingScreenProvideDetailsPreview() {
 
 @Preview
 @Composable
-fun OnboardingScreenMoreOpportunitiesPreview() {
+fun OnboardingContentMoreOpportunitiesPreview() {
 	val state = OnboardingState(step = OnboardingState.Step.MORE_OPPORTUNITIES)
-	OnboardingScreen(
+	OnboardingContent(
 		state,
 		uiState = OnboardingUiState(
 			header = Text(R.string.onboarding_more_opportunities_logo),
@@ -265,9 +262,9 @@ fun OnboardingScreenMoreOpportunitiesPreview() {
 
 @Preview
 @Composable
-fun OnboardingScreenKnowledgeFromMastersPreview() {
+fun OnboardingContentKnowledgeFromMastersPreview() {
 	val state = OnboardingState(step = OnboardingState.Step.KNOWLEDGE_FROM_MASTERS)
-	OnboardingScreen(
+	OnboardingContent(
 		state,
 		uiState = OnboardingUiState(
 			header = Text(R.string.onboarding_knowledge_from_masters_logo),
@@ -288,9 +285,9 @@ fun OnboardingScreenKnowledgeFromMastersPreview() {
 
 @Preview
 @Composable
-fun OnboardingScreenTellUsAboutYourInterestsPreview() {
+fun OnboardingContentTellUsAboutYourInterestsPreview() {
 	val state = OnboardingState(step = TELL_US_ABOUT_INTERESTS)
-	OnboardingScreen(
+	OnboardingContent(
 		state,
 		uiState = OnboardingUiState(
 			header = Text(R.string.onboarding_tell_us_about_interests_logo),
@@ -317,9 +314,9 @@ fun OnboardingScreenTellUsAboutYourInterestsPreview() {
 
 @Preview
 @Composable
-fun OnboardingScreenHelpYouStayPreview() {
+fun OnboardingContentHelpYouStayPreview() {
 	val state = OnboardingState(step = OnboardingState.Step.HELP_YOU_STAY)
-	OnboardingScreen(
+	OnboardingContent(
 		state,
 		uiState = OnboardingUiState(
 			header = Text(R.string.onboarding_help_you_stay_logo),
@@ -350,7 +347,7 @@ fun OnboardingScreenHelpYouStayPreview() {
 @Composable
 fun OnboardingSpendYourTimeProductivelyPreview() {
 	val state = OnboardingState(step = OnboardingState.Step.SPEND_YOUR_TIME_PRODUCTIVELY)
-	OnboardingScreen(
+	OnboardingContent(
 		state,
 		uiState = OnboardingUiState(
 			header = Text(R.string.onboarding_spend_your_time_productively_logo),

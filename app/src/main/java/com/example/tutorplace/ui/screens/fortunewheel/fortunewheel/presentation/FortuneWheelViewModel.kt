@@ -8,13 +8,6 @@ import javax.inject.Inject
 class FortuneWheelViewModel @Inject constructor() :
 	BaseViewModel<FortuneWheelEvent, FortuneWheelState, FortuneWheelEffect>() {
 
-	private var navigator: FortuneWheelNavigator? = null
-
-	fun attachNavigator(navigator: FortuneWheelNavigator) {
-		this.navigator = navigator
-	}
-
 	override fun initialState(): FortuneWheelState = FortuneWheelState()
-
 	override fun onEvent(event: FortuneWheelEvent) = Unit
 }

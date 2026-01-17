@@ -23,7 +23,6 @@ class CourseDetailedViewModel @Inject constructor(
 	}
 
 	override fun initialState() = CourseDetailedState()
-
 	override fun onEvent(event: CourseDetailedEvent) {
 		when (event) {
 			is SetProfileInfo,

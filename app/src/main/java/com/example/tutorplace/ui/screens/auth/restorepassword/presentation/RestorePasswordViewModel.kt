@@ -21,35 +21,19 @@ class RestorePasswordViewModel @Inject constructor(
 	private val authService: AuthService,
 ) : BaseViewModel<RestorePasswordEvent, RestorePasswordState, RestorePasswordEffect>() {
 
-	private var navigator: RestorePasswordNavigator? = null
-
-	fun attachNavigator(navigator: RestorePasswordNavigator) {
-		this.navigator = navigator
-	}
-
 	private val timer = MutableStateFlow(60)
 	private var timerJob: Job? = null
 
 	override fun initialState() = RestorePasswordState()
-
-	override fun onEvent(event: RestorePasswordEvent) {
-		setState(RestorePasswordReducer.reduce(state.value, event))
-	}
-
-	fun authorizeClicked() {
-		navigator?.exit()
-	}
-
-	fun backClicked() {
-		navigator?.exit()
-	}
-
-	fun restoreClicked() {
-		sendNewPasswordToEmail()
-	}
-
-	fun retrySendClicked() {
-		sendNewPasswordToEmail()
+	override fun onEvent(event: RestorePasswordEvent) = when (event) {
+		is RestorePasswordEvent.EmailChanged,
+		is EmailErrorSending,
+		is EmailIsNotValid,
+		is RetrySendTimeUpdated,
+		is EmailSending,
+		is EmailSent -> setState(RestorePasswordReducer.reduce(state.value, event))
+		is RestorePasswordEvent.RestoreClicked -> sendNewPasswordToEmail()
+		is RestorePasswordEvent.RetrySendClicked -> sendNewPasswordToEmail()
 	}
 
 	private fun sendNewPasswordToEmail() {

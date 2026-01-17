@@ -8,18 +8,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-
 import com.example.tutorplace.R
 import com.example.tutorplace.data.common.Sort
 import com.example.tutorplace.data.common.SortOrder
 import com.example.tutorplace.data.common.SortType.DATE_ADDED
+import com.example.tutorplace.navigation.Destinations
 import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.LARGE
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.SQUARE
@@ -29,22 +28,31 @@ import com.example.tutorplace.ui.common.itemWithSkeleton
 import com.example.tutorplace.ui.common.sectiontitle.model.SectionSortInfo
 import com.example.tutorplace.ui.common.sectiontitle.model.SectionTitle
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
+import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
+import com.example.tutorplace.ui.screens.home.presentation.HomeEffect
+import com.example.tutorplace.ui.screens.home.presentation.HomeEffect.NavigateToCatalog
+import com.example.tutorplace.ui.screens.home.presentation.HomeEffect.NavigateToCourseDetailed
+import com.example.tutorplace.ui.screens.home.presentation.HomeEffect.NavigateToFortuneWheel
+import com.example.tutorplace.ui.screens.home.presentation.HomeEffect.NavigateToFortuneWheelInformation
+import com.example.tutorplace.ui.screens.home.presentation.HomeEffect.NavigateToMail
+import com.example.tutorplace.ui.screens.home.presentation.HomeEffect.NavigateToMyCourses
+import com.example.tutorplace.ui.screens.home.presentation.HomeEffect.NavigateToProfile
+import com.example.tutorplace.ui.screens.home.presentation.HomeEffect.NavigateToSearch
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI
-import com.example.tutorplace.ui.screens.home.presentation.HomeNavigator
 import com.example.tutorplace.ui.screens.home.presentation.HomeState
 import com.example.tutorplace.ui.screens.home.presentation.HomeViewModel
 import com.example.tutorplace.ui.screens.home.ui.fortunewheel.FortuneWheelShortItem
 import com.example.tutorplace.ui.screens.home.ui.fortunewheel.FortuneWheelShortItemSkeleton
 import com.example.tutorplace.ui.screens.home.ui.mycourses.MyCoursesEmptyItem
 import com.example.tutorplace.ui.theme.ScreenColor
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun HomeScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<HomeViewModel>()
 	val state by viewModel.state.collectAsStateWithLifecycle()
-	val navigator = remember(navigator) { HomeNavigator(navigator) }
-	LaunchedEffect(Unit) { viewModel.attachNavigator(navigator) }
-	HomeScreen(
+	CollectEffects(viewModel.effect, navigator)
+	HomeContent(
 		state = state,
 		onNotificationClicked = { viewModel.onEvent(UI.NotificationClicked) },
 		onSearchClicked = { viewModel.onEvent(UI.SearchClicked) },
@@ -58,7 +66,7 @@ fun HomeScreen(navigator: Navigator) {
 }
 
 @Composable
-private fun HomeScreen(
+private fun HomeContent(
 	state: HomeState,
 	onNotificationClicked: () -> Unit,
 	onSearchClicked: () -> Unit,
@@ -157,10 +165,33 @@ private fun HomeScreen(
 	}
 }
 
+@Composable
+private fun CollectEffects(effect: Flow<HomeEffect>, navigator: Navigator) {
+	LaunchedEffect(Unit) {
+		effect.collect { homeEffect ->
+			when (homeEffect) {
+				is NavigateToCatalog -> navigator.navigate(Destinations.Catalog)
+				is NavigateToCourseDetailed -> navigator.navigate(
+					Destinations.CourseDetailed(CourseDetailedParams(homeEffect.courseId))
+				)
+				is NavigateToFortuneWheel -> navigator.navigate(Destinations.FortuneWheel)
+				is NavigateToFortuneWheelInformation -> navigator.navigate(
+					Destinations.FortuneWheel,
+					Destinations.FortuneWheelInformation
+				)
+				is NavigateToMail -> navigator.navigate(Destinations.Mail)
+				is NavigateToMyCourses -> navigator.navigate(Destinations.MyCourses)
+				is NavigateToProfile -> navigator.navigate(Destinations.Profile)
+				is NavigateToSearch -> navigator.navigate(Destinations.Search)
+			}
+		}
+	}
+}
+
 @Preview
 @Composable
 private fun HomePreview() {
-	HomeScreen(
+	HomeContent(
 		state = HomeState(),
 		onNotificationClicked = {},
 		onSearchClicked = {},

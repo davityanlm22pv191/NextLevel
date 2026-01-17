@@ -8,5 +8,7 @@ sealed interface RestorePasswordEvent : BaseEvent {
 	data object EmailErrorSending : RestorePasswordEvent
 	data object EmailSending : RestorePasswordEvent
 	data object EmailSent : RestorePasswordEvent
+	data object RestoreClicked : RestorePasswordEvent
+	data object RetrySendClicked : RestorePasswordEvent
 	data class RetrySendTimeUpdated(val seconds: Int) : RestorePasswordEvent
 }

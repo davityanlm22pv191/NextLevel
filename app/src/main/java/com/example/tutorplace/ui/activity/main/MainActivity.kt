@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
 					windowInsetsController.isAppearanceLightNavigationBars = isLightScreenColor
 				}
 
-				AppNavigationGraph(startDestination)
+				AppNavigationGraph(this, startDestination)
 			}
 		}
 	}

@@ -5,35 +5,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.tutorplace.navigation.Navigator
-
-import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.presentation.FortuneWheelNavigator
 import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.presentation.FortuneWheelViewModel
 
 @Composable
 fun FortuneWheelScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<FortuneWheelViewModel>()
-	val state = viewModel.state.collectAsState()
-	LaunchedEffect(Unit) { viewModel.attachNavigator(FortuneWheelNavigator(navigator)) }
-	FortuneWheelScreen()
+	FortuneWheelContent()
 }
 
 @Composable
-private fun FortuneWheelScreen() {
+private fun FortuneWheelContent() {
 	Scaffold(
 		modifier = Modifier.fillMaxSize()
 	) { paddingValues ->
 		Text(
 			modifier = Modifier
 				.fillMaxSize()
-				.padding(paddingValues),
-			text = "Fortune Wheel Screen",
+				.padding(paddingValues)
+				.padding(vertical = 100.dp),
+			text = "Это главный экран фортуны\nОн ещё не готов",
 			textAlign = TextAlign.Center
 		)
 	}
@@ -41,6 +37,6 @@ private fun FortuneWheelScreen() {
 
 @Preview
 @Composable
-fun FortuneWheelScreenPreview() {
-	FortuneWheelScreen()
+fun FortuneWheelContentPreview() {
+	FortuneWheelContent()
 }

@@ -14,28 +14,40 @@ class RegistrationViewModel @Inject constructor(
 	private val registerUseCase: RegisterUseCase,
 ) : BaseViewModel<RegistrationEvent, RegistrationState, RegistrationEffect>() {
 
-	private var navigator: RegistrationNavigator? = null
-
-	fun attachNavigator(navigator: RegistrationNavigator) {
-		this.navigator = navigator
-	}
-
 	override fun initialState() = RegistrationState()
-
 	override fun onEvent(event: RegistrationEvent) = when (event) {
-		is UI -> setState(RegistrationReducer.reduce(state.value, event))
-		is Domain -> Unit
+		is UI -> onUIEvent(event)
+		is Domain -> onDomainEvent(event)
 	}
 
-	fun onFirstStepClicked() {
+	private fun onUIEvent(event: UI) = when (event) {
+		is UI.ConfirmPasswordChanged,
+		is UI.EmailChanged,
+		is UI.NameChanged,
+		is UI.PasswordChanged,
+		is UI.PhoneChanged,
+		is UI.RegisterRequested,
+		is UI.TelegramChanged -> setState(RegistrationReducer.reduce(state.value, event))
+		is UI.OfferClicked -> sendEffect(RegistrationEffect.NavigateToOffer)
+		is UI.TermsClicked -> sendEffect(RegistrationEffect.NavigateToTerms)
+		is UI.YandexAuthorizationClicked -> sendEffect(RegistrationEffect.NavigateToYandexAuthorization)
+	}
+
+	private fun onDomainEvent(event: Domain) = when (event) {
+		Domain.Register -> validateStateAndNavigateToHome()
+		Domain.SwitchToFirstStep -> switchToFirstStep()
+		Domain.SwitchToSecondStep -> switchToSecondStep()
+	}
+
+	private fun switchToFirstStep() {
 		setState(RegistrationReducer.reduce(state.value, Domain.SwitchToFirstStep))
 	}
 
-	fun onSecondStepClicked() {
+	private fun switchToSecondStep() {
 		setState(RegistrationReducer.reduce(state.value, Domain.SwitchToSecondStep))
 	}
 
-	fun onRegisterClicked() = with(state.value) {
+	private fun validateStateAndNavigateToHome() = with(state.value) {
 		setState(RegistrationReducer.reduce(state.value, Domain.Register))
 		if (firstStep.isNameError) return
 		if (firstStep.isPhoneNumberError) return
@@ -53,21 +65,9 @@ class RegistrationViewModel @Inject constructor(
 				secondStep.password
 			)
 			if (isRegisterSuccess) {
-				navigator?.navigateToHome()
+				sendEffect(RegistrationEffect.NavigateToHome)
 			}
 		}
 		return@with
-	}
-
-	fun onOfferClicked() {
-		navigator?.navigateToOffer()
-	}
-
-	fun onTermsClicked() {
-		navigator?.navigateToTerms()
-	}
-
-	fun onYandexClicked() {
-		navigator?.navigateToYandexAuthorization()
 	}
 }

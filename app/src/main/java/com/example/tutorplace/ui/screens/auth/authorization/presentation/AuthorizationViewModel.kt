@@ -28,7 +28,6 @@ class AuthorizationViewModel @Inject constructor(
 ) : BaseViewModel<AuthorizationEvent, AuthorizationState, AuthorizationEffect>() {
 
 	override fun initialState() = AuthorizationState()
-
 	override fun onEvent(event: AuthorizationEvent) {
 		when (event) {
 			is CheckEnteredValues,

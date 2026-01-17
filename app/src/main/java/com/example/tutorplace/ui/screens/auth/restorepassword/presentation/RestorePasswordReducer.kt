@@ -1,7 +1,14 @@
 package com.example.tutorplace.ui.screens.auth.restorepassword.presentation
 
 import com.example.tutorplace.ui.base.BaseReducer
-import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.*
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailChanged
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailErrorSending
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailIsNotValid
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailSending
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailSent
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.RestoreClicked
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.RetrySendClicked
+import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.RetrySendTimeUpdated
 
 object RestorePasswordReducer : BaseReducer<RestorePasswordState, RestorePasswordEvent> {
 
@@ -15,6 +22,8 @@ object RestorePasswordReducer : BaseReducer<RestorePasswordState, RestorePasswor
 		is EmailIsNotValid -> oldState.copy(isEmailError = true)
 		is RetrySendTimeUpdated -> oldState.copy(timerInSeconds = event.seconds)
 		is EmailErrorSending -> oldState.copy(isLoading = false, throwable = null)
+		is RestoreClicked,
+		is RetrySendClicked -> oldState
 	}
 
 	private fun reduceEmailChanged(

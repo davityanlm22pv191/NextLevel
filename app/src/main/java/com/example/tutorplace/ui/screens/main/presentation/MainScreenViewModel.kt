@@ -19,6 +19,5 @@ class MainScreenViewModel @Inject constructor(
 	}
 
 	override fun initialState(): MainScreenState = MainScreenState()
-
 	override fun onEvent(event: MainScreenEvent) = Unit
 }

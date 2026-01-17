@@ -148,10 +148,11 @@ private fun CollectEffects(
 	effects: Flow<FortuneWheelInformationEffect>,
 	navigator: Navigator,
 ) {
+
 	LaunchedEffect(Unit) {
 		effects.collect { effect ->
 			when (effect) {
-				FortuneWheelInformationEffect.Dismiss -> navigator.goBack()
+				FortuneWheelInformationEffect.Dismiss ->  navigator.goBack()
 			}
 		}
 	}

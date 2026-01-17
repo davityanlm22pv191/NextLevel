@@ -59,7 +59,27 @@ sealed interface Destinations : NavKey, Parcelable {
 
 	@Serializable
 	@Parcelize
+	data object Mail : Destinations
+
+	@Serializable
+	@Parcelize
+	data object Profile : Destinations
+
+	@Serializable
+	@Parcelize
+	data object Search : Destinations
+
+	@Serializable
+	@Parcelize
 	data object Support : Destinations
+
+	@Serializable
+	@Parcelize
+	data object Offer : Destinations
+
+	@Serializable
+	@Parcelize
+	data object Terms : Destinations
 
 	@Serializable
 	@Parcelize

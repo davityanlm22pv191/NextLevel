@@ -12,6 +12,9 @@ sealed interface RegistrationEvent : BaseEvent {
 		data class PasswordChanged(val enteredPassword: String) : UI
 		data class ConfirmPasswordChanged(val enteredConfirmPassword: String) : UI
 		data object RegisterRequested: UI
+		data object OfferClicked: UI
+		data object TermsClicked: UI
+		data object YandexAuthorizationClicked: UI
 	}
 
 	sealed interface Domain : RegistrationEvent {

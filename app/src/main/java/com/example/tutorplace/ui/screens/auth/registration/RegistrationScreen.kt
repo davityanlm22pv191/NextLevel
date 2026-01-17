@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.LayoutDirection.Ltr
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.tutorplace.R
+import com.example.tutorplace.navigation.Destinations
+import com.example.tutorplace.navigation.Destinations.MainScreen
 import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.AuthSectionDivider
 import com.example.tutorplace.ui.common.PurpleButton
@@ -41,47 +43,54 @@ import com.example.tutorplace.ui.common.textfield.NameTextField
 import com.example.tutorplace.ui.common.textfield.PasswordTextField
 import com.example.tutorplace.ui.common.textfield.PhoneTextField
 import com.example.tutorplace.ui.common.textfield.TelegramTextField
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEffect
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEffect.NavigateToHome
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEffect.NavigateToOffer
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEffect.NavigateToTerms
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEffect.NavigateToYandexAuthorization
+import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.ConfirmPasswordChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.EmailChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.NameChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.PasswordChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.PhoneChanged
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationEvent.UI.TelegramChanged
-import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationNavigator
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState.RegistrationStep.FirstStep
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState.RegistrationStep.SecondStep
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationViewModel
+import com.example.tutorplace.ui.screens.main.model.MainScreenParams
 import com.example.tutorplace.ui.theme.BlackAlpha04
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.Typography
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun RegistrationScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<RegistrationViewModel>()
 	val state by viewModel.state.collectAsState()
-	LaunchedEffect(Unit) { viewModel.attachNavigator(RegistrationNavigator(navigator)) }
-	RegistrationScreen(
+	CollectEffects(viewModel.effect, navigator)
+	RegistrationContent(
 		state,
-		onFirstStepClicked = { viewModel.onFirstStepClicked() },
-		onSecondStepClicked = { viewModel.onSecondStepClicked() },
+		onFirstStepClicked = { viewModel.onEvent(RegistrationEvent.Domain.SwitchToFirstStep) },
+		onSecondStepClicked = { viewModel.onEvent(RegistrationEvent.Domain.SwitchToSecondStep) },
 		onNameChanged = { viewModel.onEvent(NameChanged(it)) },
 		onPhoneNumberChanged = { viewModel.onEvent(PhoneChanged(it)) },
 		onTelegramChanged = { viewModel.onEvent(TelegramChanged(it)) },
 		onEmailChanged = { viewModel.onEvent(EmailChanged(it)) },
 		onPasswordChanged = { viewModel.onEvent(PasswordChanged(it)) },
 		onConfirmPasswordChanged = { viewModel.onEvent(ConfirmPasswordChanged(it)) },
-		onRegisterClicked = { viewModel.onRegisterClicked() },
-		onYandexClicked = { viewModel.onYandexClicked() },
-		onOfferClicked = { viewModel.onOfferClicked() },
-		onTermsClicked = { viewModel.onTermsClicked() },
+		onRegisterClicked = { viewModel.onEvent(RegistrationEvent.Domain.Register) },
+		onYandexClicked = { viewModel.onEvent(RegistrationEvent.UI.YandexAuthorizationClicked) },
+		onOfferClicked = { viewModel.onEvent(RegistrationEvent.UI.OfferClicked) },
+		onTermsClicked = { viewModel.onEvent(RegistrationEvent.UI.TermsClicked) },
 		onSignUpClicked = { navigator.goBack() }
 	)
 }
 
 @Composable
-private fun RegistrationScreen(
+private fun RegistrationContent(
 	state: RegistrationState,
 	onFirstStepClicked: () -> Unit,
 	onSecondStepClicked: () -> Unit,
@@ -266,10 +275,29 @@ private fun YandexButtonWithTerms(
 	)
 }
 
+@Composable
+private fun CollectEffects(
+	effects: Flow<RegistrationEffect>,
+	navigator: Navigator,
+) {
+	LaunchedEffect(Unit) {
+		effects.collect { effect ->
+			when (effect) {
+				NavigateToHome -> navigator.navigateAndClearBackStack(
+					MainScreen(MainScreenParams(isShouldShowOnboarding = true))
+				)
+				NavigateToOffer -> navigator.navigate(Destinations.Support)
+				NavigateToTerms -> navigator.navigate(Destinations.Terms)
+				NavigateToYandexAuthorization -> navigator.navigate(Destinations.YandexAuthorization)
+			}
+		}
+	}
+}
+
 @Preview
 @Composable
 private fun FirstStepPreview() {
-	RegistrationScreen(
+	RegistrationContent(
 		state = RegistrationState(),
 		onFirstStepClicked = {},
 		onSecondStepClicked = {},
@@ -290,7 +318,7 @@ private fun FirstStepPreview() {
 @Preview
 @Composable
 private fun SecondStepPreview() {
-	RegistrationScreen(
+	RegistrationContent(
 		state = RegistrationState(currentStep = SecondStep::class),
 		onFirstStepClicked = {},
 		onSecondStepClicked = {},

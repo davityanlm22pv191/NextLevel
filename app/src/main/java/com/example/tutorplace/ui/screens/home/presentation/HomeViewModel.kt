@@ -48,12 +48,6 @@ class HomeViewModel @Inject constructor(
 	// https://iili.io/KLMazGf.png
 	// https://iili.io/KLMl2eI.png
 
-	private var navigator: HomeNavigator? = null
-
-	fun attachNavigator(navigator: HomeNavigator) {
-		this.navigator = navigator
-	}
-
 	init {
 		collectProfileShortInfo()
 		loadFortuneWheelLastRotation()
@@ -62,7 +56,6 @@ class HomeViewModel @Inject constructor(
 	}
 
 	override fun initialState() = HomeState()
-
 	override fun onEvent(event: HomeEvent) = when (event) {
 		is UI -> onUiEvent(event)
 		is Domain -> onDomainEvent(event)
@@ -74,14 +67,14 @@ class HomeViewModel @Inject constructor(
 
 	private fun onUiEvent(event: UI) {
 		when (event) {
-			is NotificationClicked -> navigator?.navigateToMail()
-			is ProfileClicked -> navigator?.navigateToProfile()
-			is SearchClicked -> navigator?.navigateToSearch()
-			is FortuneWheelClicked -> navigator?.navigateToFortuneWheelScreen()
-			is FortuneWheelInformationClicked -> navigator?.navigateToFortuneWheelInformationBottomSheet()
-			is CatalogClicked -> navigator?.switchToCatalogTab()
-			is MyCoursesClicked -> navigator?.switchToMyCoursesTab()
-			is CourseClicked -> navigator?.navigateToCourseDetailed(event.courseId)
+			is NotificationClicked -> sendEffect(HomeEffect.NavigateToMail)
+			is ProfileClicked -> sendEffect(HomeEffect.NavigateToProfile)
+			is SearchClicked -> sendEffect(HomeEffect.NavigateToSearch)
+			is FortuneWheelClicked -> sendEffect(HomeEffect.NavigateToFortuneWheel)
+			is FortuneWheelInformationClicked -> sendEffect(HomeEffect.NavigateToFortuneWheelInformation)
+			is CatalogClicked -> sendEffect(HomeEffect.NavigateToCatalog)
+			is MyCoursesClicked -> sendEffect(HomeEffect.NavigateToMyCourses)
+			is CourseClicked -> sendEffect(HomeEffect.NavigateToCourseDetailed(event.courseId))
 		}
 	}
 
