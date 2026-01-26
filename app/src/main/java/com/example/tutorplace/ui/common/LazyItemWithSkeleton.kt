@@ -17,7 +17,7 @@ fun <T> LazyListScope.itemWithSkeleton(
 	contentType: Any = key,
 	dataInfo: DataInfo<T>,
 	paddingValues: PaddingValues = PaddingValues(),
-	content: @Composable () -> Unit,
+	content: @Composable (T) -> Unit,
 	skeletonContent: @Composable () -> Unit,
 	emptyStateContent: @Composable () -> Unit = {}
 ) {
@@ -28,14 +28,17 @@ fun <T> LazyListScope.itemWithSkeleton(
 		AnimatedContent(
 			modifier = Modifier.padding(paddingValues),
 			label = "${key}_itemWithSkeleton",
-			targetState = dataInfo.isLoaded,
+			targetState = dataInfo,
 			transitionSpec = { fadeIn(tween(500)) togetherWith fadeOut(tween(500)) }
-		) { isLoaded ->
-			when {
-				dataInfo.throwable != null -> {}
-				!isLoaded -> skeletonContent()
-				dataInfo.isEmptyState -> emptyStateContent()
-				else -> content()
+		) { dataInfo ->
+			when (dataInfo) {
+				is DataInfo.Loading -> skeletonContent()
+				is DataInfo.Error -> {}
+				is DataInfo.Success -> if (dataInfo.isEmptyState()) {
+					emptyStateContent()
+				} else {
+					content(dataInfo.data)
+				}
 			}
 		}
 	}

@@ -4,7 +4,9 @@ import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.example.tutorplace.BuildConfig
+import com.example.tutorplace.data.mail.model.MailType
 import com.example.tutorplace.network.deserializers.LocalDateTimeDeserializer
+import com.example.tutorplace.network.deserializers.MailTypeDeserializer
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -43,12 +45,12 @@ object NetworkModule {
 	fun provideRetrofit(client: OkHttpClient): Retrofit {
 		val gson = GsonBuilder()
 			.registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeDeserializer())
+			.registerTypeAdapter(MailType::class.java, MailTypeDeserializer())
 			.create()
 		return Retrofit.Builder()
 			.baseUrl(BuildConfig.SERVER_URL)
 			.addConverterFactory(GsonConverterFactory.create(gson))
 			.client(client)
-			.addConverterFactory(GsonConverterFactory.create())
 			.build()
 	}
 }

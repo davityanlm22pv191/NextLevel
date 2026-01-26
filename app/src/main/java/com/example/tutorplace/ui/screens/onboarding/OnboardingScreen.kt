@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.tutorplace.R
+import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.TransparentButton
@@ -137,7 +138,7 @@ private fun OnboardingContent(
 							.height(45.dp),
 						text = stringResource(uiState.mainButtonTitle),
 						isEnabled = state.isMainButtonEnabled,
-						isLoading = state.onboardingInfo.isLoading,
+						isLoading = state.onboardingInfo is DataInfo.Loading,
 						onClick = { onNextStepClicked() }
 					)
 					AnimatedContent(

@@ -3,6 +3,7 @@ package com.example.tutorplace.ui.screens.onboarding.presentation
 import androidx.lifecycle.viewModelScope
 import com.example.tutorplace.data.onboarding.model.PlatformAccessDataBody
 import com.example.tutorplace.data.onboarding.model.PostNotificationIntervalBody
+import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.domain.usecases.onboarding.GetOnboardingInfoUseCase
 import com.example.tutorplace.domain.usecases.onboarding.PostOnboardingInfoUseCase
 import com.example.tutorplace.helpers.FormatHelper
@@ -48,7 +49,7 @@ class OnboardingViewModel @Inject constructor(
 			Step.TELL_US_ABOUT_INTERESTS -> processTellUsAboutInterestsStep()
 			Step.SPEND_YOUR_TIME_PRODUCTIVELY -> sendEffect(OnboardingEffect.GoBack)
 			Step.HELP_YOU_STAY -> processHelpYouStayStep()
-			else -> if (!state.value.onboardingInfo.isLoading) {
+			else -> if (state.value.onboardingInfo !is DataInfo.Loading) {
 				setState(OnboardingReducer.reduce(state.value, NextStepClicked))
 			}
 		}
@@ -98,12 +99,13 @@ class OnboardingViewModel @Inject constructor(
 			setState(OnboardingReducer.reduce(state.value, OnboardingInfoLoading))
 			postAction()
 				.onSuccess {
-					setState(
-						OnboardingReducer.reduce(
-							state.value,
-							OnboardingInfoLoaded(state.value.onboardingInfo.data)
-						)
-					)
+//					onEvent(OnboardingInfoLoaded(state.value.onboardingInfo))
+//					setState(
+//						OnboardingReducer.reduce(
+//							state.value,
+//							OnboardingInfoLoaded(state.value.onboardingInfo)
+//						)
+//					)
 					setState(OnboardingReducer.reduce(state.value, NextStepClicked))
 				}
 				.onFailure { throwable ->

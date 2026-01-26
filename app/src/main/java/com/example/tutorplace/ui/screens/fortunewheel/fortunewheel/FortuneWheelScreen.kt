@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.presentation.FortuneWheelViewModel
+import com.example.tutorplace.ui.screens.stub.StubScreen
 
 @Composable
 fun FortuneWheelScreen(navigator: Navigator) {
@@ -21,18 +22,7 @@ fun FortuneWheelScreen(navigator: Navigator) {
 
 @Composable
 private fun FortuneWheelContent() {
-	Scaffold(
-		modifier = Modifier.fillMaxSize()
-	) { paddingValues ->
-		Text(
-			modifier = Modifier
-				.fillMaxSize()
-				.padding(paddingValues)
-				.padding(vertical = 100.dp),
-			text = "Это главный экран фортуны\nОн ещё не готов",
-			textAlign = TextAlign.Center
-		)
-	}
+	StubScreen()
 }
 
 @Preview

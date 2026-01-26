@@ -7,10 +7,7 @@ import com.example.tutorplace.ui.base.BaseState
 import com.example.tutorplace.ui.common.textfield.TextFieldState
 
 data class OnboardingState(
-	val onboardingInfo: DataInfo<OnboardingInfo> = DataInfo(
-		OnboardingInfo.empty(),
-		isLoading = true
-	),
+	val onboardingInfo: DataInfo<OnboardingInfo> = DataInfo.Loading,
 	val step: Step,
 	val userName: TextFieldState = TextFieldState(),
 	val password: TextFieldState = TextFieldState(),

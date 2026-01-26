@@ -18,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 import com.example.tutorplace.ui.theme.GreyD5
 
@@ -27,7 +28,7 @@ fun OnboardingKnowledgeFromMasters(
 	columnScope: ColumnScope
 ) = with(columnScope) {
 	val pagerState = rememberPagerState(
-		initialPage = state.onboardingInfo.data.mastersCoverUrls.size / 2,
+		initialPage = (state.onboardingInfo as DataInfo.Success).data.mastersCoverUrls.size / 2,
 		pageCount = { state.onboardingInfo.data.mastersCoverUrls.size }
 	)
 	HorizontalPager(

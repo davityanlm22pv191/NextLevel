@@ -6,9 +6,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -19,13 +18,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -44,21 +43,24 @@ import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.navigation.rememberNavigationState
 import com.example.tutorplace.navigation.toEntries
 import com.example.tutorplace.ui.common.RequestPermission
+import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
 import com.example.tutorplace.ui.screens.catalog.CatalogScreen
 import com.example.tutorplace.ui.screens.coursedetailed.CourseDetailedScreen
 import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.FortuneWheelScreen
 import com.example.tutorplace.ui.screens.fortunewheel.fortunewheelinformation.FortuneWheelInformationScreen
 import com.example.tutorplace.ui.screens.home.HomeScreen
+import com.example.tutorplace.ui.screens.mail.MailScreen
 import com.example.tutorplace.ui.screens.main.model.MainScreenParams
+import com.example.tutorplace.ui.screens.main.presentation.MainScreenState
 import com.example.tutorplace.ui.screens.main.presentation.MainScreenViewModel
 import com.example.tutorplace.ui.screens.mycourses.MyCoursesScreen
 import com.example.tutorplace.ui.screens.onboarding.OnboardingScreen
 import com.example.tutorplace.ui.screens.tasks.TasksScreen
-import com.example.tutorplace.ui.theme.ContainerColor
 import com.example.tutorplace.ui.theme.Grey82
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.Transparent
 import com.example.tutorplace.ui.theme.Typography
+import com.example.tutorplace.ui.theme.White
 
 private val TOP_LEVEL_ROUTES = mapOf(
 	Destinations.Catalog to NavBarItem(R.drawable.ic_catalog, R.string.tab_catalog_title),
@@ -70,12 +72,16 @@ private val TOP_LEVEL_ROUTES = mapOf(
 @Composable
 fun MainScreen(params: MainScreenParams) {
 	val viewModel = hiltViewModel<MainScreenViewModel>()
-	MainContent(params)
+	val state by viewModel.state.collectAsState()
+	MainContent(state, params)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MainContent(params: MainScreenParams) {
+private fun MainContent(
+	state: MainScreenState,
+	params: MainScreenParams
+) {
 	val navigationState = rememberNavigationState(
 		startRoute = Destinations.Home,
 		topLevelRoutes = TOP_LEVEL_ROUTES.keys
@@ -102,16 +108,30 @@ private fun MainContent(params: MainScreenParams) {
 		entry<Destinations.Home> { HomeScreen(navigator) }
 		entry<Destinations.MyCourses> { MyCoursesScreen(navigator) }
 		entry<Destinations.Tasks> { TasksScreen(navigator) }
+		entry<Destinations.Mail> { MailScreen(navigator) }
 	}
 
 	Scaffold(
-		contentWindowInsets = WindowInsets(0, 0, 0, 0),
+		topBar = {
+			ToolbarHeader(
+				screenName = stringResource(R.string.home_screen_name),
+				profileShortInfo = state.profileShortInfo,
+				isArrowVisible = false,
+				onBackClicked = { navigator.goBack() },
+				onNotificationClicked = { navigator.navigate(Destinations.Mail) },
+				onSearchClicked = { navigator.navigate(Destinations.Search) },
+				onProfileClicked = { navigator.navigate(Destinations.Profile) }
+			)
+		},
 		bottomBar = {
 			NavigationBar(
 				modifier = Modifier
-					.shadow(4.dp, RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-					.clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
-				containerColor = ContainerColor,
+					.background(Transparent)
+					.shadow(
+						elevation = 8.dp,
+						shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+					),
+				containerColor = White
 			) {
 				TOP_LEVEL_ROUTES.forEach { (destination, navBarItem) ->
 					val isSelected = destination == navigationState.topLevelRoute
@@ -145,10 +165,9 @@ private fun MainContent(params: MainScreenParams) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 			RequestPermission(Manifest.permission.POST_NOTIFICATIONS) {}
 		}
+
 		NavDisplay(
-			modifier = Modifier
-				.fillMaxSize()
-				.padding(paddingValues),
+			modifier = Modifier.fillMaxSize(),
 			onBack = { navigator.goBack() },
 			sceneStrategy = bottomSheetStrategy,
 			entries = navigationState.toEntries(entryProvider),
@@ -183,5 +202,8 @@ private fun OpenOnboardingIfNeeded(
 @Preview
 @Composable
 private fun MainScreenPreview() {
-	MainContent(MainScreenParams(isShouldShowOnboarding = true))
+	MainContent(
+		state = MainScreenState(),
+		params = MainScreenParams(isShouldShowOnboarding = true)
+	)
 }

@@ -140,4 +140,10 @@
 	<string name="course_detailed_start_lesson">Начать урок</string>
 	<string name="course_detailed_materials">Материалы\nк курсу</string>
 
+	<!-- 	Mail -->
+	<string name="tutor_mail">TutorПочта</string>
+	<string name="tutor_mail_incoming">Входящие</string>
+	<string name="tutor_mail_here_will_you_mails">Здесь будут находиться ваши письма</string>
+	<string name="tutor_mail_you_do_not_have_messages_right_now">На данный момент у вас нет писем</string>
+
 </resources>

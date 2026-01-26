@@ -1,6 +1,7 @@
 package com.example.tutorplace.ui.screens.main.presentation
 
 import androidx.lifecycle.viewModelScope
+import com.example.tutorplace.data.profile.storage.ProfileStorage
 import com.example.tutorplace.domain.usecases.FetchInitialDataUseCase
 import com.example.tutorplace.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,15 +10,29 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-	private val fetchInitialDataUseCase: FetchInitialDataUseCase
+	private val fetchInitialDataUseCase: FetchInitialDataUseCase,
+	private val profileStorage: ProfileStorage
 ) : BaseViewModel<MainScreenEvent, MainScreenState, MainScreenEffect>() {
 
 	init {
 		viewModelScope.launch {
 			fetchInitialDataUseCase.execute()
+
 		}
+		collectProfileShortInfo()
 	}
 
 	override fun initialState(): MainScreenState = MainScreenState()
-	override fun onEvent(event: MainScreenEvent) = Unit
+
+	override fun onEvent(event: MainScreenEvent) {
+		setState(MainScreenReducer.reduce(state.value, event))
+	}
+
+	private fun collectProfileShortInfo() {
+		viewModelScope.launch {
+			profileStorage.profileShortInfo.collect { value ->
+				value?.let { onEvent(MainScreenEvent.ProfileInfoLoaded(it)) }
+			}
+		}
+	}
 }

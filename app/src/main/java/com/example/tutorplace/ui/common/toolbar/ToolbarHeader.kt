@@ -40,6 +40,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.tutorplace.R
+import com.example.tutorplace.data.profile.model.LevelInfo
+import com.example.tutorplace.data.profile.model.ProfileShortInfo
+import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.ui.common.CircleBadgeCounter
 import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.Black36
@@ -57,12 +60,8 @@ import com.example.tutorplace.ui.theme.Yellow12
 fun ToolbarHeader(
 	modifier: Modifier = Modifier,
 	screenName: String,
-	unreadEmailCount: Int,
-	profileImageUrl: String,
-	level: Int,
-	progress: Float,
+	profileShortInfo: DataInfo<ProfileShortInfo>,
 	isArrowVisible: Boolean,
-	isLoading: Boolean,
 	isTransparentBackground: Boolean = false,
 	isLightAppearance: Boolean = true,
 	onBackClicked: () -> Unit = {},
@@ -126,15 +125,17 @@ fun ToolbarHeader(
 			)
 			AnimatedContent(
 				modifier = Modifier.align(Alignment.TopEnd),
-				targetState = unreadEmailCount,
+				targetState = profileShortInfo,
 				label = "unreadEmailCount"
-			) {
-				if (it > 0) {
+			) { profileShortInfo ->
+				if (profileShortInfo is DataInfo.Success &&
+					profileShortInfo.data.unreadMessageCount > 0
+				) {
 					CircleBadgeCounter(
 						modifier = Modifier
 							.align(Alignment.TopEnd)
 							.offset(x = (-5).dp, y = 6.dp),
-						value = unreadEmailCount,
+						value = profileShortInfo.data.unreadMessageCount,
 						badgeColor = Red33,
 						textColor = White
 					)
@@ -165,13 +166,7 @@ fun ToolbarHeader(
 				verticalAlignment = Alignment.CenterVertically,
 				horizontalArrangement = Arrangement.spacedBy(4.dp)
 			) {
-				ProfileWithProgressAndLevel(
-					profileImageUrl,
-					progress,
-					level,
-					isLoading,
-					isLightAppearance
-				)
+				ProfileWithProgressAndLevel(profileShortInfo, isLightAppearance)
 				Icon(
 					modifier = Modifier.rotate(270f),
 					painter = painterResource(R.drawable.ic_arrow_down_black_16),
@@ -185,10 +180,7 @@ fun ToolbarHeader(
 
 @Composable
 private fun ProfileWithProgressAndLevel(
-	profileImageUrl: String,
-	progress: Float,
-	level: Int,
-	isLoading: Boolean,
+	profileShortInfo: DataInfo<ProfileShortInfo>,
 	isLightAppearance: Boolean
 ) {
 	Box(
@@ -197,27 +189,33 @@ private fun ProfileWithProgressAndLevel(
 			.padding(top = 2.dp, end = 4.dp)
 			.padding(bottom = 2.dp)
 	) {
-		if (isLoading) {
-			CircularProgressIndicator(
-				modifier = Modifier
-					.size(28.dp)
-					.align(Alignment.Center),
-				trackColor = if (isLightAppearance) GreyD5 else Black49,
-				strokeWidth = 2.dp,
-				color = PurpleDE,
-				gapSize = 0.dp
-			)
-		} else {
-			CircularProgressIndicator(
-				modifier = Modifier
-					.size(28.dp)
-					.align(Alignment.Center),
-				progress = { progress },
-				trackColor = GreyD5,
-				strokeWidth = 2.dp,
-				color = PurpleDE,
-				gapSize = 0.dp
-			)
+		when (profileShortInfo) {
+			is DataInfo.Success -> {
+				CircularProgressIndicator(
+					modifier = Modifier
+						.size(28.dp)
+						.align(Alignment.Center),
+					progress = {
+						profileShortInfo.data.level.currentAmount.toFloat() /
+								profileShortInfo.data.level.target.toFloat()
+					},
+					trackColor = GreyD5,
+					strokeWidth = 2.dp,
+					color = PurpleDE,
+					gapSize = 0.dp
+				)
+			}
+			else -> {
+				CircularProgressIndicator(
+					modifier = Modifier
+						.size(28.dp)
+						.align(Alignment.Center),
+					trackColor = if (isLightAppearance) GreyD5 else Black49,
+					strokeWidth = 2.dp,
+					color = PurpleDE,
+					gapSize = 0.dp
+				)
+			}
 		}
 		var isLoaded by remember { mutableStateOf(false) }
 		val alpha by animateFloatAsState(targetValue = if (isLoaded) 1f else 0f)
@@ -227,7 +225,7 @@ private fun ProfileWithProgressAndLevel(
 				.align(Alignment.Center)
 				.clip(CircleShape)
 				.alpha(alpha),
-			model = profileImageUrl,
+			model = if (profileShortInfo is DataInfo.Success) profileShortInfo.data.profileThumbUrl else null,
 			contentDescription = null,
 			placeholder = ColorPainter(GreyD5),
 			onSuccess = { isLoaded = true }
@@ -236,12 +234,14 @@ private fun ProfileWithProgressAndLevel(
 			modifier = Modifier
 				.align(Alignment.TopEnd)
 				.offset(x = 4.dp, y = (-2).dp),
-			targetState = level,
+			targetState = profileShortInfo,
 			label = "level"
 		) {
-			if (level != 0) {
+			if (it is DataInfo.Success &&
+				it.data.level.level != 0
+			) {
 				CircleBadgeCounter(
-					value = it,
+					value = it.data.level.level,
 					badgeColor = Yellow12,
 					textColor = Black16
 				)
@@ -260,12 +260,16 @@ fun ToolbarHeaderPreview() {
 		) {
 			ToolbarHeader(
 				screenName = "Уроки",
-				unreadEmailCount = 0,
-				profileImageUrl = "",
-				level = 9,
-				progress = 1f,
+				profileShortInfo = DataInfo.Success(
+					ProfileShortInfo(
+						id = "123",
+						userName = "userName",
+						level = LevelInfo(9, 100, 100),
+						unreadMessageCount = 0,
+						profileThumbUrl = ""
+					)
+				),
 				isArrowVisible = true,
-				isLoading = false,
 				isTransparentBackground = true,
 				isLightAppearance = false,
 				onBackClicked = {},
@@ -276,12 +280,16 @@ fun ToolbarHeaderPreview() {
 		}
 		ToolbarHeader(
 			screenName = "Моe обучение",
-			unreadEmailCount = 2,
-			profileImageUrl = "",
-			level = 2,
-			progress = 0.25f,
+			profileShortInfo = DataInfo.Success(
+				ProfileShortInfo(
+					id = "id",
+					userName = "userName",
+					level = LevelInfo(2, 25, 100),
+					unreadMessageCount = 2,
+					profileThumbUrl = ""
+				)
+			),
 			isArrowVisible = false,
-			isLoading = false,
 			onBackClicked = {},
 			onNotificationClicked = {},
 			onSearchClicked = {},
@@ -289,12 +297,8 @@ fun ToolbarHeaderPreview() {
 		)
 		ToolbarHeader(
 			screenName = "Дом",
-			unreadEmailCount = 99,
-			profileImageUrl = "",
-			level = 0,
-			progress = 0.9f,
+			profileShortInfo = DataInfo.Loading,
 			isArrowVisible = false,
-			isLoading = false,
 			onBackClicked = {},
 			onNotificationClicked = {},
 			onSearchClicked = {},
@@ -302,12 +306,16 @@ fun ToolbarHeaderPreview() {
 		)
 		ToolbarHeader(
 			screenName = "Уроки",
-			unreadEmailCount = 999,
-			profileImageUrl = "",
-			level = 9,
-			progress = 1f,
+			profileShortInfo = DataInfo.Success(
+				ProfileShortInfo(
+					id = "123",
+					userName = "userName",
+					level = LevelInfo(9, 100, 100),
+					unreadMessageCount = 999,
+					profileThumbUrl = ""
+				)
+			),
 			isArrowVisible = true,
-			isLoading = true,
 			onBackClicked = {},
 			onNotificationClicked = {},
 			onSearchClicked = {},

@@ -10,14 +10,6 @@ class Navigator(
 	private val context: Context,
 ) {
 
-	fun navigate(route: NavKey) {
-		if (route in state.backStacks.keys) {
-			state.topLevelRoute = route
-		} else {
-			state.backStacks[state.topLevelRoute]?.add(route)
-		}
-	}
-
 	fun navigateAndClearBackStack(route: NavKey) {
 		state.backStacks[state.topLevelRoute]?.add(route)
 		val currentStack = state.backStacks[state.topLevelRoute]
@@ -28,7 +20,13 @@ class Navigator(
 	}
 
 	fun navigate(vararg routes: NavKey) {
-		routes.forEach { navKey -> navigate(navKey) }
+		routes.forEach { route ->
+			if (route in state.backStacks.keys) {
+				state.topLevelRoute = route
+			} else {
+				state.backStacks[state.topLevelRoute]?.add(route)
+			}
+		}
 	}
 
 	fun goBack() {

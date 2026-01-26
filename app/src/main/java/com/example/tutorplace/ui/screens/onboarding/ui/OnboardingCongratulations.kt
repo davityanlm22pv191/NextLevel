@@ -43,27 +43,26 @@ fun OnboardingCongratulations(
 	state: OnboardingState,
 	columnScope: ColumnScope,
 ) = with(columnScope) {
-	val onboardingInfo = state.onboardingInfo
 	AnimatedContent(
-		targetState = onboardingInfo.data,
+		targetState = state.onboardingInfo,
 	) { onboardingInfo ->
-		if (onboardingInfo.productName.isNotEmpty() && !state.onboardingInfo.isLoading) {
+		if (onboardingInfo is DataInfo.Success && onboardingInfo.data.productName.isNotEmpty()) {
 			SpanClickableText(
 				modifier = Modifier
 					.fillMaxWidth()
 					.padding(16.dp),
 				text = stringResource(
-					onboardingInfo.productName.gender().switchStringResId(
+					onboardingInfo.data.productName.gender().switchStringResId(
 						maleStringResId = R.string.onboarding_congratulations_new_product_is_available_male_format,
 						middleStringResId = R.string.onboarding_congratulations_new_product_is_available_middle_format,
 						femaleStringResId = R.string.onboarding_congratulations_new_product_is_available_female_format
 					),
-					onboardingInfo.productName
+					onboardingInfo.data.productName
 				),
 				links = listOf(
 					SpanLinkData(
-						link = onboardingInfo.productName,
-						tag = onboardingInfo.productName,
+						link = onboardingInfo.data.productName,
+						tag = onboardingInfo.data.productName,
 						style = SpanStyle(color = PurpleCC),
 						onClick = {}
 					)
@@ -131,7 +130,7 @@ private fun OnboardingCongratulationsPreview() {
 			columnScope = this,
 			state = OnboardingState(
 				step = OnboardingState.Step.CONGRATULATIONS,
-				onboardingInfo = DataInfo(
+				onboardingInfo = DataInfo.Success(
 					data = OnboardingInfo.empty().copy(productName = "Нумерология")
 				),
 			)

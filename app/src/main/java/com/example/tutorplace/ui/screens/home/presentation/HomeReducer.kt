@@ -1,15 +1,12 @@
 package com.example.tutorplace.ui.screens.home.presentation
 
-import com.example.tutorplace.domain.model.failure
-import com.example.tutorplace.domain.model.loaded
-import com.example.tutorplace.domain.model.loading
+import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.ui.base.BaseReducer
 
 object HomeReducer : BaseReducer<HomeState, HomeEvent> {
 
 	override fun reduce(oldState: HomeState, event: HomeEvent): HomeState = when (event) {
 		is HomeEvent.Domain -> when (event) {
-			is HomeEvent.Domain.SetProfileInfo -> oldState.copy(profileShortInfo = event.profileShortInfo)
 			is HomeEvent.Domain.FortuneWheelLoading -> reduceFortuneWheelLoading(oldState)
 			is HomeEvent.Domain.FortuneWheelFailed -> reduceFortuneWheelFailed(oldState, event)
 			is HomeEvent.Domain.FortuneWheelLoaded -> reduceFortuneWheelLoaded(oldState, event)
@@ -27,57 +24,53 @@ object HomeReducer : BaseReducer<HomeState, HomeEvent> {
 		oldState: HomeState,
 		event: HomeEvent.Domain.FortuneWheelFailed
 	): HomeState {
-		return oldState.copy(
-			fortuneWheelLastRotation = oldState.fortuneWheelLastRotation.failure(event.throwable)
-		)
+		return oldState.copy(fortuneWheelLastRotation = DataInfo.Error(event.throwable))
 	}
 
 	private fun reduceFortuneWheelLoading(oldState: HomeState): HomeState {
-		return oldState.copy(fortuneWheelLastRotation = oldState.fortuneWheelLastRotation.loading())
+		return oldState.copy(fortuneWheelLastRotation = DataInfo.Loading)
 	}
 
 	private fun reduceFortuneWheelLoaded(
 		oldState: HomeState,
 		event: HomeEvent.Domain.FortuneWheelLoaded
 	): HomeState {
-		return oldState.copy(
-			fortuneWheelLastRotation = oldState.fortuneWheelLastRotation.loaded(event.lastRotation)
-		)
+		return oldState.copy(fortuneWheelLastRotation = DataInfo.Success(event.lastRotation))
 	}
 
 	private fun reduceMyCoursesFailed(
 		oldState: HomeState,
 		event: HomeEvent.Domain.MyCoursesFailed
 	): HomeState {
-		return oldState.copy(myCourses = oldState.myCourses.failure(event.throwable))
+		return oldState.copy(myCourses = DataInfo.Error(event.throwable))
 	}
 
 	private fun reduceMyCoursesLoading(oldState: HomeState): HomeState {
-		return oldState.copy(myCourses = oldState.myCourses.loading())
+		return oldState.copy(myCourses = DataInfo.Loading)
 	}
 
 	private fun reduceMyCoursesLoaded(
 		oldState: HomeState,
 		event: HomeEvent.Domain.MyCoursesLoaded
 	): HomeState {
-		return oldState.copy(myCourses = oldState.myCourses.loaded(event.courses))
+		return oldState.copy(myCourses = DataInfo.Success(event.courses))
 	}
 
 	private fun reduceSpeciallyForYouFailed(
 		oldState: HomeState,
 		event: HomeEvent.Domain.SpeciallyForFailed
 	): HomeState {
-		return oldState.copy(myCourses = oldState.speciallyForYou.failure(event.throwable))
+		return oldState.copy(myCourses = DataInfo.Error(event.throwable))
 	}
 
 	private fun reduceSpeciallyForYouLoading(oldState: HomeState): HomeState {
-		return oldState.copy(speciallyForYou = oldState.speciallyForYou.loading())
+		return oldState.copy(speciallyForYou = DataInfo.Loading)
 	}
 
 	private fun reduceSpeciallyForYouLoaded(
 		oldState: HomeState,
 		event: HomeEvent.Domain.SpeciallyForLoaded
 	): HomeState {
-		return oldState.copy(speciallyForYou = oldState.speciallyForYou.loaded(event.courses))
+		return oldState.copy(speciallyForYou = DataInfo.Success(event.courses))
 	}
 }
