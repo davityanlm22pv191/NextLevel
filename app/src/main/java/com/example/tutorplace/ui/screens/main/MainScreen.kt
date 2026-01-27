@@ -8,7 +8,6 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -43,6 +42,7 @@ import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.navigation.rememberNavigationState
 import com.example.tutorplace.navigation.toEntries
 import com.example.tutorplace.ui.common.RequestPermission
+import com.example.tutorplace.ui.common.RoundedTopCornerShape
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
 import com.example.tutorplace.ui.screens.catalog.CatalogScreen
 import com.example.tutorplace.ui.screens.coursedetailed.CourseDetailedScreen
@@ -129,7 +129,7 @@ private fun MainContent(
 					.background(Transparent)
 					.shadow(
 						elevation = 8.dp,
-						shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+						shape = RoundedTopCornerShape(20.dp),
 					),
 				containerColor = White
 			) {

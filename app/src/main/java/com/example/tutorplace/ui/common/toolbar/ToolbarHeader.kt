@@ -44,6 +44,7 @@ import com.example.tutorplace.data.profile.model.LevelInfo
 import com.example.tutorplace.data.profile.model.ProfileShortInfo
 import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.ui.common.CircleBadgeCounter
+import com.example.tutorplace.ui.common.RoundedBottomCornerShape
 import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.Black36
 import com.example.tutorplace.ui.theme.Black49
@@ -75,7 +76,7 @@ fun ToolbarHeader(
 			.wrapContentHeight()
 			.background(
 				color = if (isTransparentBackground) Transparent else White,
-				shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
+				shape = RoundedBottomCornerShape(20.dp)
 			)
 			.statusBarsPadding()
 			.padding(horizontal = 16.dp),
@@ -256,7 +257,7 @@ fun ToolbarHeaderPreview() {
 	Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
 		Surface(
 			color = Black16,
-			shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
+			shape = RoundedBottomCornerShape(20.dp)
 		) {
 			ToolbarHeader(
 				screenName = "Уроки",
