@@ -1,4 +1,4 @@
-package com.example.tutorplace.navigation
+package com.example.tutorplace.navigation.destinations
 
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeaderConfig
 

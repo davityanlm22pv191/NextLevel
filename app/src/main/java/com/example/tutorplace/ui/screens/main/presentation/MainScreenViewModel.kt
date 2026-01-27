@@ -2,6 +2,7 @@ package com.example.tutorplace.ui.screens.main.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.example.tutorplace.data.profile.storage.ProfileStorage
+import com.example.tutorplace.domain.usecases.FetchInitialDataUseCase
 import com.example.tutorplace.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

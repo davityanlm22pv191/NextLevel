@@ -4,6 +4,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import com.example.tutorplace.navigation.destinations.Destinations
+import com.example.tutorplace.navigation.strategy.BottomSheetSceneStrategy
 import com.example.tutorplace.ui.screens.auth.authorization.AuthorizationScreen
 import com.example.tutorplace.ui.screens.auth.registration.RegistrationScreen
 import com.example.tutorplace.ui.screens.auth.restorepassword.RestorePasswordScreen

@@ -1,9 +1,8 @@
-package com.example.tutorplace.ui.common.bottomnavigationbar
+package com.example.tutorplace.navigation.bottomnavbar
 
 import androidx.navigation3.runtime.NavKey
 import com.example.tutorplace.R
-import com.example.tutorplace.navigation.Destinations
-import com.example.tutorplace.navigation.NavBarItem
+import com.example.tutorplace.navigation.destinations.Destinations
 
 enum class BottomNavigationBarItems(
 	val destination: NavKey,

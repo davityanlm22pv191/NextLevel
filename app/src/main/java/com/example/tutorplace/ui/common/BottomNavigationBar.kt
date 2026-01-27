@@ -1,4 +1,4 @@
-package com.example.tutorplace.ui.common.bottomnavigationbar
+package com.example.tutorplace.ui.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
+import com.example.tutorplace.navigation.bottomnavbar.BottomNavigationBarItems
 import com.example.tutorplace.ui.theme.Grey82
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.Transparent

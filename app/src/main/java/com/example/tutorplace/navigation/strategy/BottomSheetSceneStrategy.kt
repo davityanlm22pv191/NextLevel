@@ -1,4 +1,4 @@
-package com.example.tutorplace.navigation
+package com.example.tutorplace.navigation.strategy
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet

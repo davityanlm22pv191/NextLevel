@@ -20,7 +20,7 @@ import com.example.tutorplace.R
 import com.example.tutorplace.data.common.Sort
 import com.example.tutorplace.data.common.SortOrder
 import com.example.tutorplace.data.common.SortType.DATE_ADDED
-import com.example.tutorplace.navigation.Destinations
+import com.example.tutorplace.navigation.destinations.Destinations
 import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.LARGE
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.SQUARE

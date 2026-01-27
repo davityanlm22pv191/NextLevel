@@ -24,33 +24,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
-import com.example.tutorplace.navigation.BottomSheetSceneStrategy
-import com.example.tutorplace.navigation.DestinationWithBottomBar
-import com.example.tutorplace.navigation.DestinationWithToolbar
-import com.example.tutorplace.navigation.Destinations
 import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.navigation.appEntryProvider
+import com.example.tutorplace.navigation.bottomnavbar.BottomNavigationBarItems
+import com.example.tutorplace.navigation.destinations.DestinationWithBottomBar
+import com.example.tutorplace.navigation.destinations.DestinationWithToolbar
+import com.example.tutorplace.navigation.destinations.Destinations
 import com.example.tutorplace.navigation.rememberNavigationState
+import com.example.tutorplace.navigation.strategy.BottomSheetSceneStrategy
 import com.example.tutorplace.navigation.toEntries
+import com.example.tutorplace.ui.common.BottomNavigationBar
 import com.example.tutorplace.ui.common.RequestPermission
-import com.example.tutorplace.ui.common.bottomnavigationbar.BottomNavigationBar
-import com.example.tutorplace.ui.common.bottomnavigationbar.BottomNavigationBarItems
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeaderConfig
 import com.example.tutorplace.ui.screens.main.presentation.MainScreenState
 import com.example.tutorplace.ui.screens.main.presentation.MainScreenViewModel
 
 @Composable
-fun MainScreen(startDestination: NavKey?) {
+fun MainScreen(userIsAuthorized: Boolean) {
 	val viewModel = hiltViewModel<MainScreenViewModel>()
 	val state by viewModel.state.collectAsState()
-	MainContent(state, startDestination)
+	MainContent(state, userIsAuthorized)
 }
 
 @Composable
-private fun MainContent(state: MainScreenState, startRoute: NavKey?) {
+private fun MainContent(state: MainScreenState, userIsAuthorized: Boolean) {
 	val navigationState = rememberNavigationState(
-		startRoute = startRoute ?: Destinations.Authorization,
+		startRoute = if (userIsAuthorized) Destinations.Home else Destinations.Authorization,
 		topLevelRoutes = BottomNavigationBarItems.entries
 			.map { topLevelRoute -> topLevelRoute.destination }
 			.plus(Destinations.Authorization)
@@ -139,5 +139,5 @@ private fun OpenOnboardingIfNeeded(
 @Preview
 @Composable
 private fun MainScreenPreview() {
-	MainContent(state = MainScreenState(), startRoute = null)
+	MainContent(state = MainScreenState(), userIsAuthorized = false)
 }

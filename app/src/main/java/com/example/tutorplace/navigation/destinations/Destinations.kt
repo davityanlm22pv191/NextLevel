@@ -1,4 +1,4 @@
-package com.example.tutorplace.navigation
+package com.example.tutorplace.navigation.destinations
 
 import android.os.Parcelable
 import androidx.navigation3.runtime.NavKey
@@ -7,8 +7,6 @@ import com.example.tutorplace.ui.common.toolbar.ToolbarHeaderConfig
 import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import com.example.tutorplace.navigation.DestinationWithBottomBar as WithBottomBar
-import com.example.tutorplace.navigation.DestinationWithToolbar as WithToolbar
 
 sealed interface Destinations : NavKey, Parcelable {
 
@@ -26,7 +24,7 @@ sealed interface Destinations : NavKey, Parcelable {
 
 	@Serializable
 	@Parcelize
-	data object Catalog : Destinations, WithToolbar, WithBottomBar {
+	data object Catalog : Destinations, DestinationWithToolbar, DestinationWithBottomBar {
 		override val config: ToolbarHeaderConfig
 			get() = ToolbarHeaderConfig(
 				R.string.tab_catalog_title,
@@ -37,7 +35,7 @@ sealed interface Destinations : NavKey, Parcelable {
 
 	@Serializable
 	@Parcelize
-	data object MyCourses : Destinations, WithToolbar, WithBottomBar {
+	data object MyCourses : Destinations, DestinationWithToolbar, DestinationWithBottomBar {
 		override val config: ToolbarHeaderConfig
 			get() = ToolbarHeaderConfig(
 				R.string.tab_my_courses_title,
@@ -48,7 +46,7 @@ sealed interface Destinations : NavKey, Parcelable {
 
 	@Serializable
 	@Parcelize
-	data object Home : Destinations, WithToolbar, WithBottomBar {
+	data object Home : Destinations, DestinationWithToolbar, DestinationWithBottomBar {
 		override val config: ToolbarHeaderConfig
 			get() = ToolbarHeaderConfig(
 				R.string.tab_home_title,
@@ -59,7 +57,7 @@ sealed interface Destinations : NavKey, Parcelable {
 
 	@Serializable
 	@Parcelize
-	data object Tasks : Destinations, WithToolbar, WithBottomBar {
+	data object Tasks : Destinations, DestinationWithToolbar, DestinationWithBottomBar {
 		override val config: ToolbarHeaderConfig
 			get() = ToolbarHeaderConfig(
 				R.string.tab_tasks_title,
@@ -84,7 +82,7 @@ sealed interface Destinations : NavKey, Parcelable {
 	@Parcelize
 	data class CourseDetailed(
 		val params: CourseDetailedParams
-	) : Destinations, WithToolbar, WithBottomBar {
+	) : Destinations, DestinationWithToolbar, DestinationWithBottomBar {
 		override val config: ToolbarHeaderConfig
 			get() = ToolbarHeaderConfig(
 				R.string.course_detailed_title,
@@ -95,7 +93,7 @@ sealed interface Destinations : NavKey, Parcelable {
 
 	@Serializable
 	@Parcelize
-	data object Mail : Destinations, WithToolbar {
+	data object Mail : Destinations, DestinationWithToolbar {
 		override val config: ToolbarHeaderConfig
 			get() = ToolbarHeaderConfig(
 				R.string.tutor_mail,

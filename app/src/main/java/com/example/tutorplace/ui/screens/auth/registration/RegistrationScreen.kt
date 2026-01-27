@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.LayoutDirection.Ltr
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.tutorplace.R
-import com.example.tutorplace.navigation.Destinations
+import com.example.tutorplace.navigation.destinations.Destinations
 import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.AuthSectionDivider
 import com.example.tutorplace.ui.common.PurpleButton
