@@ -70,10 +70,6 @@ sealed interface Destinations : NavKey, Parcelable {
 
 	@Serializable
 	@Parcelize
-	data object MainScreen : Destinations
-
-	@Serializable
-	@Parcelize
 	data object Onboarding : Destinations
 
 	@Serializable

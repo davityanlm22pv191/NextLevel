@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.tutorplace.R
 import com.example.tutorplace.navigation.Destinations
-import com.example.tutorplace.navigation.Destinations.MainScreen
 import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.AuthSectionDivider
 import com.example.tutorplace.ui.common.PurpleButton
@@ -59,6 +58,7 @@ import com.example.tutorplace.ui.screens.auth.registration.presentation.Registra
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState.RegistrationStep.FirstStep
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState.RegistrationStep.SecondStep
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationViewModel
+import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.BlackAlpha04
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.ScreenColor
@@ -248,7 +248,7 @@ private fun YandexButtonWithTerms(
 				onClick = { onTermsClicked() },
 			)
 		),
-		textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center),
+		textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center, color = Black16),
 	)
 	HorizontalDivider(
 		modifier = Modifier
@@ -270,7 +270,7 @@ private fun YandexButtonWithTerms(
 				onClick = { onSignUpClicked() }
 			)
 		),
-		textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
+		textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center, color = Black16)
 	)
 }
 
@@ -282,7 +282,7 @@ private fun CollectEffects(
 	LaunchedEffect(Unit) {
 		effects.collect { effect ->
 			when (effect) {
-				NavigateToHome -> navigator.navigateAndClearBackStack(MainScreen)
+				NavigateToHome -> navigator.navigateAndClearBackStack(Destinations.Home)
 				NavigateToOffer -> navigator.navigate(Destinations.Support)
 				NavigateToTerms -> navigator.navigate(Destinations.Terms)
 				NavigateToYandexAuthorization -> navigator.navigate(Destinations.YandexAuthorization)

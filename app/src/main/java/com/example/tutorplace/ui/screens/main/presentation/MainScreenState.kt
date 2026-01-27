@@ -6,6 +6,5 @@ import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.ui.base.BaseState
 
 data class MainScreenState(
-	val startRoute: NavKey? = null,
 	val profileShortInfo: DataInfo<ProfileShortInfo> = DataInfo.Loading,
 ) : BaseState

@@ -42,6 +42,7 @@ import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.Resto
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.RetrySendClicked
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordState
 import com.example.tutorplace.ui.screens.auth.restorepassword.presentation.RestorePasswordViewModel
+import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.BlackAlpha04
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.ScreenColor
@@ -161,7 +162,7 @@ private fun DoYouHaveAnAccountSection(onAuthorizedClicked: () -> Unit) {
 				onClick = { onAuthorizedClicked() }
 			)
 		),
-		textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
+		textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center, color = Black16)
 	)
 }
 

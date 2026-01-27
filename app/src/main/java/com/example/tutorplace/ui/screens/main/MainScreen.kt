@@ -8,7 +8,6 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,17 +41,16 @@ import com.example.tutorplace.ui.screens.main.presentation.MainScreenState
 import com.example.tutorplace.ui.screens.main.presentation.MainScreenViewModel
 
 @Composable
-fun MainScreen() {
+fun MainScreen(startDestination: NavKey?) {
 	val viewModel = hiltViewModel<MainScreenViewModel>()
 	val state by viewModel.state.collectAsState()
-	MainContent(state)
+	MainContent(state, startDestination)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MainContent(state: MainScreenState) {
+private fun MainContent(state: MainScreenState, startRoute: NavKey?) {
 	val navigationState = rememberNavigationState(
-		startRoute = state.startRoute ?: Destinations.Authorization,
+		startRoute = startRoute ?: Destinations.Authorization,
 		topLevelRoutes = BottomNavigationBarItems.entries
 			.map { topLevelRoute -> topLevelRoute.destination }
 			.plus(Destinations.Authorization)
@@ -141,5 +139,5 @@ private fun OpenOnboardingIfNeeded(
 @Preview
 @Composable
 private fun MainScreenPreview() {
-	MainContent(state = MainScreenState())
+	MainContent(state = MainScreenState(), startRoute = null)
 }
