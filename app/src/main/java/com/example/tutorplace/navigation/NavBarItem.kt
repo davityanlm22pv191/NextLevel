@@ -4,6 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
 data class NavBarItem(
-	@field:DrawableRes val icon: Int,
-	@field:StringRes val label: Int,
+	@param:DrawableRes val icon: Int,
+	@param:StringRes val label: Int,
 )

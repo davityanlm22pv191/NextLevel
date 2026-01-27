@@ -57,7 +57,6 @@ import com.example.tutorplace.ui.screens.auth.authorization.presentation.Authori
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.YandexAuthorizationClicked
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationState
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationViewModel
-import com.example.tutorplace.ui.screens.main.model.MainScreenParams
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.Typography
@@ -231,9 +230,7 @@ private fun CollectEffects(
 	LaunchedEffect(Unit) {
 		effects.collect { effect ->
 			when (effect) {
-				NavigateToHome -> navigator.navigateAndClearBackStack(
-					Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = false))
-				)
+				NavigateToHome -> navigator.navigateAndClearBackStack(Destinations.MainScreen)
 				NavigateToRegistration -> navigator.navigate(Destinations.Registration)
 				NavigateToRestorePassword -> navigator.navigate(Destinations.RestorePassword)
 				NavigateToSupport -> navigator.navigate(Destinations.Support)

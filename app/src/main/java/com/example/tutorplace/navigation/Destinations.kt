@@ -2,10 +2,13 @@ package com.example.tutorplace.navigation
 
 import android.os.Parcelable
 import androidx.navigation3.runtime.NavKey
+import com.example.tutorplace.R
+import com.example.tutorplace.ui.common.toolbar.ToolbarHeaderConfig
 import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
-import com.example.tutorplace.ui.screens.main.model.MainScreenParams
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
+import com.example.tutorplace.navigation.DestinationWithBottomBar as WithBottomBar
+import com.example.tutorplace.navigation.DestinationWithToolbar as WithToolbar
 
 sealed interface Destinations : NavKey, Parcelable {
 
@@ -23,23 +26,51 @@ sealed interface Destinations : NavKey, Parcelable {
 
 	@Serializable
 	@Parcelize
-	data object Catalog : Destinations
+	data object Catalog : Destinations, WithToolbar, WithBottomBar {
+		override val config: ToolbarHeaderConfig
+			get() = ToolbarHeaderConfig(
+				R.string.tab_catalog_title,
+				style = ToolbarHeaderConfig.ToolbarHeaderStyle.Light,
+				isBackArrowVisible = false
+			)
+	}
 
 	@Serializable
 	@Parcelize
-	data object MyCourses : Destinations
+	data object MyCourses : Destinations, WithToolbar, WithBottomBar {
+		override val config: ToolbarHeaderConfig
+			get() = ToolbarHeaderConfig(
+				R.string.tab_my_courses_title,
+				style = ToolbarHeaderConfig.ToolbarHeaderStyle.Light,
+				isBackArrowVisible = false
+			)
+	}
 
 	@Serializable
 	@Parcelize
-	data object Home : Destinations
+	data object Home : Destinations, WithToolbar, WithBottomBar {
+		override val config: ToolbarHeaderConfig
+			get() = ToolbarHeaderConfig(
+				R.string.tab_home_title,
+				style = ToolbarHeaderConfig.ToolbarHeaderStyle.Light,
+				isBackArrowVisible = false
+			)
+	}
 
 	@Serializable
 	@Parcelize
-	data object Tasks : Destinations
+	data object Tasks : Destinations, WithToolbar, WithBottomBar {
+		override val config: ToolbarHeaderConfig
+			get() = ToolbarHeaderConfig(
+				R.string.tab_tasks_title,
+				style = ToolbarHeaderConfig.ToolbarHeaderStyle.Light,
+				isBackArrowVisible = false
+			)
+	}
 
 	@Serializable
 	@Parcelize
-	data class MainScreen(val params: MainScreenParams) : Destinations
+	data object MainScreen : Destinations
 
 	@Serializable
 	@Parcelize
@@ -55,11 +86,27 @@ sealed interface Destinations : NavKey, Parcelable {
 
 	@Serializable
 	@Parcelize
-	data class CourseDetailed(val params: CourseDetailedParams) : Destinations
+	data class CourseDetailed(
+		val params: CourseDetailedParams
+	) : Destinations, WithToolbar, WithBottomBar {
+		override val config: ToolbarHeaderConfig
+			get() = ToolbarHeaderConfig(
+				R.string.course_detailed_title,
+				style = ToolbarHeaderConfig.ToolbarHeaderStyle.Light,
+				isBackArrowVisible = false
+			)
+	}
 
 	@Serializable
 	@Parcelize
-	data object Mail : Destinations
+	data object Mail : Destinations, WithToolbar {
+		override val config: ToolbarHeaderConfig
+			get() = ToolbarHeaderConfig(
+				R.string.tutor_mail,
+				style = ToolbarHeaderConfig.ToolbarHeaderStyle.Light,
+				isBackArrowVisible = false
+			)
+	}
 
 	@Serializable
 	@Parcelize

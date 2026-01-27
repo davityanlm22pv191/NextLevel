@@ -1,4 +1,4 @@
-package com.example.tutorplace.helpers
+package com.example.tutorplace.extension
 
 import androidx.compose.ui.graphics.Color
 import kotlin.math.sqrt

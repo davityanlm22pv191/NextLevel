@@ -59,7 +59,6 @@ import com.example.tutorplace.ui.screens.auth.registration.presentation.Registra
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState.RegistrationStep.FirstStep
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationState.RegistrationStep.SecondStep
 import com.example.tutorplace.ui.screens.auth.registration.presentation.RegistrationViewModel
-import com.example.tutorplace.ui.screens.main.model.MainScreenParams
 import com.example.tutorplace.ui.theme.BlackAlpha04
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.ScreenColor
@@ -283,9 +282,7 @@ private fun CollectEffects(
 	LaunchedEffect(Unit) {
 		effects.collect { effect ->
 			when (effect) {
-				NavigateToHome -> navigator.navigateAndClearBackStack(
-					MainScreen(MainScreenParams(isShouldShowOnboarding = true))
-				)
+				NavigateToHome -> navigator.navigateAndClearBackStack(MainScreen)
 				NavigateToOffer -> navigator.navigate(Destinations.Support)
 				NavigateToTerms -> navigator.navigate(Destinations.Terms)
 				NavigateToYandexAuthorization -> navigator.navigate(Destinations.YandexAuthorization)
