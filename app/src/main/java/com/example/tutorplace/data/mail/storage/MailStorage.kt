@@ -5,7 +5,9 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface MailStorage {
 
-	val mails: StateFlow<List<Mail>>
+	val mails: StateFlow<List<Mail>?>
 
 	fun setMails(mails: List<Mail>)
+
+	fun clear()
 }

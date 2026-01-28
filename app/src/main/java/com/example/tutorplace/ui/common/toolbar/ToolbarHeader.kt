@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,6 +73,10 @@ fun ToolbarHeader(
 ) {
 	Row(
 		modifier = modifier
+			.shadow(
+				elevation = 8.dp,
+				shape = RoundedBottomCornerShape(20.dp),
+			)
 			.fillMaxWidth()
 			.wrapContentHeight()
 			.background(

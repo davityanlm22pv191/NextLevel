@@ -7,12 +7,16 @@ import javax.inject.Inject
 
 class MailStorageImpl @Inject constructor() : MailStorage {
 
-	private val _mails = MutableStateFlow<List<Mail>>(emptyList())
+	private val _mails = MutableStateFlow<List<Mail>?>(null)
 
-	override val mails: StateFlow<List<Mail>>
+	override val mails: StateFlow<List<Mail>?>
 		get() = _mails
 
 	override fun setMails(mails: List<Mail>) {
 		_mails.value = mails
+	}
+
+	override fun clear() {
+		_mails.value = null
 	}
 }

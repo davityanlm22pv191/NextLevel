@@ -2,7 +2,7 @@ package com.example.tutorplace.ui.screens.mail.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.example.tutorplace.data.mail.storage.MailStorage
-import com.example.tutorplace.domain.usecases.mail.GetMailsUseCase
+import com.example.tutorplace.domain.usecases.mail.UpdateMailsUseCase
 import com.example.tutorplace.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -11,7 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MailViewModel @Inject constructor(
 	private val mailStorage: MailStorage,
-	private val getMailsUseCase: GetMailsUseCase,
+	private val updateMailsUseCase: UpdateMailsUseCase,
 ) : BaseViewModel<MailEvent, MailState, MailEffect>() {
 
 	init {
@@ -28,7 +28,7 @@ class MailViewModel @Inject constructor(
 	private fun updateMails() {
 		viewModelScope.launch {
 			onEvent(MailEvent.MailsLoading)
-			getMailsUseCase
+			updateMailsUseCase
 				.execute()
 				.onFailure { throwable -> onEvent(MailEvent.MailsFailed(throwable)) }
 		}
@@ -37,7 +37,7 @@ class MailViewModel @Inject constructor(
 	private fun collectMails() {
 		viewModelScope.launch {
 			mailStorage.mails.collect { mails ->
-				onEvent(MailEvent.MailsLoaded(mails))
+				mails?.let { onEvent(MailEvent.MailsLoaded(mails)) }
 			}
 		}
 	}

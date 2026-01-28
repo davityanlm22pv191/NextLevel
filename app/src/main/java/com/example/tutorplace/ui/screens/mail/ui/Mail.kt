@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,15 +25,18 @@ import com.example.tutorplace.R
 import com.example.tutorplace.data.mail.model.Mail
 import com.example.tutorplace.data.mail.model.MailType.GIFT
 import com.example.tutorplace.data.mail.model.MailType.NOTIFICATION
+import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.GreyF8
 import com.example.tutorplace.ui.theme.Red33
+import com.example.tutorplace.ui.theme.Typography
 
 @Composable
-fun Mail(mail: Mail) {
+fun Mail(modifier: Modifier = Modifier, mail: Mail) {
 	Box(
-		modifier = Modifier
+		modifier = modifier
 			.fillMaxWidth()
 			.background(GreyF8, shape = RoundedCornerShape(20.dp))
+			.alpha(if (mail.isViewed) 0.5f else 1f)
 	) {
 		Row(
 			modifier = Modifier
@@ -56,14 +60,16 @@ fun Mail(mail: Mail) {
 				Text(
 					modifier = Modifier.fillMaxWidth(),
 					text = mail.title,
+					style = Typography.labelMedium.copy(color = Black16)
 				)
 				Text(
 					modifier = Modifier.fillMaxWidth(),
-					text = mail.description
+					text = mail.description,
+					style = Typography.labelMedium.copy(color = Black16)
 				)
 			}
 		}
-		if (mail.isViewed) {
+		if (!mail.isViewed) {
 			Box(
 				modifier = Modifier
 					.size(10.dp)
@@ -82,7 +88,7 @@ private fun MailPreview() {
 		verticalArrangement = Arrangement.spacedBy(8.dp),
 	) {
 		Mail(
-			Mail(
+			mail = Mail(
 				id = "123",
 				title = "Вам подарок",
 				description = "Заберите свой долгожданный подарок",
@@ -91,7 +97,7 @@ private fun MailPreview() {
 			)
 		)
 		Mail(
-			Mail(
+			mail = Mail(
 				id = "456",
 				title = "Вам подарок",
 				description = "Заберите свой долгожданный подарок",
@@ -100,7 +106,7 @@ private fun MailPreview() {
 			)
 		)
 		Mail(
-			Mail(
+			mail = Mail(
 				id = "789",
 				title = "Уведомление",
 				description = "У вас одно непрочитанное сообщение",
@@ -109,7 +115,7 @@ private fun MailPreview() {
 			)
 		)
 		Mail(
-			Mail(
+			mail = Mail(
 				id = "149",
 				title = "Уведомление",
 				description = "У вас одно непрочитанное сообщение",

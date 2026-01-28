@@ -59,17 +59,15 @@ private fun MailContent(state: MailState) {
 				)
 			}
 			when (state.mails) {
-				is DataInfo.Error -> {
-
-				}
+				is DataInfo.Error -> {}
 				is DataInfo.Loading -> {
 					items(
 						MAIL_SKELETON_ITEM_COUNT,
 						key = { index -> index.toString() },
-						itemContent = {
+						itemContent = { index ->
 							MailSkeleton(
 								modifier = Modifier.padding(
-									top = if (it == 0) 16.dp else 8.dp
+									top = if (index == 0) 16.dp else 8.dp
 								)
 							)
 						}
@@ -82,8 +80,11 @@ private fun MailContent(state: MailState) {
 						items(
 							state.mails.data.size,
 							key = { index -> state.mails.data[index].id },
-						) {
-							Mail(state.mails.data[it])
+						) { index ->
+							Mail(
+								modifier = Modifier.padding(top = if (index == 0) 16.dp else 8.dp),
+								state.mails.data[index]
+							)
 						}
 					}
 				}
