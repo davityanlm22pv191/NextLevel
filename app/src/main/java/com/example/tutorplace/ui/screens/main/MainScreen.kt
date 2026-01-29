@@ -75,8 +75,16 @@ private fun MainContent(state: MainScreenState, userIsAuthorized: Boolean) {
 						screenName = stringResource(config.screenName),
 						profileShortInfo = state.profileShortInfo,
 						onBackClicked = { navigator.goBack() },
-						onNotificationClicked = { navigator.navigate(Destinations.Mail) },
-						onSearchClicked = { navigator.navigate(Destinations.Search) },
+						onNotificationClicked = {
+							if (!navigationState.isDestinationIsAlreadyOpen(Destinations.Mail)) {
+								navigator.navigate(Destinations.Mail)
+							}
+						},
+						onSearchClicked = {
+							if (!navigationState.isDestinationIsAlreadyOpen(Destinations.Search)) {
+								navigator.navigate(Destinations.Search)
+							}
+						},
 						onProfileClicked = { navigator.navigate(Destinations.Profile) }
 					)
 				}

@@ -21,6 +21,8 @@ import com.example.tutorplace.ui.theme.Transparent
 import com.example.tutorplace.ui.theme.Typography
 import com.example.tutorplace.ui.theme.White
 
+const val BOTTOM_NAVIGATION_BAR_HEIGHT = 94
+
 @Composable
 fun BottomNavigationBar(
 	currentTopLevelRoute: NavKey,

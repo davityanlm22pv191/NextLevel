@@ -17,6 +17,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.runtime.serialization.NavKeySerializer
 import androidx.savedstate.compose.serialization.serializers.MutableStateSerializer
+import com.example.tutorplace.navigation.destinations.Destinations
 
 class NavigationState(
 	val startRoute: NavKey,
@@ -30,6 +31,10 @@ class NavigationState(
 		} else {
 			listOf(startRoute, topLevelRoute)
 		}
+
+	fun isDestinationIsAlreadyOpen(destinations: Destinations): Boolean {
+		return backStacks[topLevelRoute]?.firstOrNull() == destinations
+	}
 }
 
 @Composable

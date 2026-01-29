@@ -20,8 +20,9 @@ import com.example.tutorplace.R
 import com.example.tutorplace.data.common.Sort
 import com.example.tutorplace.data.common.SortOrder
 import com.example.tutorplace.data.common.SortType.DATE_ADDED
-import com.example.tutorplace.navigation.destinations.Destinations
 import com.example.tutorplace.navigation.Navigator
+import com.example.tutorplace.navigation.destinations.Destinations
+import com.example.tutorplace.ui.common.BOTTOM_NAVIGATION_BAR_HEIGHT
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.LARGE
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.SQUARE
 import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleAndSort
@@ -29,6 +30,7 @@ import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleA
 import com.example.tutorplace.ui.common.itemWithSkeleton
 import com.example.tutorplace.ui.common.sectiontitle.model.SectionSortInfo
 import com.example.tutorplace.ui.common.sectiontitle.model.SectionTitle
+import com.example.tutorplace.ui.common.toolbar.TOOLBAR_HEADER_HEIGHT
 import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
 import com.example.tutorplace.ui.screens.home.presentation.HomeEffect
 import com.example.tutorplace.ui.screens.home.presentation.HomeEffect.NavigateToCatalog
@@ -78,6 +80,7 @@ private fun HomeContent(
 				.fillMaxSize()
 				.padding(paddingValues)
 		) {
+			item { Spacer(Modifier.height(TOOLBAR_HEADER_HEIGHT.dp)) }
 			itemWithSkeleton(
 				key = "FortuneWheelShort",
 				dataInfo = state.fortuneWheelLastRotation,
@@ -136,7 +139,7 @@ private fun HomeContent(
 				},
 				emptyStateContent = {}
 			)
-			item { Spacer(Modifier.height(94.dp)) }
+			item { Spacer(Modifier.height(BOTTOM_NAVIGATION_BAR_HEIGHT.dp)) }
 		}
 	}
 }

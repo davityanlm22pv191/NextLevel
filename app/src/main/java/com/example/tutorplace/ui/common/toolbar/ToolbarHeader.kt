@@ -58,6 +58,8 @@ import com.example.tutorplace.ui.theme.Typography
 import com.example.tutorplace.ui.theme.White
 import com.example.tutorplace.ui.theme.Yellow12
 
+const val TOOLBAR_HEADER_HEIGHT = 48
+
 @Composable
 fun ToolbarHeader(
 	modifier: Modifier = Modifier,
