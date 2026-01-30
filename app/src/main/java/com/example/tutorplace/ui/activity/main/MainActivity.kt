@@ -4,11 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.SideEffect
-import androidx.core.view.WindowInsetsControllerCompat
-import com.example.tutorplace.extension.isLight
 import com.example.tutorplace.ui.screens.main.MainScreen
-import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.TutorPlaceTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,13 +16,6 @@ class MainActivity : ComponentActivity() {
 		enableEdgeToEdge()
 		setContent {
 			TutorPlaceTheme {
-				val isLightScreenColor = ScreenColor.isLight()
-				SideEffect {
-					val windowController = WindowInsetsControllerCompat(window, window.decorView)
-					windowController.isAppearanceLightStatusBars = isLightScreenColor
-					windowController.isAppearanceLightNavigationBars = isLightScreenColor
-				}
-
 				MainScreen(userIsAuthorized)
 			}
 		}
