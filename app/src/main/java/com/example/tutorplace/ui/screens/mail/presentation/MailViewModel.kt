@@ -2,6 +2,7 @@ package com.example.tutorplace.ui.screens.mail.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.example.tutorplace.data.mail.storage.MailStorage
+import com.example.tutorplace.data.profile.storage.ProfileStorage
 import com.example.tutorplace.domain.usecases.mail.UpdateMailsUseCase
 import com.example.tutorplace.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,9 +13,11 @@ import javax.inject.Inject
 class MailViewModel @Inject constructor(
 	private val mailStorage: MailStorage,
 	private val updateMailsUseCase: UpdateMailsUseCase,
+	private val profileStorage: ProfileStorage,
 ) : BaseViewModel<MailEvent, MailState, MailEffect>() {
 
 	init {
+		getUnreadMessageCount()
 		updateMails()
 		collectMails()
 	}
@@ -38,6 +41,16 @@ class MailViewModel @Inject constructor(
 		viewModelScope.launch {
 			mailStorage.mails.collect { mails ->
 				mails?.let { onEvent(MailEvent.MailsLoaded(mails)) }
+			}
+		}
+	}
+
+	private fun getUnreadMessageCount() {
+		viewModelScope.launch {
+			profileStorage.profileShortInfo.collect { value ->
+				value?.unreadMessageCount?.let { count ->
+					onEvent(MailEvent.UnreadMessageCountLoaded(count))
+				}
 			}
 		}
 	}

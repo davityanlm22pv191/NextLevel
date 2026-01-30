@@ -22,10 +22,9 @@ class MainActivity : ComponentActivity() {
 			TutorPlaceTheme {
 				val isLightScreenColor = ScreenColor.isLight()
 				SideEffect {
-					val windowInsetsController =
-						WindowInsetsControllerCompat(window, window.decorView)
-					windowInsetsController.isAppearanceLightStatusBars = isLightScreenColor
-					windowInsetsController.isAppearanceLightNavigationBars = isLightScreenColor
+					val windowController = WindowInsetsControllerCompat(window, window.decorView)
+					windowController.isAppearanceLightStatusBars = isLightScreenColor
+					windowController.isAppearanceLightNavigationBars = isLightScreenColor
 				}
 
 				MainScreen(userIsAuthorized)

@@ -36,7 +36,6 @@ import com.example.tutorplace.navigation.toEntries
 import com.example.tutorplace.ui.common.BottomNavigationBar
 import com.example.tutorplace.ui.common.RequestPermission
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
-import com.example.tutorplace.ui.common.toolbar.ToolbarHeaderConfig
 import com.example.tutorplace.ui.screens.main.presentation.MainScreenState
 import com.example.tutorplace.ui.screens.main.presentation.MainScreenViewModel
 
@@ -62,16 +61,17 @@ private fun MainContent(state: MainScreenState, userIsAuthorized: Boolean) {
 
 	Scaffold(
 		topBar = {
-			val toolbarConfig = navigationState.topLevelRoute as? DestinationWithToolbar
+			val isToolbarVisible = navigationState.currentScreen is DestinationWithToolbar
 			AnimatedContent(
 				label = "toolbarHeader",
-				targetState = toolbarConfig?.config,
-			) { config ->
-				if (config != null) {
+				targetState = isToolbarVisible,
+			) { isVisible ->
+				if (isVisible) {
+					val config = (navigationState.currentScreen as? DestinationWithToolbar)?.config
+						?: return@AnimatedContent
 					ToolbarHeader(
-						isTransparentBackground = config.style is ToolbarHeaderConfig.ToolbarHeaderStyle.Transparent,
-						isLightAppearance = config.style is ToolbarHeaderConfig.ToolbarHeaderStyle.Light,
-						isArrowVisible = config.isBackArrowVisible,
+						theme = config.theme,
+						isArrowVisible = navigationState.currentScreen !in BottomNavigationBarItems.entries.map { topLevelRoute -> topLevelRoute.destination },
 						screenName = stringResource(config.screenName),
 						profileShortInfo = state.profileShortInfo,
 						onBackClicked = { navigator.goBack() },
@@ -91,7 +91,7 @@ private fun MainContent(state: MainScreenState, userIsAuthorized: Boolean) {
 			}
 		},
 		bottomBar = {
-			val isBottomBarVisible = navigationState.topLevelRoute is DestinationWithBottomBar
+			val isBottomBarVisible = navigationState.currentScreen is DestinationWithBottomBar
 			AnimatedContent(
 				label = "bottomBar",
 				targetState = isBottomBarVisible

@@ -31,6 +31,8 @@ class NavigationState(
 		} else {
 			listOf(startRoute, topLevelRoute)
 		}
+	val currentScreen: Destinations
+		get() = backStacks[topLevelRoute]?.last() as Destinations
 
 	fun isDestinationIsAlreadyOpen(destinations: Destinations): Boolean {
 		return backStacks[topLevelRoute]?.firstOrNull() == destinations

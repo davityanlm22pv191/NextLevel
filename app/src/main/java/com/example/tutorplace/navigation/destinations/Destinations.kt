@@ -28,7 +28,7 @@ sealed interface Destinations : NavKey, Parcelable {
 		override val config: ToolbarHeaderConfig
 			get() = ToolbarHeaderConfig(
 				R.string.tab_catalog_title,
-				style = ToolbarHeaderConfig.ToolbarHeaderStyle.Light,
+				theme = ToolbarHeaderConfig.ToolbarHeaderTheme.Light,
 				isBackArrowVisible = false
 			)
 	}
@@ -39,7 +39,7 @@ sealed interface Destinations : NavKey, Parcelable {
 		override val config: ToolbarHeaderConfig
 			get() = ToolbarHeaderConfig(
 				R.string.tab_my_courses_title,
-				style = ToolbarHeaderConfig.ToolbarHeaderStyle.Light,
+				theme = ToolbarHeaderConfig.ToolbarHeaderTheme.Light,
 				isBackArrowVisible = false
 			)
 	}
@@ -50,7 +50,7 @@ sealed interface Destinations : NavKey, Parcelable {
 		override val config: ToolbarHeaderConfig
 			get() = ToolbarHeaderConfig(
 				R.string.tab_home_title,
-				style = ToolbarHeaderConfig.ToolbarHeaderStyle.Light,
+				theme = ToolbarHeaderConfig.ToolbarHeaderTheme.Light,
 				isBackArrowVisible = false
 			)
 	}
@@ -61,7 +61,7 @@ sealed interface Destinations : NavKey, Parcelable {
 		override val config: ToolbarHeaderConfig
 			get() = ToolbarHeaderConfig(
 				R.string.tab_tasks_title,
-				style = ToolbarHeaderConfig.ToolbarHeaderStyle.Light,
+				theme = ToolbarHeaderConfig.ToolbarHeaderTheme.Light,
 				isBackArrowVisible = false
 			)
 	}
@@ -86,18 +86,18 @@ sealed interface Destinations : NavKey, Parcelable {
 		override val config: ToolbarHeaderConfig
 			get() = ToolbarHeaderConfig(
 				R.string.course_detailed_title,
-				style = ToolbarHeaderConfig.ToolbarHeaderStyle.Light,
+				theme = ToolbarHeaderConfig.ToolbarHeaderTheme.Dark,
 				isBackArrowVisible = false
 			)
 	}
 
 	@Serializable
 	@Parcelize
-	data object Mail : Destinations, DestinationWithToolbar {
+	data object Mail : Destinations, DestinationWithToolbar, DestinationWithBottomBar {
 		override val config: ToolbarHeaderConfig
 			get() = ToolbarHeaderConfig(
 				R.string.tutor_mail,
-				style = ToolbarHeaderConfig.ToolbarHeaderStyle.Light,
+				theme = ToolbarHeaderConfig.ToolbarHeaderTheme.Light,
 				isBackArrowVisible = false
 			)
 	}

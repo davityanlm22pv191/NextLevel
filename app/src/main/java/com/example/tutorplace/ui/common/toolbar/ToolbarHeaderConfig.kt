@@ -4,12 +4,11 @@ import androidx.annotation.StringRes
 
 data class ToolbarHeaderConfig(
 	@StringRes val screenName: Int,
-	val style: ToolbarHeaderStyle,
+	val theme: ToolbarHeaderTheme,
 	val isBackArrowVisible: Boolean,
 ) {
-	sealed interface ToolbarHeaderStyle {
-		data object Transparent : ToolbarHeaderStyle
-		data object Light : ToolbarHeaderStyle
-		data object Dark : ToolbarHeaderStyle
+	sealed interface ToolbarHeaderTheme {
+		data object Dark : ToolbarHeaderTheme
+		data object Light : ToolbarHeaderTheme
 	}
 }

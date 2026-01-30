@@ -1,7 +1,11 @@
 package com.example.tutorplace.ui.common.toolbar
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +44,7 @@ import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowInsetsControllerCompat
 import coil.compose.AsyncImage
 import com.example.tutorplace.R
 import com.example.tutorplace.data.profile.model.LevelInfo
@@ -46,6 +52,8 @@ import com.example.tutorplace.data.profile.model.ProfileShortInfo
 import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.ui.common.CircleBadgeCounter
 import com.example.tutorplace.ui.common.RoundedBottomCornerShape
+import com.example.tutorplace.ui.common.toolbar.ToolbarHeaderConfig.ToolbarHeaderTheme
+import com.example.tutorplace.ui.theme.Black
 import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.Black36
 import com.example.tutorplace.ui.theme.Black49
@@ -53,7 +61,6 @@ import com.example.tutorplace.ui.theme.GreyD5
 import com.example.tutorplace.ui.theme.GreyF8
 import com.example.tutorplace.ui.theme.PurpleDE
 import com.example.tutorplace.ui.theme.Red33
-import com.example.tutorplace.ui.theme.Transparent
 import com.example.tutorplace.ui.theme.Typography
 import com.example.tutorplace.ui.theme.White
 import com.example.tutorplace.ui.theme.Yellow12
@@ -66,23 +73,33 @@ fun ToolbarHeader(
 	screenName: String,
 	profileShortInfo: DataInfo<ProfileShortInfo>,
 	isArrowVisible: Boolean,
-	isTransparentBackground: Boolean = false,
-	isLightAppearance: Boolean = true,
+	theme: ToolbarHeaderTheme,
 	onBackClicked: () -> Unit = {},
 	onNotificationClicked: () -> Unit,
 	onSearchClicked: () -> Unit,
 	onProfileClicked: () -> Unit,
 ) {
+	val window = LocalActivity.current?.window
+	SideEffect {
+		if (window == null) return@SideEffect
+		val windowController = WindowInsetsControllerCompat(window, window.decorView)
+		val isLightStatusBar = when (theme) {
+			ToolbarHeaderTheme.Dark -> false
+			ToolbarHeaderTheme.Light -> true
+		}
+		windowController.isAppearanceLightStatusBars = isLightStatusBar
+		windowController.isAppearanceLightNavigationBars = isLightStatusBar
+	}
 	Row(
 		modifier = modifier
 			.shadow(
-				elevation = 8.dp,
+				elevation = 4.dp,
 				shape = RoundedBottomCornerShape(20.dp),
 			)
 			.fillMaxWidth()
 			.wrapContentHeight()
 			.background(
-				color = if (isTransparentBackground) Transparent else White,
+				color = if (theme == ToolbarHeaderTheme.Dark) Black else White,
 				shape = RoundedBottomCornerShape(20.dp)
 			)
 			.statusBarsPadding()
@@ -92,8 +109,8 @@ fun ToolbarHeader(
 		AnimatedContent(
 			targetState = isArrowVisible,
 			label = "arrow",
-		) {
-			if (it) {
+		) { isVisible ->
+			if (isVisible) {
 				Icon(
 					modifier = Modifier
 						.size(24.dp)
@@ -101,7 +118,7 @@ fun ToolbarHeader(
 						.clickable(interactionSource = null, indication = null) { onBackClicked() },
 					painter = painterResource(R.drawable.ic_arrow_left_black_16),
 					contentDescription = null,
-					tint = if (isLightAppearance) Black16 else White
+					tint = if (theme == ToolbarHeaderTheme.Light) Black16 else White
 				)
 			}
 		}
@@ -112,10 +129,18 @@ fun ToolbarHeader(
 			contentDescription = null
 		)
 		Spacer(Modifier.width(12.dp))
-		AnimatedContent(targetState = screenName, label = "screenName") {
+		AnimatedContent(
+			targetState = screenName,
+			label = "screenName",
+			transitionSpec = {
+				slideInVertically(
+					initialOffsetY = { it },
+				) togetherWith slideOutVertically(targetOffsetY = { -it })
+			}
+		) {
 			Text(
 				text = it,
-				style = Typography.titleMedium.copy(color = if (isLightAppearance) Black16 else White)
+				style = Typography.titleMedium.copy(color = if (theme == ToolbarHeaderTheme.Light) Black16 else White)
 			)
 		}
 		Spacer(Modifier.weight(1f))
@@ -129,7 +154,7 @@ fun ToolbarHeader(
 				modifier = Modifier.align(Alignment.Center),
 				painter = painterResource(R.drawable.ic_email),
 				contentDescription = null,
-				tint = if (isLightAppearance) Black16 else White
+				tint = if (theme == ToolbarHeaderTheme.Light) Black16 else White
 			)
 			AnimatedContent(
 				modifier = Modifier.align(Alignment.TopEnd),
@@ -160,12 +185,12 @@ fun ToolbarHeader(
 			Icon(
 				painter = painterResource(R.drawable.ic_search),
 				contentDescription = null,
-				tint = if (isLightAppearance) Black16 else White
+				tint = if (theme == ToolbarHeaderTheme.Light) Black16 else White
 			)
 		}
 		Surface(
 			modifier = Modifier,
-			color = if (isLightAppearance) GreyF8 else Black36,
+			color = if (theme == ToolbarHeaderTheme.Light) GreyF8 else Black36,
 			shape = RoundedCornerShape(40.dp),
 			onClick = { onProfileClicked() }
 		) {
@@ -174,12 +199,12 @@ fun ToolbarHeader(
 				verticalAlignment = Alignment.CenterVertically,
 				horizontalArrangement = Arrangement.spacedBy(4.dp)
 			) {
-				ProfileWithProgressAndLevel(profileShortInfo, isLightAppearance)
+				ProfileWithProgressAndLevel(profileShortInfo, theme)
 				Icon(
 					modifier = Modifier.rotate(270f),
 					painter = painterResource(R.drawable.ic_arrow_down_black_16),
 					contentDescription = null,
-					tint = if (isLightAppearance) Black16 else White
+					tint = if (theme == ToolbarHeaderTheme.Light) Black16 else White
 				)
 			}
 		}
@@ -189,7 +214,7 @@ fun ToolbarHeader(
 @Composable
 private fun ProfileWithProgressAndLevel(
 	profileShortInfo: DataInfo<ProfileShortInfo>,
-	isLightAppearance: Boolean
+	theme: ToolbarHeaderTheme,
 ) {
 	Box(
 		modifier = Modifier
@@ -218,7 +243,7 @@ private fun ProfileWithProgressAndLevel(
 					modifier = Modifier
 						.size(28.dp)
 						.align(Alignment.Center),
-					trackColor = if (isLightAppearance) GreyD5 else Black49,
+					trackColor = if (theme == ToolbarHeaderTheme.Light) GreyD5 else Black49,
 					strokeWidth = 2.dp,
 					color = PurpleDE,
 					gapSize = 0.dp
@@ -278,8 +303,7 @@ fun ToolbarHeaderPreview() {
 					)
 				),
 				isArrowVisible = true,
-				isTransparentBackground = true,
-				isLightAppearance = false,
+				theme = ToolbarHeaderTheme.Dark,
 				onBackClicked = {},
 				onNotificationClicked = {},
 				onSearchClicked = {},
@@ -297,6 +321,7 @@ fun ToolbarHeaderPreview() {
 					profileThumbUrl = ""
 				)
 			),
+			theme = ToolbarHeaderTheme.Light,
 			isArrowVisible = false,
 			onBackClicked = {},
 			onNotificationClicked = {},
@@ -304,6 +329,7 @@ fun ToolbarHeaderPreview() {
 			onProfileClicked = {},
 		)
 		ToolbarHeader(
+			theme = ToolbarHeaderTheme.Light,
 			screenName = "Дом",
 			profileShortInfo = DataInfo.Loading,
 			isArrowVisible = false,
@@ -323,6 +349,7 @@ fun ToolbarHeaderPreview() {
 					profileThumbUrl = ""
 				)
 			),
+			theme = ToolbarHeaderTheme.Light,
 			isArrowVisible = true,
 			onBackClicked = {},
 			onNotificationClicked = {},

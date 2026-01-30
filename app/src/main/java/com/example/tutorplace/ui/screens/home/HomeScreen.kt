@@ -87,12 +87,17 @@ private fun HomeContent(
 				paddingValues = PaddingValues(top = 8.dp),
 				content = { lastRotationTime ->
 					FortuneWheelShortItem(
+						modifier = Modifier.padding(horizontal = 4.dp),
 						lastRotationTime = lastRotationTime,
 						onInformationClick = { onFortuneWheelInformationClicked() },
 						onItemClick = { onFortuneWheelClicked() }
 					)
 				},
-				skeletonContent = { FortuneWheelShortItemSkeleton() }
+				skeletonContent = {
+					FortuneWheelShortItemSkeleton(
+						modifier = Modifier.padding(horizontal = 4.dp)
+					)
+				}
 			)
 			itemWithSkeleton(
 				key = "MyCourses",

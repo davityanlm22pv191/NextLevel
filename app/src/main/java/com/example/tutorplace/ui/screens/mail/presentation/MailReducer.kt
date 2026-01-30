@@ -12,6 +12,9 @@ object MailReducer : BaseReducer<MailState, MailEvent> {
 			is MailEvent.MailsFailed -> oldState.copy(mails = DataInfo.Error(event.throwable))
 			is MailEvent.MailsLoading -> oldState.copy(mails = DataInfo.Loading)
 			is MailEvent.MailsLoaded -> oldState.copy(mails = DataInfo.Success(event.mails))
+			is MailEvent.UnreadMessageCountLoaded -> oldState.copy(
+				skeletonItemsCount = DataInfo.Success(event.count)
+			)
 			else -> oldState
 		}
 	}

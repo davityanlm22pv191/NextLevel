@@ -82,6 +82,7 @@ fun FortuneWheelShortItem(
 	Box(
 		modifier = modifier
 			.fillMaxWidth()
+			.clip(RoundedCornerShape(16.dp))
 			.clickable { onItemClick() },
 	) {
 		Image(
@@ -90,24 +91,25 @@ fun FortuneWheelShortItem(
 			contentDescription = null,
 			contentScale = ContentScale.Crop
 		)
-		Column(modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 5.dp, bottom = 16.dp)) {
+		Column(
+			modifier = Modifier.padding(
+				top = 20.dp,
+				start = 20.dp,
+				end = 5.dp,
+				bottom = 16.dp
+			)
+		) {
 			Text(
 				modifier = Modifier.fillMaxWidth(),
 				text = stringResource(R.string.fortune_wheel_try_your_luck),
-				style = Typography.displayMedium.copy(
-					color = White,
-					fontWeight = FontWeight.Normal
-				)
+				style = Typography.displayMedium.copy(color = White, fontWeight = FontWeight.Normal)
 			)
 			Text(
 				modifier = Modifier
 					.fillMaxWidth()
 					.padding(top = 2.dp),
 				text = stringResource(R.string.fortune_wheel),
-				style = Typography.labelMedium.copy(
-					color = White,
-					fontWeight = FontWeight.Normal
-				)
+				style = Typography.labelMedium.copy(color = White, fontWeight = FontWeight.Normal)
 			)
 			AnimatedContent(
 				targetState = durationTime.isZero or durationTime.isNegative
