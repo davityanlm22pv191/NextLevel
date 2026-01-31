@@ -1,11 +1,9 @@
 package com.example.tutorplace.ui.screens.mail
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -60,14 +58,14 @@ private fun MailContent(state: MailState) {
 					top = paddingValues.calculateTopPadding() + TOOLBAR_HEADER_HEIGHT.dp,
 					start = paddingValues.calculateStartPadding(Rtl),
 					end = paddingValues.calculateEndPadding(Rtl),
-					bottom = paddingValues.calculateBottomPadding()
+					bottom = paddingValues.calculateBottomPadding() + BOTTOM_NAVIGATION_BAR_HEIGHT.dp
 				)
 				.background(White, RoundedCornerShape(20.dp))
 				.padding(horizontal = 16.dp)
 		) {
 			item(key = "title") {
 				Text(
-					modifier = Modifier.padding(top = 16.dp),
+					modifier = Modifier.padding(vertical = 16.dp),
 					text = stringResource(R.string.tutor_mail_incoming),
 					style = Typography.headlineLarge.copy(color = Black16)
 				)
@@ -75,23 +73,18 @@ private fun MailContent(state: MailState) {
 			itemsWithSkeletons(
 				dataInfo = state.mails,
 				skeletonItemsCount = MAIL_SKELETON_ITEM_COUNT,
-				content = { mail, index ->
+				content = { mail, _ ->
 					Mail(
-						modifier = Modifier.padding(top = if (index == 0) 16.dp else 8.dp),
+						modifier = Modifier.padding(bottom = 8.dp),
 						mail = mail
 					)
 				},
-				skeletonItem = { index ->
-					MailSkeleton(
-						modifier = Modifier.padding(top = if (index == 0) 16.dp else 8.dp)
-					)
+				skeletonItem = { _ ->
+					MailSkeleton(modifier = Modifier.padding(bottom = 8.dp))
 				},
-				emptyStateContent = { MailEmptyState(Modifier.padding(top = 16.dp)) },
+				emptyStateContent = { MailEmptyState() },
 				errorStateContent = {}
 			)
-			item(key = "bottomBarSeparator") {
-				Spacer(Modifier.height(BOTTOM_NAVIGATION_BAR_HEIGHT.dp))
-			}
 		}
 	}
 }
