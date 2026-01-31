@@ -28,7 +28,7 @@ fun <T> LazyListScope.itemsWithSkeletons(
 		is DataInfo.Success<List<T>> -> {
 			if (dataInfo.isEmptyState()) {
 				item(
-					key = { "emptyStateContent" },
+					key = "emptyStateContent",
 					content = { emptyStateContent() }
 				)
 			} else {

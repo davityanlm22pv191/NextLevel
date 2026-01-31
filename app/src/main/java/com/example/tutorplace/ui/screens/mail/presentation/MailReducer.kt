@@ -4,6 +4,7 @@ import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.ui.base.BaseReducer
 
 object MailReducer : BaseReducer<MailState, MailEvent> {
+
 	override fun reduce(
 		oldState: MailState,
 		event: MailEvent

@@ -86,7 +86,7 @@ private fun MailContent(state: MailState) {
 						modifier = Modifier.padding(top = if (index == 0) 16.dp else 8.dp)
 					)
 				},
-				emptyStateContent = { MailEmptyState() },
+				emptyStateContent = { MailEmptyState(Modifier.padding(top = 16.dp)) },
 				errorStateContent = {}
 			)
 			item(key = "bottomBarSeparator") {

@@ -20,9 +20,11 @@ import com.example.tutorplace.ui.theme.GreyF8
 import com.example.tutorplace.ui.theme.Typography
 
 @Composable
-fun MailEmptyState() {
+fun MailEmptyState(
+	modifier: Modifier = Modifier,
+) {
 	Column(
-		modifier = Modifier
+		modifier = modifier
 			.fillMaxWidth()
 			.background(GreyF8, shape = RoundedCornerShape(20.dp))
 			.padding(16.dp),
