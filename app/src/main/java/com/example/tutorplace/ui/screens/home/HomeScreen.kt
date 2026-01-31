@@ -27,7 +27,7 @@ import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.LARG
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.SQUARE
 import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleAndSort
 import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleAndSortSkeleton
-import com.example.tutorplace.ui.common.itemWithSkeleton
+import com.example.tutorplace.ui.common.lazyitems.itemWithSkeleton
 import com.example.tutorplace.ui.common.sectiontitle.model.SectionSortInfo
 import com.example.tutorplace.ui.common.sectiontitle.model.SectionTitle
 import com.example.tutorplace.ui.common.toolbar.TOOLBAR_HEADER_HEIGHT

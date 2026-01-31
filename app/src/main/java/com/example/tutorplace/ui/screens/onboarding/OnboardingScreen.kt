@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -34,6 +33,7 @@ import com.example.tutorplace.R
 import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.PurpleButton
+import com.example.tutorplace.ui.common.RoundedTopCornerShape
 import com.example.tutorplace.ui.common.TransparentButton
 import com.example.tutorplace.ui.common.header.Header
 import com.example.tutorplace.ui.common.header.HeaderLogoType.Image
@@ -120,11 +120,8 @@ private fun OnboardingContent(
 				modifier = Modifier
 					.fillMaxWidth()
 					.padding(top = if (state.step != TELL_US_ABOUT_INTERESTS) 20.dp else 0.dp)
-					.shadow(8.dp, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-					.background(
-						ContainerColor,
-						RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-					)
+					.shadow(8.dp, RoundedTopCornerShape(16.dp))
+					.background(ContainerColor, RoundedTopCornerShape(16.dp))
 					.padding(16.dp)
 			) {
 				Column(

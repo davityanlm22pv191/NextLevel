@@ -18,7 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.tutorplace.data.courses.course.CourseDetailed
 import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.navigation.Navigator
-import com.example.tutorplace.ui.common.itemWithSkeleton
+import com.example.tutorplace.ui.common.lazyitems.itemWithSkeleton
 import com.example.tutorplace.ui.common.toolbar.TOOLBAR_HEADER_HEIGHT
 import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEvent

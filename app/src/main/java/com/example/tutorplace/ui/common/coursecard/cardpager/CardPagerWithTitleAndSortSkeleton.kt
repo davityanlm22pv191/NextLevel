@@ -58,7 +58,12 @@ fun CardPagerWithTitleAndSortSkeleton(
 			current.coerceIn(0, SKELETON_CARD_COUNT - 1)
 		}
 	}
-	SkeletonShimmer(modifier = Modifier.background(color = ScreenColor)) {
+	SkeletonShimmer(
+		modifier = Modifier.background(
+			color = ScreenColor,
+			shape = RoundedCornerShape(20.dp)
+		)
+	) {
 		Column(
 			modifier = modifier
 				.fillMaxWidth()

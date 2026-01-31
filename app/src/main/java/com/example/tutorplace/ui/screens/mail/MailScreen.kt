@@ -25,6 +25,7 @@ import com.example.tutorplace.R
 import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.BOTTOM_NAVIGATION_BAR_HEIGHT
+import com.example.tutorplace.ui.common.lazyitems.itemsWithSkeletons
 import com.example.tutorplace.ui.common.toolbar.TOOLBAR_HEADER_HEIGHT
 import com.example.tutorplace.ui.screens.mail.presentation.MailEffect
 import com.example.tutorplace.ui.screens.mail.presentation.MailState
@@ -71,41 +72,23 @@ private fun MailContent(state: MailState) {
 					style = Typography.headlineLarge.copy(color = Black16)
 				)
 			}
-			when (state.mails) {
-				is DataInfo.Error -> {}
-				is DataInfo.Loading -> {
-					items(
-						count = when (state.skeletonItemsCount) {
-							is DataInfo.Error,
-							is DataInfo.Loading -> MAIL_SKELETON_ITEM_COUNT
-							is DataInfo.Success -> state.skeletonItemsCount.data
-						},
-						key = { index -> index.toString() },
-						itemContent = { index ->
-							MailSkeleton(
-								modifier = Modifier.padding(
-									top = if (index == 0) 16.dp else 8.dp
-								)
-							)
-						}
+			itemsWithSkeletons(
+				dataInfo = state.mails,
+				skeletonItemsCount = MAIL_SKELETON_ITEM_COUNT,
+				content = { mail, index ->
+					Mail(
+						modifier = Modifier.padding(top = if (index == 0) 16.dp else 8.dp),
+						mail = mail
 					)
-				}
-				is DataInfo.Success -> {
-					if (state.mails.isEmptyState()) {
-						item(key = "empty_state") { MailEmptyState() }
-					} else {
-						items(
-							state.mails.data.size,
-							key = { index -> state.mails.data[index].id },
-						) { index ->
-							Mail(
-								modifier = Modifier.padding(top = if (index == 0) 16.dp else 8.dp),
-								state.mails.data[index]
-							)
-						}
-					}
-				}
-			}
+				},
+				skeletonItem = { index ->
+					MailSkeleton(
+						modifier = Modifier.padding(top = if (index == 0) 16.dp else 8.dp)
+					)
+				},
+				emptyStateContent = { MailEmptyState() },
+				errorStateContent = {}
+			)
 			item(key = "bottomBarSeparator") {
 				Spacer(Modifier.height(BOTTOM_NAVIGATION_BAR_HEIGHT.dp))
 			}

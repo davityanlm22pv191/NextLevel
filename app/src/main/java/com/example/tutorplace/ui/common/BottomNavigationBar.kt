@@ -1,7 +1,6 @@
 package com.example.tutorplace.ui.common
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -33,7 +32,7 @@ fun BottomNavigationBar(
 			.background(Transparent)
 			.shadow(
 				elevation = 8.dp,
-				shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+				shape = RoundedTopCornerShape(20.dp),
 			),
 		containerColor = White
 	) {
