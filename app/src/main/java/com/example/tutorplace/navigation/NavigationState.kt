@@ -31,11 +31,13 @@ class NavigationState(
 		} else {
 			listOf(startRoute, topLevelRoute)
 		}
-	val currentScreen: Destinations
-		get() = backStacks[topLevelRoute]?.last() as Destinations
+	val currentScreen: NavKey
+		get() = requireNotNull(backStacks[topLevelRoute]?.last()) {
+			"NavigationState.kt переменная currentScreen: NavKey почему-то вернула null"
+		}
 
 	fun isDestinationIsAlreadyOpen(destinations: Destinations): Boolean {
-		return backStacks[topLevelRoute]?.firstOrNull() == destinations
+		return currentScreen == destinations
 	}
 }
 
