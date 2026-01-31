@@ -4,12 +4,14 @@ import com.example.tutorplace.data.profile.ProfileService
 import com.example.tutorplace.data.profile.storage.ProfileStorage
 import javax.inject.Inject
 
-class GetProfileShortInfoUseCase @Inject constructor(
+class UpdateProfileShortInfoUseCase @Inject constructor(
 	private val profileService: ProfileService,
 	private val profileStorage: ProfileStorage,
 ) {
 	// Mock Image Url https://iili.io/K4WLI4a.png
 	suspend fun execute(): Result<Unit> {
+		profileStorage.clear()
+		profileStorage.profileShortInfo
 		val response = profileService.getProfileShortInfo()
 		return if (response.isSuccessful) {
 			response.body()?.let { profileShortInfo ->

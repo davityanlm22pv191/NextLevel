@@ -1,157 +1,148 @@
 package com.example.tutorplace.ui.screens.main
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.os.Build
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
-import com.example.tutorplace.R
-import com.example.tutorplace.navigation.BottomSheetSceneStrategy
-import com.example.tutorplace.navigation.Destinations
-import com.example.tutorplace.navigation.NavBarItem
 import com.example.tutorplace.navigation.Navigator
+import com.example.tutorplace.navigation.appEntryProvider
+import com.example.tutorplace.navigation.bottomnavbar.BottomNavigationBarItems
+import com.example.tutorplace.navigation.destinations.DestinationWithBottomBar
+import com.example.tutorplace.navigation.destinations.DestinationWithToolbar
+import com.example.tutorplace.navigation.destinations.Destinations
 import com.example.tutorplace.navigation.rememberNavigationState
+import com.example.tutorplace.navigation.strategy.BottomSheetSceneStrategy
 import com.example.tutorplace.navigation.toEntries
+import com.example.tutorplace.ui.common.BottomNavigationBar
 import com.example.tutorplace.ui.common.RequestPermission
-import com.example.tutorplace.ui.screens.catalog.CatalogScreen
-import com.example.tutorplace.ui.screens.coursedetailed.CourseDetailedScreen
-import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.FortuneWheelScreen
-import com.example.tutorplace.ui.screens.fortunewheel.fortunewheelinformation.FortuneWheelInformationScreen
-import com.example.tutorplace.ui.screens.home.HomeScreen
-import com.example.tutorplace.ui.screens.main.model.MainScreenParams
+import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
+import com.example.tutorplace.ui.screens.main.presentation.MainScreenState
 import com.example.tutorplace.ui.screens.main.presentation.MainScreenViewModel
-import com.example.tutorplace.ui.screens.mycourses.MyCoursesScreen
-import com.example.tutorplace.ui.screens.onboarding.OnboardingScreen
-import com.example.tutorplace.ui.screens.tasks.TasksScreen
-import com.example.tutorplace.ui.theme.ContainerColor
-import com.example.tutorplace.ui.theme.Grey82
-import com.example.tutorplace.ui.theme.PurpleCC
-import com.example.tutorplace.ui.theme.Transparent
-import com.example.tutorplace.ui.theme.Typography
 
-private val TOP_LEVEL_ROUTES = mapOf(
-	Destinations.Catalog to NavBarItem(R.drawable.ic_catalog, R.string.tab_catalog_title),
-	Destinations.MyCourses to NavBarItem(R.drawable.ic_play, R.string.tab_my_courses_title),
-	Destinations.Home to NavBarItem(R.drawable.ic_home, R.string.tab_home_title),
-	Destinations.Tasks to NavBarItem(R.drawable.ic_star, R.string.tab_tasks_title),
-)
+private const val BAR_ANIMATIONS_DURATION_MS = 300
 
 @Composable
-fun MainScreen(params: MainScreenParams) {
+fun MainScreen(userIsAuthorized: Boolean) {
 	val viewModel = hiltViewModel<MainScreenViewModel>()
-	MainContent(params)
+	val state by viewModel.state.collectAsState()
+	MainContent(state, userIsAuthorized)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-private fun MainContent(params: MainScreenParams) {
+private fun MainContent(state: MainScreenState, userIsAuthorized: Boolean) {
 	val navigationState = rememberNavigationState(
-		startRoute = Destinations.Home,
-		topLevelRoutes = TOP_LEVEL_ROUTES.keys
+		startRoute = if (userIsAuthorized) Destinations.Home else Destinations.Authorization,
+		topLevelRoutes = BottomNavigationBarItems.entries
+			.map { topLevelRoute -> topLevelRoute.destination }
+			.plus(Destinations.Authorization)
+			.toSet()
 	)
 	val context = LocalContext.current
 	val navigator = remember { Navigator(navigationState, context) }
 	val bottomSheetStrategy = remember { BottomSheetSceneStrategy<NavKey>() }
-	val entryProvider = entryProvider<NavKey> {
-		entry<Destinations.Onboarding>(
-			metadata = BottomSheetSceneStrategy.bottomSheet(),
-		) {
-			OnboardingScreen(navigator)
-		}
-		entry<Destinations.FortuneWheel> { FortuneWheelScreen(navigator) }
-		entry<Destinations.FortuneWheelInformation>(
-			metadata = BottomSheetSceneStrategy.bottomSheet()
-		) {
-			FortuneWheelInformationScreen(navigator)
-		}
-		entry<Destinations.CourseDetailed> { courseDetailed ->
-			CourseDetailedScreen(navigator, courseDetailed.params)
-		}
-		entry<Destinations.Catalog> { CatalogScreen(navigator) }
-		entry<Destinations.Home> { HomeScreen(navigator) }
-		entry<Destinations.MyCourses> { MyCoursesScreen(navigator) }
-		entry<Destinations.Tasks> { TasksScreen(navigator) }
-	}
 
 	Scaffold(
-		contentWindowInsets = WindowInsets(0, 0, 0, 0),
-		bottomBar = {
-			NavigationBar(
-				modifier = Modifier
-					.shadow(4.dp, RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-					.clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
-				containerColor = ContainerColor,
+		topBar = {
+			val isToolbarVisible = navigationState.currentScreen is DestinationWithToolbar
+			AnimatedVisibility(
+				label = "toolbarHeaderVisibility",
+				visible = isToolbarVisible,
+				enter = slideInVertically(
+					initialOffsetY = { -it },
+					animationSpec = tween(durationMillis = BAR_ANIMATIONS_DURATION_MS)
+				),
+				exit = slideOutVertically(
+					targetOffsetY = { -it },
+					animationSpec = tween(durationMillis = BAR_ANIMATIONS_DURATION_MS)
+				)
 			) {
-				TOP_LEVEL_ROUTES.forEach { (destination, navBarItem) ->
-					val isSelected = destination == navigationState.topLevelRoute
-					NavigationBarItem(
-						selected = isSelected,
-						label = {
-							Text(
-								text = stringResource(navBarItem.label),
-								style = Typography.bodySmall
-							)
-						},
-						icon = {
-							Icon(
-								painter = painterResource(navBarItem.icon),
-								contentDescription = null
-							)
-						},
-						onClick = { navigator.navigate(destination) },
-						colors = NavigationBarItemDefaults.colors(
-							selectedIconColor = PurpleCC,
-							unselectedIconColor = Grey82,
-							selectedTextColor = PurpleCC,
-							unselectedTextColor = Grey82,
-							indicatorColor = Transparent
+				val config = (navigationState.currentScreen as? DestinationWithToolbar)?.config
+					?: return@AnimatedVisibility
+				ToolbarHeader(
+					theme = config.theme,
+					isArrowVisible = navigationState.currentScreen !in BottomNavigationBarItems.entries.map { topLevelRoute -> topLevelRoute.destination },
+					screenName = stringResource(config.screenName),
+					profileShortInfo = state.profileShortInfo,
+					onBackClicked = { navigator.goBack() },
+					onNotificationClicked = {
+						if (!navigationState.isDestinationIsAlreadyOpen(Destinations.Mail)) {
+							navigator.navigate(Destinations.Mail)
+						}
+					},
+					onSearchClicked = {
+						if (!navigationState.isDestinationIsAlreadyOpen(Destinations.Search)) {
+							navigator.navigate(Destinations.Search)
+						}
+					},
+					onProfileClicked = { navigator.navigate(Destinations.Profile) }
+				)
+			}
+		},
+		bottomBar = {
+			val isBottomBarVisible = navigationState.currentScreen is DestinationWithBottomBar
+			AnimatedVisibility(
+				label = "bottomBarVisibility",
+				visible = isBottomBarVisible,
+				enter = slideInVertically(
+					initialOffsetY = { fullHeight -> fullHeight },
+					animationSpec = tween(durationMillis = BAR_ANIMATIONS_DURATION_MS)
+				),
+				exit = slideOutVertically(
+					targetOffsetY = { fullHeight -> fullHeight },
+					animationSpec = tween(durationMillis = BAR_ANIMATIONS_DURATION_MS)
+				)
+			) {
+				AnimatedContent(
+					label = "bottomBar",
+					targetState = isBottomBarVisible,
+
+					) { isVisible ->
+					if (isVisible) {
+						BottomNavigationBar(
+							currentTopLevelRoute = navigationState.topLevelRoute,
+							onClick = { bottomNavBarItemDestination ->
+								navigator.navigate(bottomNavBarItemDestination)
+							}
 						)
-					)
+					}
 				}
 			}
 		}
-	) { paddingValues ->
+	) { _ ->
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 			RequestPermission(Manifest.permission.POST_NOTIFICATIONS) {}
 		}
+
 		NavDisplay(
-			modifier = Modifier
-				.fillMaxSize()
-				.padding(paddingValues),
+			modifier = Modifier.fillMaxSize(),
 			onBack = { navigator.goBack() },
 			sceneStrategy = bottomSheetStrategy,
-			entries = navigationState.toEntries(entryProvider),
+			entries = navigationState.toEntries(appEntryProvider(navigator)),
 			predictivePopTransitionSpec = {
 				slideInHorizontally(
 					initialOffsetX = { -it },
@@ -162,7 +153,7 @@ private fun MainContent(params: MainScreenParams) {
 				)
 			}
 		)
-		OpenOnboardingIfNeeded(navigator, params.isShouldShowOnboarding)
+		// OpenOnboardingIfNeeded(navigator, params.isShouldShowOnboarding)
 	}
 }
 
@@ -183,5 +174,5 @@ private fun OpenOnboardingIfNeeded(
 @Preview
 @Composable
 private fun MainScreenPreview() {
-	MainContent(MainScreenParams(isShouldShowOnboarding = true))
+	MainContent(state = MainScreenState(), userIsAuthorized = false)
 }

@@ -1,0 +1,3 @@
+package com.example.tutorplace.navigation.destinations
+
+interface DestinationWithBottomBar

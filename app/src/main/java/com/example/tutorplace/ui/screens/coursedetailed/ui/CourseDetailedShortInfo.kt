@@ -2,6 +2,7 @@ package com.example.tutorplace.ui.screens.coursedetailed.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +28,7 @@ import com.example.tutorplace.data.courses.course.CourseDetailed
 import com.example.tutorplace.ui.common.PurpleGradientButton
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType
 import com.example.tutorplace.ui.common.coursecard.card.RatingWithCourseDuration
+import com.example.tutorplace.ui.common.toolbar.TOOLBAR_HEADER_HEIGHT
 import com.example.tutorplace.ui.theme.Black
 import com.example.tutorplace.ui.theme.Black34
 import com.example.tutorplace.ui.theme.PurpleDE
@@ -35,18 +37,15 @@ import com.example.tutorplace.ui.theme.White
 
 @Composable
 fun CourseDetailedShortInfo(
+	modifier: Modifier = Modifier,
 	course: CourseDetailed,
 	onStartLessonClicked: () -> Unit,
 	onMaterialsClicked: () -> Unit
 ) {
 	Column(
-		modifier = Modifier
+		modifier = modifier
 			.fillMaxWidth()
 			.clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
-			.background(
-				brush = Brush.verticalGradient(colors = listOf(Black, Black34)),
-				shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
-			)
 			.padding(16.dp),
 	) {
 		Text(
@@ -104,9 +103,21 @@ fun CourseDetailedShortInfo(
 @Composable
 @Preview
 private fun CourseDetailedShortInfoPreview() {
-	CourseDetailedShortInfo(
-		course = CourseDetailed.MOCK,
-		onStartLessonClicked = {},
-		onMaterialsClicked = {}
-	)
+	Box(
+		modifier = Modifier
+			.background(color = White)
+			.padding(bottom = 40.dp),
+	) {
+		CourseDetailedShortInfo(
+			modifier = Modifier
+				.background(
+					brush = Brush.verticalGradient(colors = listOf(Black, Black34)),
+					shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
+				)
+				.padding(top = TOOLBAR_HEADER_HEIGHT.dp),
+			course = CourseDetailed.MOCK,
+			onStartLessonClicked = {},
+			onMaterialsClicked = {}
+		)
+	}
 }

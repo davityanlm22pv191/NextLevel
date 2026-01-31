@@ -1,12 +1,12 @@
 package com.example.tutorplace.domain.usecases
 
-import com.example.tutorplace.domain.usecases.profile.GetProfileShortInfoUseCase
+import com.example.tutorplace.domain.usecases.profile.UpdateProfileShortInfoUseCase
 import javax.inject.Inject
 
 class FetchInitialDataUseCase @Inject constructor(
-	private val getProfileShortInfoUseCase: GetProfileShortInfoUseCase,
+	private val updateProfileShortInfoUseCase: UpdateProfileShortInfoUseCase,
 ) {
 	suspend fun execute() {
-		getProfileShortInfoUseCase.execute()
+		updateProfileShortInfoUseCase.execute()
 	}
 }

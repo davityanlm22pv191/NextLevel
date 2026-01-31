@@ -3,13 +3,11 @@ package com.example.tutorplace.ui.screens.home.presentation
 import androidx.lifecycle.viewModelScope
 import com.example.tutorplace.data.courses.CoursesService
 import com.example.tutorplace.data.fortunewheel.FortuneWheelService
-import com.example.tutorplace.data.profile.storage.ProfileStorage
 import com.example.tutorplace.ui.base.BaseViewModel
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain.FortuneWheelFailed
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain.FortuneWheelLoaded
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain.FortuneWheelLoading
-import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.Domain.SetProfileInfo
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI.CatalogClicked
 import com.example.tutorplace.ui.screens.home.presentation.HomeEvent.UI.CourseClicked
@@ -25,7 +23,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-	private val profileStorage: ProfileStorage,
 	private val fortuneWheelService: FortuneWheelService,
 	private val coursesService: CoursesService,
 ) : BaseViewModel<HomeEvent, HomeState, HomeEffect>() {
@@ -49,7 +46,6 @@ class HomeViewModel @Inject constructor(
 	// https://iili.io/KLMl2eI.png
 
 	init {
-		collectProfileShortInfo()
 		loadFortuneWheelLastRotation()
 		loadMyCourses()
 		loadSpeciallyForYou()
@@ -75,14 +71,6 @@ class HomeViewModel @Inject constructor(
 			is CatalogClicked -> sendEffect(HomeEffect.NavigateToCatalog)
 			is MyCoursesClicked -> sendEffect(HomeEffect.NavigateToMyCourses)
 			is CourseClicked -> sendEffect(HomeEffect.NavigateToCourseDetailed(event.courseId))
-		}
-	}
-
-	private fun collectProfileShortInfo() {
-		viewModelScope.launch {
-			profileStorage.profileShortInfo.collect { value ->
-				value?.let { profileShortInfo -> onDomainEvent(SetProfileInfo(profileShortInfo)) }
-			}
 		}
 	}
 

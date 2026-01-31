@@ -1,9 +1,7 @@
 package com.example.tutorplace.ui.screens.onboarding.presentation
 
 import com.example.tutorplace.data.onboarding.model.OnboardingInfo
-import com.example.tutorplace.domain.model.failure
-import com.example.tutorplace.domain.model.loaded
-import com.example.tutorplace.domain.model.loading
+import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.base.BaseReducer
 import com.example.tutorplace.ui.common.textfield.TextFieldState
@@ -35,7 +33,7 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 	): OnboardingState = when (event) {
 		is NextStepClicked, is SkipButtonClicked -> reduceNextStep(oldState)
 		is PreviousStepClicked -> reducePreviousStep(oldState)
-		is OnboardingInfoLoading -> oldState.copy(onboardingInfo = oldState.onboardingInfo.loading())
+		is OnboardingInfoLoading -> oldState.copy(onboardingInfo = DataInfo.Loading)
 		is OnboardingInfoLoadFail -> reduceOnboardingInfoLoadFail(oldState, event.throwable)
 		is OnboardingInfoLoaded -> reduceOnboardingInfoLoaded(oldState, event.onboardingInfo)
 		is NameValidError -> reduceNameValidError(oldState)
@@ -203,7 +201,7 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 		oldState: OnboardingState,
 		onboardingInfo: OnboardingInfo
 	): OnboardingState = oldState.copy(
-		onboardingInfo = oldState.onboardingInfo.loaded(onboardingInfo),
+		onboardingInfo = DataInfo.Success(onboardingInfo),
 		isMainButtonEnabled = true
 	)
 
@@ -211,7 +209,7 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 		oldState: OnboardingState,
 		throwable: Throwable
 	): OnboardingState = oldState.copy(
-		onboardingInfo = oldState.onboardingInfo.failure(throwable),
+		onboardingInfo = DataInfo.Error(throwable),
 		isMainButtonEnabled = true
 	)
 }

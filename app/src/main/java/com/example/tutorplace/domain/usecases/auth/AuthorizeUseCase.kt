@@ -8,14 +8,13 @@ class AuthorizeUseCase @Inject constructor(
 	private val authService: AuthService,
 	private val credentialsStorage: CredentialsStorage
 ) {
-	suspend fun execute(email: String, password: String): Boolean {
-		return authService
+	suspend fun execute(email: String, password: String) {
+		authService
 			.authorizeWithEmail(email, password)
 			.onSuccess { token ->
 				if (token != null) {
 					credentialsStorage.saveToken(token)
 				}
 			}
-			.isSuccess
 	}
 }

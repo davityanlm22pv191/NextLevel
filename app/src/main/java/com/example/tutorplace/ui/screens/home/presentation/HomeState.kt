@@ -9,8 +9,7 @@ import java.time.LocalDateTime
 data class HomeState(
 	val isLoading: Boolean = false,
 	val throwable: Throwable? = null,
-	val fortuneWheelLastRotation: DataInfo<LocalDateTime> = DataInfo(LocalDateTime.now()),
-	val profileShortInfo: ProfileShortInfo? = null,
-	val myCourses: DataInfo<List<Course>?> = DataInfo(null),
-	val speciallyForYou: DataInfo<List<Course>?> = DataInfo(null)
+	val fortuneWheelLastRotation: DataInfo<LocalDateTime> = DataInfo.Loading,
+	val myCourses: DataInfo<List<Course>> = DataInfo.Loading,
+	val speciallyForYou: DataInfo<List<Course>> = DataInfo.Loading
 ) : BaseState

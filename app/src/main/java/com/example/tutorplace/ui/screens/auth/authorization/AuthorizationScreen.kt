@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.tutorplace.R
-import com.example.tutorplace.navigation.Destinations
+import com.example.tutorplace.navigation.destinations.Destinations
 import com.example.tutorplace.navigation.Navigator
 import com.example.tutorplace.ui.common.AuthSectionDivider
 import com.example.tutorplace.ui.common.PurpleButton
@@ -57,7 +57,7 @@ import com.example.tutorplace.ui.screens.auth.authorization.presentation.Authori
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationEvent.YandexAuthorizationClicked
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationState
 import com.example.tutorplace.ui.screens.auth.authorization.presentation.AuthorizationViewModel
-import com.example.tutorplace.ui.screens.main.model.MainScreenParams
+import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.Typography
@@ -204,7 +204,7 @@ private fun SupportSection(onSupportClick: () -> Unit, onRegisterClick: () -> Un
 					onClick = onSupportClick
 				)
 			),
-			textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
+			textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center, color = Black16)
 		)
 
 		SpanClickableText(
@@ -218,7 +218,7 @@ private fun SupportSection(onSupportClick: () -> Unit, onRegisterClick: () -> Un
 					onClick = onRegisterClick
 				)
 			),
-			textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center)
+			textStyle = Typography.labelMedium.copy(textAlign = TextAlign.Center, color = Black16)
 		)
 	}
 }
@@ -231,9 +231,7 @@ private fun CollectEffects(
 	LaunchedEffect(Unit) {
 		effects.collect { effect ->
 			when (effect) {
-				NavigateToHome -> navigator.navigateAndClearBackStack(
-					Destinations.MainScreen(MainScreenParams(isShouldShowOnboarding = false))
-				)
+				NavigateToHome -> navigator.navigateAndClearBackStack(Destinations.Home)
 				NavigateToRegistration -> navigator.navigate(Destinations.Registration)
 				NavigateToRestorePassword -> navigator.navigate(Destinations.RestorePassword)
 				NavigateToSupport -> navigator.navigate(Destinations.Support)

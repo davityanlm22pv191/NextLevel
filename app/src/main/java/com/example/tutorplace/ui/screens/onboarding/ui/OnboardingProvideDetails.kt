@@ -166,7 +166,7 @@ private fun OnboardingProvideDetailsPreview() {
 		OnboardingProvideDetails(
 			columnScope = this,
 			state = OnboardingState(
-				onboardingInfo = DataInfo(OnboardingInfo.empty()),
+				onboardingInfo = DataInfo.Success(OnboardingInfo.empty()),
 				step = OnboardingState.Step.PROVIDE_DETAILS,
 				password = TextFieldState(value = "123456", isError = true),
 				sex = Sex.MALE

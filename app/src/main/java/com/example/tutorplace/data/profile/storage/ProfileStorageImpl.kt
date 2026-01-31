@@ -15,4 +15,8 @@ class ProfileStorageImpl @Inject constructor() : ProfileStorage {
 	override fun setProfileShortInfo(info: ProfileShortInfo) {
 		_profileShortInfo.value = info
 	}
+
+	override fun clear() {
+		_profileShortInfo.value = null
+	}
 }

@@ -4,29 +4,28 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.tutorplace.R
 import com.example.tutorplace.data.courses.course.CourseDetailed
-import com.example.tutorplace.data.profile.model.ProfileShortInfo
 import com.example.tutorplace.domain.model.DataInfo
-import com.example.tutorplace.domain.model.loaded
 import com.example.tutorplace.navigation.Navigator
-import com.example.tutorplace.ui.common.itemWithSkeleton
-import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
+import com.example.tutorplace.ui.common.lazyitems.itemWithSkeleton
+import com.example.tutorplace.ui.common.toolbar.TOOLBAR_HEADER_HEIGHT
 import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEvent
-import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedState
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedViewModel
 import com.example.tutorplace.ui.screens.coursedetailed.ui.CourseDetailedShortInfo
 import com.example.tutorplace.ui.theme.Black
+import com.example.tutorplace.ui.theme.Black34
 import com.example.tutorplace.ui.theme.ScreenColor
 
 @Composable
@@ -37,48 +36,14 @@ fun CourseDetailedScreen(navigator: Navigator, params: CourseDetailedParams) {
 	}
 	val state by viewModel.state.collectAsStateWithLifecycle()
 
-	CourseDetailedContent(
-		state.profileShortInfo,
-		state.courseDetailed,
-		onBackButtonClicked = { navigator.goBack() },
-		onNotificationClicked = {},
-		onSearchClicked = {},
-		onProfileClicked = {}
-	)
+	CourseDetailedContent(state.courseDetailed)
 }
 
 @Composable
 private fun CourseDetailedContent(
-	profileShortInfo: DataInfo<ProfileShortInfo?>,
-	courseDetailed: DataInfo<CourseDetailed?>,
-	onBackButtonClicked: () -> Unit,
-	onNotificationClicked: () -> Unit,
-	onSearchClicked: () -> Unit,
-	onProfileClicked: () -> Unit
+	courseDetailed: DataInfo<CourseDetailed>,
 ) {
-	Scaffold(
-		topBar = {
-			ToolbarHeader(
-				modifier = Modifier.background(Black),
-				screenName = stringResource(R.string.course_detailed_title),
-				unreadEmailCount = profileShortInfo.data?.unreadMessageCount ?: 0,
-				profileImageUrl = profileShortInfo.data?.profileThumbUrl.orEmpty(),
-				level = profileShortInfo.data?.level?.level ?: 0,
-				progress = profileShortInfo.data?.level?.let { (_, currentAmount, target) ->
-					currentAmount / target.toFloat()
-				} ?: 0f,
-				isArrowVisible = true,
-				isLightAppearance = false,
-				isTransparentBackground = true,
-				isLoading = profileShortInfo.isLoading,
-				onBackClicked = { onBackButtonClicked() },
-				onNotificationClicked = { onNotificationClicked() },
-				onSearchClicked = { onSearchClicked() },
-				onProfileClicked = { onProfileClicked() }
-			)
-		},
-		containerColor = ScreenColor,
-	) { paddingValues ->
+	Scaffold(containerColor = ScreenColor) { paddingValues ->
 		LazyColumn(
 			modifier = Modifier
 				.fillMaxSize()
@@ -89,7 +54,13 @@ private fun CourseDetailedContent(
 				dataInfo = courseDetailed,
 				content = {
 					CourseDetailedShortInfo(
-						course = courseDetailed.data ?: return@itemWithSkeleton,
+						modifier = Modifier
+							.background(
+								brush = Brush.verticalGradient(colors = listOf(Black, Black34)),
+								shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
+							)
+							.padding(top = TOOLBAR_HEADER_HEIGHT.dp),
+						course = it,
 						onStartLessonClicked = {},
 						onMaterialsClicked = {}
 					)
@@ -104,11 +75,6 @@ private fun CourseDetailedContent(
 @Composable
 private fun CourseDetailedContentPreview() {
 	CourseDetailedContent(
-		profileShortInfo = CourseDetailedState().profileShortInfo,
-		courseDetailed = CourseDetailedState().courseDetailed.loaded(CourseDetailed.MOCK),
-		onBackButtonClicked = {},
-		onNotificationClicked = {},
-		onSearchClicked = {},
-		onProfileClicked = {}
+		courseDetailed = DataInfo.Success(CourseDetailed.MOCK),
 	)
 }

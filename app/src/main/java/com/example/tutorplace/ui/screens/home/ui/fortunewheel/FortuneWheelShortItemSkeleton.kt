@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,7 +36,11 @@ fun FortuneWheelShortItemSkeleton(modifier: Modifier = Modifier) {
 	SkeletonShimmer(
 		modifier = modifier
 			.fillMaxWidth()
-			.background(Brush.linearGradient(colors = listOf(GreyD5, PurpleDE)))
+			.clip(RoundedCornerShape(20.dp))
+			.background(
+				Brush.linearGradient(colors = listOf(GreyD5, PurpleDE)),
+				shape = RoundedCornerShape(20.dp)
+			)
 	) {
 		Column(
 			modifier = Modifier
@@ -61,7 +66,10 @@ fun FortuneWheelShortItemSkeleton(modifier: Modifier = Modifier) {
 					.padding(top = 4.dp)
 					.fillMaxWidth()
 					.height(54.dp)
-					.background(color = GreyF8.copy(alpha = 0.8f), shape = RoundedCornerShape(20.dp))
+					.background(
+						color = GreyF8.copy(alpha = 0.8f),
+						shape = RoundedCornerShape(20.dp)
+					)
 					.alpha(0.5f),
 				verticalAlignment = Alignment.CenterVertically
 			) {

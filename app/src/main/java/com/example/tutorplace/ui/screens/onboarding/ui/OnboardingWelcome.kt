@@ -15,6 +15,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingState
 import com.example.tutorplace.ui.theme.GreyD5
 
@@ -30,7 +31,7 @@ fun OnboardingWelcome(
 			.padding(horizontal = 16.dp)
 			.clip(RoundedCornerShape(20.dp))
 			.graphicsLayer(scaleX = 1.6f, scaleY = 1.6f),
-		model = state.onboardingInfo.data.coverUrl,
+		model = if (state.onboardingInfo is DataInfo.Success) state.onboardingInfo.data.coverUrl else null,
 		contentDescription = null,
 		placeholder = ColorPainter(GreyD5),
 		contentScale = ContentScale.Crop,

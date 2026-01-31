@@ -10,27 +10,27 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CredentialsStorageImpl @Inject constructor(
-	@param:ApplicationContext private val context: Context
+	@ApplicationContext private val context: Context
 ) : CredentialsStorage {
 
 	private val Context.dataStore by preferencesDataStore(name = "credentials")
 	private val tokenPreferenceKey = stringPreferencesKey("TOKEN_PREFERENCE_KEY")
 
-	override suspend fun saveToken(token: String) = with(context.dataStore) {
-		edit { prefs -> prefs[tokenPreferenceKey] = token }
-		return@with
+	override suspend fun saveToken(token: String)  {
+		context.dataStore.edit { prefs -> prefs[tokenPreferenceKey] = token }
 	}
 
 	override suspend fun isAuthorized(): Flow<Boolean> {
 		return getToken().map { token -> !token.isNullOrEmpty() }
 	}
 
-	override suspend fun clearToken() = with(context.dataStore) {
-		edit { prefs -> prefs.remove(tokenPreferenceKey) }
-		return@with
+	override suspend fun clearToken() {
+		context.dataStore.edit { prefs -> prefs.remove(tokenPreferenceKey) }
 	}
 
 	private fun getToken(): Flow<String?> = with(context.dataStore) {
-		return data.map { prefs -> prefs[tokenPreferenceKey] }
+		data.map { prefs -> prefs[tokenPreferenceKey] }
 	}
+
+	override suspend fun collectAuthorized(): Flow<Boolean> = getToken().map { token -> !token.isNullOrEmpty() }
 }

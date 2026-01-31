@@ -1,7 +1,9 @@
 package com.example.tutorplace.ui.screens.home
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
@@ -18,16 +20,17 @@ import com.example.tutorplace.R
 import com.example.tutorplace.data.common.Sort
 import com.example.tutorplace.data.common.SortOrder
 import com.example.tutorplace.data.common.SortType.DATE_ADDED
-import com.example.tutorplace.navigation.Destinations
 import com.example.tutorplace.navigation.Navigator
+import com.example.tutorplace.navigation.destinations.Destinations
+import com.example.tutorplace.ui.common.BOTTOM_NAVIGATION_BAR_HEIGHT
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.LARGE
 import com.example.tutorplace.ui.common.coursecard.card.CourseCardShapeType.SQUARE
 import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleAndSort
 import com.example.tutorplace.ui.common.coursecard.cardpager.CardPagerWithTitleAndSortSkeleton
-import com.example.tutorplace.ui.common.itemWithSkeleton
+import com.example.tutorplace.ui.common.lazyitems.itemWithSkeleton
 import com.example.tutorplace.ui.common.sectiontitle.model.SectionSortInfo
 import com.example.tutorplace.ui.common.sectiontitle.model.SectionTitle
-import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
+import com.example.tutorplace.ui.common.toolbar.TOOLBAR_HEADER_HEIGHT
 import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
 import com.example.tutorplace.ui.screens.home.presentation.HomeEffect
 import com.example.tutorplace.ui.screens.home.presentation.HomeEffect.NavigateToCatalog
@@ -54,9 +57,6 @@ fun HomeScreen(navigator: Navigator) {
 	CollectEffects(viewModel.effect, navigator)
 	HomeContent(
 		state = state,
-		onNotificationClicked = { viewModel.onEvent(UI.NotificationClicked) },
-		onSearchClicked = { viewModel.onEvent(UI.SearchClicked) },
-		onProfileClicked = { viewModel.onEvent(UI.ProfileClicked) },
 		onFortuneWheelClicked = { viewModel.onEvent(UI.FortuneWheelClicked) },
 		onFortuneWheelInformationClicked = { viewModel.onEvent(UI.FortuneWheelInformationClicked) },
 		onMyCoursesClicked = { viewModel.onEvent(UI.MyCoursesClicked) },
@@ -68,58 +68,42 @@ fun HomeScreen(navigator: Navigator) {
 @Composable
 private fun HomeContent(
 	state: HomeState,
-	onNotificationClicked: () -> Unit,
-	onSearchClicked: () -> Unit,
-	onProfileClicked: () -> Unit,
 	onFortuneWheelClicked: () -> Unit,
 	onFortuneWheelInformationClicked: () -> Unit,
 	onMyCoursesClicked: () -> Unit,
 	onCatalogClicked: () -> Unit,
 	onCourseClicked: (courseId: String) -> Unit,
 ) {
-	Scaffold(
-		topBar = {
-			ToolbarHeader(
-				screenName = stringResource(R.string.home_screen_name),
-				unreadEmailCount = state.profileShortInfo?.unreadMessageCount ?: 0,
-				profileImageUrl = state.profileShortInfo?.profileThumbUrl.orEmpty(),
-				level = state.profileShortInfo?.level?.level ?: 0,
-				progress = state.profileShortInfo?.level?.let { (_, currentAmount, target) ->
-					currentAmount / target.toFloat()
-				} ?: 0f,
-				isArrowVisible = false,
-				isLoading = state.profileShortInfo == null,
-				onBackClicked = {},
-				onNotificationClicked = { onNotificationClicked() },
-				onSearchClicked = { onSearchClicked() },
-				onProfileClicked = { onProfileClicked() }
-			)
-		},
-		containerColor = ScreenColor,
-	) { paddingValues ->
+	Scaffold(containerColor = ScreenColor) { paddingValues ->
 		LazyColumn(
 			modifier = Modifier
 				.fillMaxSize()
 				.padding(paddingValues)
 		) {
+			item { Spacer(Modifier.height(TOOLBAR_HEADER_HEIGHT.dp)) }
 			itemWithSkeleton(
 				key = "FortuneWheelShort",
 				dataInfo = state.fortuneWheelLastRotation,
 				paddingValues = PaddingValues(top = 8.dp),
-				content = {
+				content = { lastRotationTime ->
 					FortuneWheelShortItem(
-						lastRotationTime = state.fortuneWheelLastRotation.data,
+						modifier = Modifier.padding(horizontal = 4.dp),
+						lastRotationTime = lastRotationTime,
 						onInformationClick = { onFortuneWheelInformationClicked() },
 						onItemClick = { onFortuneWheelClicked() }
 					)
 				},
-				skeletonContent = { FortuneWheelShortItemSkeleton() }
+				skeletonContent = {
+					FortuneWheelShortItemSkeleton(
+						modifier = Modifier.padding(horizontal = 4.dp)
+					)
+				}
 			)
 			itemWithSkeleton(
 				key = "MyCourses",
 				dataInfo = state.myCourses,
 				paddingValues = PaddingValues(top = 8.dp),
-				content = {
+				content = { courses ->
 					CardPagerWithTitleAndSort(
 						sectionTitle = SectionTitle.Clickable(
 							text = stringResource(R.string.home_my_courses_section_title),
@@ -130,7 +114,7 @@ private fun HomeContent(
 							sorts = listOf(),
 							onClick = {}
 						),
-						courses = state.myCourses.data ?: emptyList(),
+						courses = courses,
 						shape = SQUARE,
 						onCourseClick = { course -> onCourseClicked(course.id) }
 					)
@@ -146,12 +130,11 @@ private fun HomeContent(
 				key = "SpeciallyForYou",
 				dataInfo = state.speciallyForYou,
 				paddingValues = PaddingValues(top = 8.dp),
-				content = {
+				content = { courses ->
 					CardPagerWithTitleAndSort(
-						modifier = Modifier,
 						sectionTitle = SectionTitle.NonClickable(text = stringResource(R.string.home_specially_for_you)),
 						sort = null,
-						courses = state.speciallyForYou.data ?: emptyList(),
+						courses = courses,
 						shape = LARGE,
 						onCourseClick = { course -> onCourseClicked(course.id) }
 					)
@@ -161,6 +144,7 @@ private fun HomeContent(
 				},
 				emptyStateContent = {}
 			)
+			item { Spacer(Modifier.height(BOTTOM_NAVIGATION_BAR_HEIGHT.dp)) }
 		}
 	}
 }
@@ -193,9 +177,6 @@ private fun CollectEffects(effect: Flow<HomeEffect>, navigator: Navigator) {
 private fun HomePreview() {
 	HomeContent(
 		state = HomeState(),
-		onNotificationClicked = {},
-		onSearchClicked = {},
-		onProfileClicked = {},
 		onFortuneWheelClicked = {},
 		onFortuneWheelInformationClicked = {},
 		onMyCoursesClicked = {},

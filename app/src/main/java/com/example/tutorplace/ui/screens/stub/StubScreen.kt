@@ -9,7 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.ScreenColor
+import com.example.tutorplace.ui.theme.Typography
 
 @Composable
 fun StubScreen() {
@@ -18,10 +20,15 @@ fun StubScreen() {
 		containerColor = ScreenColor
 	) { paddingValues ->
 		Box(
-			modifier = Modifier.fillMaxSize().padding(paddingValues),
+			modifier = Modifier
+				.fillMaxSize()
+				.padding(paddingValues),
 			contentAlignment = Alignment.Center
 		) {
-			Text("Этот функционал ещё не реализован")
+			Text(
+				"Этот функционал ещё не реализован",
+				style = Typography.titleLarge.copy(Black16)
+			)
 		}
 	}
 }

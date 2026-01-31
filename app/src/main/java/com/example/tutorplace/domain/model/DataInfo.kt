@@ -1,35 +1,12 @@
 package com.example.tutorplace.domain.model
 
-data class DataInfo<T>(
-	val data: T,
-	val isLoading: Boolean = true,
-	val throwable: Throwable? = null,
-) {
-	val isLoaded: Boolean
-		get() = !isLoading && throwable == null && data != null
+sealed class DataInfo<out T> {
 
-	val isEmptyState: Boolean
-		get() = isLoaded && (data is Collection<*> && data.isEmpty())
-}
+	data object Loading : DataInfo<Nothing>()
 
-fun <T> DataInfo<T>.loaded(data: T): DataInfo<T> {
-	return this.copy(
-		data = data,
-		isLoading = false,
-		throwable = null
-	)
-}
+	data class Error(val throwable: Throwable) : DataInfo<Nothing>()
 
-fun <T> DataInfo<T>.loading(): DataInfo<T> {
-	return this.copy(
-		isLoading = true,
-		throwable = null
-	)
-}
-
-fun <T> DataInfo<T>.failure(throwable: Throwable): DataInfo<T> {
-	return this.copy(
-		isLoading = false,
-		throwable = throwable
-	)
+	data class Success<T>(val data: T) : DataInfo<T>() {
+		fun isEmptyState(): Boolean = data is Collection<*> && data.isEmpty()
+	}
 }

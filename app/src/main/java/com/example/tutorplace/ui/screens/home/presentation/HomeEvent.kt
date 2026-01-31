@@ -7,8 +7,6 @@ import java.time.LocalDateTime
 
 sealed interface HomeEvent : BaseEvent {
 	sealed interface Domain : HomeEvent {
-		data class SetProfileInfo(val profileShortInfo: ProfileShortInfo) : Domain
-
 		data object FortuneWheelLoading : Domain
 		data class FortuneWheelLoaded(val lastRotation: LocalDateTime) : Domain
 		data class FortuneWheelFailed(val throwable: Throwable) : Domain

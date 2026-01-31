@@ -30,7 +30,7 @@ fun OnboardingTellUsAboutInterests(
 			.verticalScroll(scrollState)
 	) {
 		TagSelector(
-			tags = state.onboardingInfo.data.interests.map { interest ->
+			tags = (state.onboardingInfo as DataInfo.Success).data.interests.map { interest ->
 				interest.toTag(isSelected = interest.id in state.selectedInterestsIds)
 			},
 			onTagSelected = { tag -> onTagClicked(tag) }
@@ -46,7 +46,7 @@ private fun OnboardingTellUsAboutInterestsPreview() {
 			columnScope = this,
 			state = OnboardingState(
 				step = OnboardingState.Step.TELL_US_ABOUT_INTERESTS,
-				onboardingInfo = DataInfo(
+				onboardingInfo = DataInfo.Success(
 					data = OnboardingInfo.empty().copy(
 						interests = listOf(
 							Interest(1, "Бизнес"),

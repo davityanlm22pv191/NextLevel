@@ -7,7 +7,6 @@ import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedPara
 
 sealed interface CourseDetailedEvent : BaseEvent {
 	data class AttachParams(val params: CourseDetailedParams) : CourseDetailedEvent
-	data class SetProfileInfo(val profileShortInfo: ProfileShortInfo) : CourseDetailedEvent
 	data class CourseDetailedLoaded(val course: CourseDetailed) : CourseDetailedEvent
 	data class CourseDetailedFailed(val throwable: Throwable) : CourseDetailedEvent
 }

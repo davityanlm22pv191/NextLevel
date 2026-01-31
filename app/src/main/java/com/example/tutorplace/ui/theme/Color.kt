@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.lerp
 
 val Transparent = Color(0x00000000)
 val ScreenColor: Color
-	@Composable get() = lerp(White, MaterialTheme.colorScheme.primaryContainer, 0.10f)
+	@Composable get() = lerp(White, MaterialTheme.colorScheme.primaryContainer, 0.15f)
 
 val ContainerColor: Color
 	@Composable get() = lerp(White, MaterialTheme.colorScheme.primaryContainer, 0.05f)
@@ -21,6 +21,7 @@ val Black49 = Color(0xFF3D4449)
 val Black36 = Color(0xFF293036)
 val Black34 = Color(0xFF343434)
 val BlackAlpha04 = Color(0x0A000000)
+val Black1E = Color(0xFF0F161E)
 
 val Grey82 = Color(0xFF828282)
 val GreyF8 = Color(0xFFF8F8F8)
