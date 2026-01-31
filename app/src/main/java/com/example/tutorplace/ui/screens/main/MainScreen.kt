@@ -1,11 +1,15 @@
 package com.example.tutorplace.ui.screens.main
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
@@ -39,6 +43,8 @@ import com.example.tutorplace.ui.common.toolbar.ToolbarHeader
 import com.example.tutorplace.ui.screens.main.presentation.MainScreenState
 import com.example.tutorplace.ui.screens.main.presentation.MainScreenViewModel
 
+private const val BAR_ANIMATIONS_DURATION_MS = 300
+
 @Composable
 fun MainScreen(userIsAuthorized: Boolean) {
 	val viewModel = hiltViewModel<MainScreenViewModel>()
@@ -46,6 +52,7 @@ fun MainScreen(userIsAuthorized: Boolean) {
 	MainContent(state, userIsAuthorized)
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun MainContent(state: MainScreenState, userIsAuthorized: Boolean) {
 	val navigationState = rememberNavigationState(
@@ -62,51 +69,71 @@ private fun MainContent(state: MainScreenState, userIsAuthorized: Boolean) {
 	Scaffold(
 		topBar = {
 			val isToolbarVisible = navigationState.currentScreen is DestinationWithToolbar
-			AnimatedContent(
-				label = "toolbarHeader",
-				targetState = isToolbarVisible,
-			) { isVisible ->
-				if (isVisible) {
-					val config = (navigationState.currentScreen as? DestinationWithToolbar)?.config
-						?: return@AnimatedContent
-					ToolbarHeader(
-						theme = config.theme,
-						isArrowVisible = navigationState.currentScreen !in BottomNavigationBarItems.entries.map { topLevelRoute -> topLevelRoute.destination },
-						screenName = stringResource(config.screenName),
-						profileShortInfo = state.profileShortInfo,
-						onBackClicked = { navigator.goBack() },
-						onNotificationClicked = {
-							if (!navigationState.isDestinationIsAlreadyOpen(Destinations.Mail)) {
-								navigator.navigate(Destinations.Mail)
-							}
-						},
-						onSearchClicked = {
-							if (!navigationState.isDestinationIsAlreadyOpen(Destinations.Search)) {
-								navigator.navigate(Destinations.Search)
-							}
-						},
-						onProfileClicked = { navigator.navigate(Destinations.Profile) }
-					)
-				}
+			AnimatedVisibility(
+				label = "toolbarHeaderVisibility",
+				visible = isToolbarVisible,
+				enter = slideInVertically(
+					initialOffsetY = { -it },
+					animationSpec = tween(durationMillis = BAR_ANIMATIONS_DURATION_MS)
+				),
+				exit = slideOutVertically(
+					targetOffsetY = { -it },
+					animationSpec = tween(durationMillis = BAR_ANIMATIONS_DURATION_MS)
+				)
+			) {
+				val config = (navigationState.currentScreen as? DestinationWithToolbar)?.config
+					?: return@AnimatedVisibility
+				ToolbarHeader(
+					theme = config.theme,
+					isArrowVisible = navigationState.currentScreen !in BottomNavigationBarItems.entries.map { topLevelRoute -> topLevelRoute.destination },
+					screenName = stringResource(config.screenName),
+					profileShortInfo = state.profileShortInfo,
+					onBackClicked = { navigator.goBack() },
+					onNotificationClicked = {
+						if (!navigationState.isDestinationIsAlreadyOpen(Destinations.Mail)) {
+							navigator.navigate(Destinations.Mail)
+						}
+					},
+					onSearchClicked = {
+						if (!navigationState.isDestinationIsAlreadyOpen(Destinations.Search)) {
+							navigator.navigate(Destinations.Search)
+						}
+					},
+					onProfileClicked = { navigator.navigate(Destinations.Profile) }
+				)
 			}
 		},
 		bottomBar = {
 			val isBottomBarVisible = navigationState.currentScreen is DestinationWithBottomBar
-			AnimatedContent(
-				label = "bottomBar",
-				targetState = isBottomBarVisible
+			AnimatedVisibility(
+				label = "bottomBarVisibility",
+				visible = isBottomBarVisible,
+				enter = slideInVertically(
+					initialOffsetY = { fullHeight -> fullHeight },
+					animationSpec = tween(durationMillis = BAR_ANIMATIONS_DURATION_MS)
+				),
+				exit = slideOutVertically(
+					targetOffsetY = { fullHeight -> fullHeight },
+					animationSpec = tween(durationMillis = BAR_ANIMATIONS_DURATION_MS)
+				)
 			) {
-				if (it) {
-					BottomNavigationBar(
-						currentTopLevelRoute = navigationState.topLevelRoute,
-						onClick = { bottomNavBarItemDestination ->
-							navigator.navigate(bottomNavBarItemDestination)
-						}
-					)
+				AnimatedContent(
+					label = "bottomBar",
+					targetState = isBottomBarVisible,
+
+					) { isVisible ->
+					if (isVisible) {
+						BottomNavigationBar(
+							currentTopLevelRoute = navigationState.topLevelRoute,
+							onClick = { bottomNavBarItemDestination ->
+								navigator.navigate(bottomNavBarItemDestination)
+							}
+						)
+					}
 				}
 			}
 		}
-	) { paddingValues ->
+	) { _ ->
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 			RequestPermission(Manifest.permission.POST_NOTIFICATIONS) {}
 		}

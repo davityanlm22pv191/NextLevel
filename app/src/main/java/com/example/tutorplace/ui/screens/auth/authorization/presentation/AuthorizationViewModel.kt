@@ -1,6 +1,7 @@
 package com.example.tutorplace.ui.screens.auth.authorization.presentation
 
 import androidx.lifecycle.viewModelScope
+import com.example.tutorplace.data.credentials.CredentialsStorage
 import com.example.tutorplace.domain.usecases.auth.AuthorizeUseCase
 import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.base.BaseViewModel
@@ -24,10 +25,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthorizationViewModel @Inject constructor(
+	private val credentialsStorage: CredentialsStorage,
 	private val authorizeUseCase: AuthorizeUseCase,
 ) : BaseViewModel<AuthorizationEvent, AuthorizationState, AuthorizationEffect>() {
 
+	init {
+		collectCredentials()
+	}
+
 	override fun initialState() = AuthorizationState()
+
 	override fun onEvent(event: AuthorizationEvent) {
 		when (event) {
 			is CheckEnteredValues,
@@ -46,14 +53,22 @@ class AuthorizationViewModel @Inject constructor(
 		setState(AuthorizationReducer.reduce(state.value, CheckEnteredValues))
 		if (!FormatHelper.isValidEmail(state.value.email)) return
 		if (!FormatHelper.isValidPassword(state.value.password)) return
-		setState(AuthorizationReducer.reduce(state.value, EnterToProfileRequested))
+		authorize()
+	}
+
+	private fun authorize() {
 		viewModelScope.launch {
-			val isAuthorizedSuccess = authorizeUseCase.execute(
-				email = state.value.email,
-				password = state.value.password
-			)
-			if (isAuthorizedSuccess) {
-				sendEffect(NavigateToHome)
+			setState(AuthorizationReducer.reduce(state.value, EnterToProfileRequested))
+			authorizeUseCase.execute(email = state.value.email, password = state.value.password)
+		}
+	}
+
+	private fun collectCredentials() {
+		viewModelScope.launch {
+			credentialsStorage.collectAuthorized().collect { isAuthorized ->
+				if (isAuthorized) {
+					sendEffect(NavigateToHome)
+				}
 			}
 		}
 	}

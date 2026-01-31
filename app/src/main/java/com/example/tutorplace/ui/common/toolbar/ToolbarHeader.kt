@@ -50,6 +50,7 @@ import com.example.tutorplace.R
 import com.example.tutorplace.data.profile.model.LevelInfo
 import com.example.tutorplace.data.profile.model.ProfileShortInfo
 import com.example.tutorplace.domain.model.DataInfo
+import com.example.tutorplace.extension.isLight
 import com.example.tutorplace.ui.common.CircleBadgeCounter
 import com.example.tutorplace.ui.common.RoundedBottomCornerShape
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeaderConfig.ToolbarHeaderTheme
@@ -61,6 +62,7 @@ import com.example.tutorplace.ui.theme.GreyD5
 import com.example.tutorplace.ui.theme.GreyF8
 import com.example.tutorplace.ui.theme.PurpleDE
 import com.example.tutorplace.ui.theme.Red33
+import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.Typography
 import com.example.tutorplace.ui.theme.White
 import com.example.tutorplace.ui.theme.Yellow12
@@ -80,12 +82,13 @@ fun ToolbarHeader(
 	onProfileClicked: () -> Unit,
 ) {
 	val window = LocalActivity.current?.window
+	val screenColor = ScreenColor
 	SideEffect {
 		if (window == null) return@SideEffect
 		val windowController = WindowInsetsControllerCompat(window, window.decorView)
 		val isLightStatusBar = when (theme) {
 			ToolbarHeaderTheme.Dark -> false
-			ToolbarHeaderTheme.Light -> true
+			ToolbarHeaderTheme.Light -> screenColor.isLight()
 		}
 		windowController.isAppearanceLightStatusBars = isLightStatusBar
 		windowController.isAppearanceLightNavigationBars = isLightStatusBar

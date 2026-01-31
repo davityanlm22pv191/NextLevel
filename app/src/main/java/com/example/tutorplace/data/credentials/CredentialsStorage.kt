@@ -9,4 +9,6 @@ interface CredentialsStorage {
 	suspend fun clearToken()
 
 	suspend fun isAuthorized(): Flow<Boolean>
+
+	suspend fun collectAuthorized(): Flow<Boolean>
 }
