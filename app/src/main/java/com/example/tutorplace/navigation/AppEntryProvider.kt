@@ -19,6 +19,7 @@ import com.example.tutorplace.ui.screens.mycourses.MyCoursesScreen
 import com.example.tutorplace.ui.screens.onboarding.OnboardingScreen
 import com.example.tutorplace.ui.screens.stub.StubScreen
 import com.example.tutorplace.ui.screens.tasks.TasksScreen
+import com.example.tutorplace.ui.screens.yournewscreen.YourNewScreenScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,4 +48,5 @@ fun appEntryProvider(navigator: Navigator) = entryProvider<NavKey> {
 	entry<Destinations.MyCourses> { MyCoursesScreen(navigator) }
 	entry<Destinations.Tasks> { TasksScreen(navigator) }
 	entry<Destinations.Mail> { MailScreen(navigator) }
+	entry<Destinations.YourNewScreen> { YourNewScreenScreen(it.params, navigator) }
 }
