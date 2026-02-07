@@ -30,6 +30,7 @@ import com.example.tutorplace.R
 import com.example.tutorplace.data.onboarding.model.OnboardingInfo
 import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.domain.model.Sex
+import com.example.tutorplace.ui.common.SexChoosingMenu
 import com.example.tutorplace.ui.common.textfield.NameTextField
 import com.example.tutorplace.ui.common.textfield.PasswordTextField
 import com.example.tutorplace.ui.common.textfield.TextFieldState
@@ -93,70 +94,6 @@ fun OnboardingProvideDetails(
 		isError = state.isSexError,
 		onSexChosen = { onSexChosen(it) }
 	)
-}
-
-@Composable
-private fun SexChoosingMenu(
-	modifier: Modifier = Modifier,
-	selectedSex: Sex?,
-	isError: Boolean,
-	onSexChosen: (Sex) -> Unit
-) {
-	val sexList = listOf(Sex.MALE, Sex.FEMALE)
-	var isOpen by remember { mutableStateOf(false) }
-	val rotateDegrees by animateFloatAsState(targetValue = if (isOpen) 180f else 0f)
-
-	Surface(
-		modifier = modifier,
-		shape = RoundedCornerShape(12.dp),
-		color = if (isError) White else ContainerColor,
-		border = BorderStroke(1.dp, if (isError) Red1D else GreyD5),
-		onClick = { isOpen = !isOpen }
-	) {
-		Row(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(horizontal = 16.dp, vertical = 14.dp),
-			verticalAlignment = Alignment.CenterVertically
-		) {
-			Text(
-				modifier = Modifier.weight(1f),
-				text = stringResource(selectedSex?.stringResId ?: R.string.common_your_sex),
-				style = Typography.labelMedium.copy(color = if (selectedSex != null) Black16 else Grey82),
-				maxLines = 1
-			)
-			Image(
-				modifier = Modifier.rotate(rotateDegrees),
-				contentDescription = null,
-				painter = painterResource(R.drawable.ic_arrow_down_black_16),
-				alpha = if (selectedSex != null) 1f else 0.5f,
-			)
-			DropdownMenu(
-				expanded = isOpen,
-				onDismissRequest = { isOpen = false },
-				shape = RoundedCornerShape(24.dp),
-				containerColor = ContainerColor
-			) {
-				sexList.forEach { sex ->
-					DropdownMenuItem(
-						text = {
-							Text(
-								text = stringResource(sex.stringResId),
-								style = Typography.labelMedium.copy(Black16)
-							)
-						},
-						onClick = {
-							isOpen = false
-							if (selectedSex != sex) {
-								onSexChosen(sex)
-							}
-						},
-						contentPadding = PaddingValues(horizontal = 16.dp),
-					)
-				}
-			}
-		}
-	}
 }
 
 @Preview(showSystemUi = false, showBackground = true, backgroundColor = 0xFFFFFFFF)

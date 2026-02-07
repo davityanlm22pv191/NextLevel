@@ -60,7 +60,7 @@ object HomeReducer : BaseReducer<HomeState, HomeEvent> {
 		oldState: HomeState,
 		event: HomeEvent.Domain.SpeciallyForFailed
 	): HomeState {
-		return oldState.copy(myCourses = DataInfo.Error(event.throwable))
+		return oldState.copy(speciallyForYou = DataInfo.Error(event.throwable))
 	}
 
 	private fun reduceSpeciallyForYouLoading(oldState: HomeState): HomeState {

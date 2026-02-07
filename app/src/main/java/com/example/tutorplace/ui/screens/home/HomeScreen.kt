@@ -172,7 +172,7 @@ private fun CollectEffects(effect: Flow<HomeEffect>, navigator: Navigator) {
 	}
 }
 
-@Preview
+@Preview(showSystemUi = true)
 @Composable
 private fun HomePreview() {
 	HomeContent(

@@ -226,7 +226,7 @@ private fun TimerCounter(value: Int, amount: Int) {
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
-@Preview
+@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 private fun FortuneWheelShortItemPreview() {
 	FortuneWheelShortItem(

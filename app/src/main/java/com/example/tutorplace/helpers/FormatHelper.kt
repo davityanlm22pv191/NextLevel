@@ -1,15 +1,27 @@
 package com.example.tutorplace.helpers
 
 import android.util.Patterns
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 object FormatHelper {
 
-	const val DATE_WITH_TIME = "dd.MM.yyyy HH:mm:ss"
+	const val DATE_MONTH_YEAR_WITH_HOUR_MINUT_SECOND = "dd.MM.yyyy HH:mm:ss"
+	const val DATE_MONTH_YEAR = "dd.MM.yyyy"
 
 	private const val REQUIRED_NAME_LENGTH = 6
 	private const val REQUIRED_PASSWORD_LENGTH = 6
 	private const val RUSSIAN_PHONE_NUMBER_LENGTH = 11
+
+	// region ==================== Date =====================
+
+	fun formatDate(date: LocalDate, format: String): String {
+		val formatter = DateTimeFormatter.ofPattern(format)
+		return formatter.format(date)
+	}
+
+	// endregion
 
 	// region ==================== E-mail =====================
 

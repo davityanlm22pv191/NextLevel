@@ -8,7 +8,7 @@ import javax.inject.Inject
 class MatrixOfFateInputValuesViewModel @Inject constructor() :
 	BaseViewModel<MatrixOfFateInputValuesEvent, MatrixOfFateInputValuesState, MatrixOfFateInputValuesEffect>() {
 
-	override fun initialState() = MatrixOfFateInputValuesState
+	override fun initialState() = MatrixOfFateInputValuesState()
 
 	override fun onEvent(event: MatrixOfFateInputValuesEvent) {
 		when (event) {

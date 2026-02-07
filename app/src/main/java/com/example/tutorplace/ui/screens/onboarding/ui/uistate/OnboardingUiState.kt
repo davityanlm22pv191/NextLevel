@@ -10,10 +10,10 @@ import com.example.tutorplace.ui.screens.onboarding.presentation.OnboardingViewM
 
 data class OnboardingUiState(
 	val header: HeaderLogoType,
-	@param:StringRes val title: Int,
-	@param:StringRes val description: Int?,
+	@StringRes val title: Int,
+	@StringRes val description: Int?,
 	val contentSeparatorHeightDp: Dp,
-	@param:StringRes val mainButtonTitle: Int,
+	@StringRes val mainButtonTitle: Int,
 	val isBackButtonVisible: Boolean,
 	val isSkipButtonVisible: Boolean,
 	val content: @Composable ColumnScope.() -> Unit

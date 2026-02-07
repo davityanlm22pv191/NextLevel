@@ -22,6 +22,7 @@
 	<string name="common_splash_format">%1$s/%2$s</string>
 	<string name="common_sort_progress">По прогрессу</string>
 	<string name="common_sort_date_added">По дате добавления</string>
+	<string name="common_calculate">Рассчитать</string>
 
 	<plurals name="common_days_format">
 		<item quantity="one">%s день</item>
@@ -147,5 +148,11 @@
 	<string name="tutor_mail_incoming">Входящие</string>
 	<string name="tutor_mail_here_will_you_mails">Здесь будут находиться ваши письма</string>
 	<string name="tutor_mail_you_do_not_have_messages_right_now">На данный момент у вас нет писем</string>
+
+	<!-- Matrix of fate -->
+	<string name="matrix_of_fate_input_data_title_logo">🔮</string>
+	<string name="matrix_of_fate_input_data_title">Персональная матрица судьбы</string>
+	<string name="matrix_of_fate_field_your_name_hint">Ваше имя</string>
+	<string name="matrix_of_fate_field_birthdate_hint">Дата рождения</string>
 
 </resources>

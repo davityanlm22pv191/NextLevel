@@ -3,8 +3,8 @@ package com.example.tutorplace.ui.screens.coursedetailed.presentation
 import androidx.lifecycle.viewModelScope
 import com.example.tutorplace.data.courses.CoursesService
 import com.example.tutorplace.ui.base.BaseViewModel
-import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToCertificate
-import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToDashboard
+import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToCertificateDetailed
+import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToDashboardDetailed
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToMaterialsForCourse
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToStartLesson
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEvent.AttachParams
@@ -30,8 +30,8 @@ class CourseDetailedViewModel @Inject constructor(
 			is CourseDetailedFailed,
 			is CourseDetailedLoaded -> setState(CourseDetailedReducer.reduce(state.value, event))
 			is AttachParams -> loadCourseDetailed(event.params.courseId)
-			is CertificateClicked -> sendEffect(NavigateToCertificate)
-			is DashboardClicked -> sendEffect(NavigateToDashboard)
+			is CertificateClicked -> sendEffect(NavigateToCertificateDetailed)
+			is DashboardClicked -> sendEffect(NavigateToDashboardDetailed)
 			is MaterialsForCoursesClicked -> sendEffect(NavigateToMaterialsForCourse)
 			is StartLessonClicked -> sendEffect(NavigateToStartLesson)
 		}

@@ -26,12 +26,13 @@ import com.example.tutorplace.R
 import com.example.tutorplace.data.courses.course.CourseDetailed
 import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.navigation.Navigator
+import com.example.tutorplace.navigation.destinations.Destinations
 import com.example.tutorplace.ui.common.lazyitems.itemWithSkeleton
 import com.example.tutorplace.ui.common.toolbar.TOOLBAR_HEADER_HEIGHT
 import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect
-import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToCertificate
-import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToDashboard
+import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToCertificateDetailed
+import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToDashboardDetailed
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToMaterialsForCourse
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToStartLesson
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEvent
@@ -162,8 +163,10 @@ private fun CollectEffects(effect: Flow<CourseDetailedEffect>, navigator: Naviga
 	LaunchedEffect(Unit) {
 		effect.collect { effect ->
 			when (effect) {
-				NavigateToCertificate -> {}
-				NavigateToDashboard -> {}
+				NavigateToCertificateDetailed -> {}
+				NavigateToDashboardDetailed -> navigator.navigate(
+					Destinations.MatrixOfFateInputValues
+				)
 				NavigateToMaterialsForCourse -> {}
 				NavigateToStartLesson -> {}
 			}

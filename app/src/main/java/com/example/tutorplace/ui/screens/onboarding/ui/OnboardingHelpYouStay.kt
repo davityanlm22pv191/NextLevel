@@ -137,7 +137,8 @@ private fun TimeSelector(
 			shape = RoundedCornerShape(24.dp),
 			containerColor = ContainerColor,
 		) {
-			generateTimeList().forEach { time ->
+			val timeList = remember { generateTimeList() }
+			timeList.forEach { time ->
 				DropdownMenuItem(
 					text = { Text(text = time, style = Typography.labelMedium.copy(Black16)) },
 					onClick = {

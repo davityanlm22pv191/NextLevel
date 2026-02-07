@@ -100,12 +100,12 @@ class HomeViewModel @Inject constructor(
 
 	private fun loadSpeciallyForYou() {
 		viewModelScope.launch {
-			onDomainEvent(Domain.MyCoursesLoading)
+			onDomainEvent(Domain.SpeciallyForYouLoading)
 			val response = coursesService.getSpeciallyForYou()
 			if (response.isSuccessful) {
 				onDomainEvent(Domain.SpeciallyForLoaded(response.body()!!.courses))
 			} else {
-				onDomainEvent(Domain.MyCoursesFailed(Throwable(response.message())))
+				onDomainEvent(Domain.SpeciallyForFailed(Throwable(response.message())))
 			}
 		}
 	}

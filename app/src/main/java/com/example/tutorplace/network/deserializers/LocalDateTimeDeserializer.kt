@@ -1,6 +1,6 @@
 package com.example.tutorplace.network.deserializers
 
-import com.example.tutorplace.helpers.FormatHelper.DATE_WITH_TIME
+import com.example.tutorplace.helpers.FormatHelper.DATE_MONTH_YEAR_WITH_HOUR_MINUT_SECOND
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -15,6 +15,6 @@ class LocalDateTimeDeserializer : JsonDeserializer<LocalDateTime> {
 		typeOfT: Type?,
 		context: JsonDeserializationContext?
 	): LocalDateTime {
-		return LocalDateTime.parse(json?.asString, DateTimeFormatter.ofPattern(DATE_WITH_TIME))
+		return LocalDateTime.parse(json?.asString, DateTimeFormatter.ofPattern(DATE_MONTH_YEAR_WITH_HOUR_MINUT_SECOND))
 	}
 }

@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import com.example.tutorplace.R
 
 enum class Sex(
-	@param:StringRes val stringResId: Int
+	@StringRes val stringResId: Int
 ) {
 	MALE(R.string.common_sex_male),
 	MIDDLE(0),

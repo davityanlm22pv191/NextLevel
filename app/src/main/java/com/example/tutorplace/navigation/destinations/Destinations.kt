@@ -5,7 +5,6 @@ import androidx.navigation3.runtime.NavKey
 import com.example.tutorplace.R
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeaderConfig
 import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
-import com.example.tutorplace.ui.screens.matrixoffate.inputvalues.model.MatrixOfFateInputValuesParams
 import com.example.tutorplace.ui.screens.matrixoffate.detailed.model.MatrixOfFateDetailedParams
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
@@ -130,7 +129,7 @@ sealed interface Destinations : NavKey, Parcelable {
 
 	@Serializable
 	@Parcelize
-	data class MatrixOfFateInputValues(val params: MatrixOfFateInputValuesParams) : Destinations
+	data object MatrixOfFateInputValues : Destinations
 
 	@Serializable
 	@Parcelize
