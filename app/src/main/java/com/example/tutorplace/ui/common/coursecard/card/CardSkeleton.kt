@@ -16,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,7 +32,9 @@ fun CardSkeleton(
 	modifier: Modifier = Modifier,
 	shape: CourseCardShapeType,
 ) {
-	SkeletonShimmer {
+	SkeletonShimmer(
+		modifier = Modifier.clip(RoundedCornerShape(20.dp))
+	) {
 		Column(
 			modifier = modifier
 				.width(if (shape == CourseCardShapeType.SQUARE) 175.dp else 340.dp)

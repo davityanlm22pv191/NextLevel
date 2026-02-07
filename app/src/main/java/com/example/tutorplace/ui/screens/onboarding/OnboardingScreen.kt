@@ -2,6 +2,7 @@ package com.example.tutorplace.ui.screens.onboarding
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -138,18 +139,16 @@ private fun OnboardingContent(
 						isLoading = state.onboardingInfo is DataInfo.Loading,
 						onClick = { onNextStepClicked() }
 					)
-					AnimatedContent(
-						targetState = uiState.isSkipButtonVisible
-					) { isSkipButtonVisible ->
-						if (isSkipButtonVisible) {
-							TransparentButton(
-								modifier = Modifier
-									.fillMaxWidth()
-									.height(45.dp),
-								text = stringResource(R.string.common_skip),
-								onClick = { onSkipClicked() }
-							)
-						}
+					AnimatedVisibility(
+						visible = uiState.isSkipButtonVisible
+					) {
+						TransparentButton(
+							modifier = Modifier
+								.fillMaxWidth()
+								.height(45.dp),
+							text = stringResource(R.string.common_skip),
+							onClick = { onSkipClicked() }
+						)
 					}
 				}
 			}

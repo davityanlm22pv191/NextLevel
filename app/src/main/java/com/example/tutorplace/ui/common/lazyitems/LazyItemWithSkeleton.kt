@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,6 +41,40 @@ fun <T> LazyListScope.itemWithSkeleton(
 	item(
 		key = key,
 		contentType = contentType,
+	) {
+		AnimatedContent(
+			modifier = Modifier.padding(paddingValues),
+			label = "${key}_itemWithSkeleton",
+			targetState = dataInfo,
+			transitionSpec = { fadeIn(tween(500)) togetherWith fadeOut(tween(500)) }
+		) { dataInfo ->
+			when (dataInfo) {
+				is DataInfo.Loading -> skeletonContent()
+				is DataInfo.Error -> {}
+				is DataInfo.Success -> if (dataInfo.isEmptyState()) {
+					emptyStateContent()
+				} else {
+					content(dataInfo.data)
+				}
+			}
+		}
+	}
+}
+
+fun <T> LazyGridScope.itemWithSkeleton(
+	key: String,
+	contentType: Any = key,
+	span: GridItemSpan? = null,
+	dataInfo: DataInfo<T>,
+	paddingValues: PaddingValues = PaddingValues(),
+	content: @Composable (T) -> Unit,
+	skeletonContent: @Composable () -> Unit,
+	emptyStateContent: @Composable () -> Unit = {}
+) {
+	item(
+		key = key,
+		contentType = contentType,
+		span = span?.let { gridItemSpan -> { gridItemSpan } }
 	) {
 		AnimatedContent(
 			modifier = Modifier.padding(paddingValues),

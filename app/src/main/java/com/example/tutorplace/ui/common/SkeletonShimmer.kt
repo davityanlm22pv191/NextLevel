@@ -66,6 +66,7 @@ fun SkeletonShimmer(
 	// (иначе drawWithCache иногда не сработает).
 	Box(
 		modifier = modifier
+			.graphicsLayer(alpha = 0.99f)
 			.drawWithCache {
 				// ⚙️ drawWithCache позволяет кэшировать всё, что не меняется каждый кадр.
 				// Здесь мы создаём лямбду onDrawWithContent, которая вызывается при каждой отрисовке.

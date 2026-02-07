@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tutorplace.ui.common.SkeletonShimmer
@@ -22,7 +23,9 @@ import com.example.tutorplace.ui.theme.GreyF8
 
 @Composable
 fun MailSkeleton(modifier: Modifier = Modifier) {
-	SkeletonShimmer {
+	SkeletonShimmer(
+		modifier = Modifier.clip(RoundedCornerShape(20.dp))
+	) {
 		Box(
 			modifier = modifier
 				.fillMaxWidth()
