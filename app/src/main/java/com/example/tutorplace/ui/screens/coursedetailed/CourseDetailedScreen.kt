@@ -80,6 +80,13 @@ private fun CourseDetailedContent(
 			columns = GridCells.Fixed(2),
 			horizontalArrangement = Arrangement.spacedBy(8.dp)
 		) {
+			item(
+				span = { GridItemSpan(2) }
+			) {
+				AnimatedVisibility(state.courseDetailed is DataInfo.Loading) {
+					Spacer(Modifier.height(TOOLBAR_HEADER_HEIGHT.dp))
+				}
+			}
 			item(span = { GridItemSpan(2) }) {
 				AnimatedVisibility(visible = state.courseDetailed is DataInfo.Success) {
 					CourseDetailedShortInfo(
@@ -114,7 +121,12 @@ private fun CourseDetailedContent(
 					}
 				},
 				emptyStateContent = {},
-				skeletonContent = { CourseActionSkeleton(backgroundPattern = DASH_LINES) }
+				skeletonContent = {
+					CourseActionSkeleton(
+						modifier = Modifier.padding(start = 16.dp),
+						backgroundPattern = DASH_LINES
+					)
+				}
 			)
 			itemWithSkeleton(
 				key = "certificate",
@@ -134,7 +146,12 @@ private fun CourseDetailedContent(
 					}
 				},
 				emptyStateContent = {},
-				skeletonContent = { CourseActionSkeleton(backgroundPattern = GEOMETRIC_FIGURES) }
+				skeletonContent = {
+					CourseActionSkeleton(
+						modifier = Modifier.padding(end = 16.dp),
+						backgroundPattern = GEOMETRIC_FIGURES
+					)
+				}
 			)
 		}
 	}

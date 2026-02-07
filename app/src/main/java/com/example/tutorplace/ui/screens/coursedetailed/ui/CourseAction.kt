@@ -112,11 +112,13 @@ fun CourseActionSkeleton(
 			.background(
 				Brush.verticalGradient(listOf(Black16, Black33)),
 				shape = RoundedCornerShape(20.dp)
-			),
+			)
+			.clip(RoundedCornerShape(20.dp)),
 	) {
 		SkeletonShimmer {
 			Image(
-				painterResource(backgroundPattern.drawable),
+				modifier = Modifier.fillMaxSize(),
+				painter = painterResource(backgroundPattern.drawable),
 				contentDescription = null
 			)
 		}
@@ -162,13 +164,22 @@ private fun CourseActionPreview() {
 			)
 		}
 		item {
-			CourseActionSkeleton(backgroundPattern = DASH_LINES)
+			CourseActionSkeleton(
+				modifier = Modifier.clip(RoundedCornerShape(20.dp)),
+				backgroundPattern = DASH_LINES
+			)
 		}
 		item {
-			CourseActionSkeleton(backgroundPattern = GEOMETRIC_FIGURES)
+			CourseActionSkeleton(
+				modifier = Modifier.clip(RoundedCornerShape(20.dp)),
+				backgroundPattern = GEOMETRIC_FIGURES
+			)
 		}
 		item(span = { GridItemSpan(2) }) {
-			CourseActionSkeleton(backgroundPattern = GEOMETRIC_FIGURES)
+			CourseActionSkeleton(
+				modifier = Modifier.clip(RoundedCornerShape(20.dp)),
+				backgroundPattern = GEOMETRIC_FIGURES
+			)
 		}
 	}
 }
