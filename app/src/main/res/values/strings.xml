@@ -139,6 +139,8 @@
 	<string name="course_detailed_title">Курс</string>
 	<string name="course_detailed_start_lesson">Начать урок</string>
 	<string name="course_detailed_materials">Материалы\nк курсу</string>
+	<string name="course_detailed_dashboard">Дашборд</string>
+	<string name="course_detailed_certificate">Сертификат</string>
 
 	<!-- 	Mail -->
 	<string name="tutor_mail">TutorПочта</string>

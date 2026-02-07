@@ -1,7 +1,10 @@
 package com.example.tutorplace.ui.screens.coursedetailed.ui
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,8 +17,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
@@ -40,7 +46,7 @@ fun CourseDetailedShortInfo(
 	modifier: Modifier = Modifier,
 	course: CourseDetailed,
 	onStartLessonClicked: () -> Unit,
-	onMaterialsClicked: () -> Unit
+	onMaterialsForCourseClicked: () -> Unit
 ) {
 	Column(
 		modifier = modifier
@@ -80,6 +86,9 @@ fun CourseDetailedShortInfo(
 				style = Typography.labelMedium.copy(color = White),
 				textAlign = TextAlign.End,
 			)
+			val interactionSource = remember { MutableInteractionSource() }
+			val isPressed by interactionSource.collectIsPressedAsState()
+			val alpha by animateFloatAsState(if (isPressed) 0.5f else 1f)
 			Icon(
 				modifier = Modifier
 					.padding(start = 8.dp)
@@ -90,7 +99,11 @@ fun CourseDetailedShortInfo(
 						shape = RoundedCornerShape(12.dp)
 					)
 					.clip(RoundedCornerShape(12.dp))
-					.clickable(onClick = { onMaterialsClicked() })
+					.clickable(
+						interactionSource = interactionSource,
+						onClick = { onMaterialsForCourseClicked() }
+					)
+					.alpha(alpha)
 					.padding(4.dp),
 				painter = painterResource(R.drawable.ic_folder),
 				contentDescription = null,
@@ -117,7 +130,7 @@ private fun CourseDetailedShortInfoPreview() {
 				.padding(top = TOOLBAR_HEADER_HEIGHT.dp),
 			course = CourseDetailed.MOCK,
 			onStartLessonClicked = {},
-			onMaterialsClicked = {}
+			onMaterialsForCourseClicked = {}
 		)
 	}
 }
