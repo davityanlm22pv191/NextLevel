@@ -5,7 +5,7 @@ import androidx.navigation3.runtime.NavKey
 import com.example.tutorplace.R
 import com.example.tutorplace.ui.common.toolbar.ToolbarHeaderConfig
 import com.example.tutorplace.ui.screens.coursedetailed.model.CourseDetailedParams
-import com.example.tutorplace.ui.screens.yournewscreen.model.YourNewScreenParams
+import com.example.tutorplace.ui.screens.matrixoffate.inputvalues.model.MatrixOfFateInputValuesParams
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
@@ -129,5 +129,5 @@ sealed interface Destinations : NavKey, Parcelable {
 
 	@Serializable
 	@Parcelize
-	data class YourNewScreen(val params: YourNewScreenParams) : Destinations
+	data class MatrixOfFateInputValues(val params: MatrixOfFateInputValuesParams) : Destinations
 }
