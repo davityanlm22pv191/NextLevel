@@ -15,11 +15,12 @@ import com.example.tutorplace.ui.screens.fortunewheel.fortunewheel.FortuneWheelS
 import com.example.tutorplace.ui.screens.fortunewheel.fortunewheelinformation.FortuneWheelInformationScreen
 import com.example.tutorplace.ui.screens.home.HomeScreen
 import com.example.tutorplace.ui.screens.mail.MailScreen
+import com.example.tutorplace.ui.screens.matrixoffate.detailed.MatrixOfFateDetailedScreen
+import com.example.tutorplace.ui.screens.matrixoffate.inputvalues.MatrixOfFateInputValuesScreen
 import com.example.tutorplace.ui.screens.mycourses.MyCoursesScreen
 import com.example.tutorplace.ui.screens.onboarding.OnboardingScreen
 import com.example.tutorplace.ui.screens.stub.StubScreen
 import com.example.tutorplace.ui.screens.tasks.TasksScreen
-import com.example.tutorplace.ui.screens.matrixoffate.inputvalues.MatrixOfFateInputValuesScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,4 +50,5 @@ fun appEntryProvider(navigator: Navigator) = entryProvider<NavKey> {
 	entry<Destinations.Tasks> { TasksScreen(navigator) }
 	entry<Destinations.Mail> { MailScreen(navigator) }
 	entry<Destinations.MatrixOfFateInputValues> { MatrixOfFateInputValuesScreen(it.params, navigator) }
+	entry<Destinations.MatrixOfFateDetailed> { MatrixOfFateDetailedScreen(it.params, navigator) }
 }
