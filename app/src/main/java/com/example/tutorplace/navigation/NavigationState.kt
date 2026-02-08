@@ -31,6 +31,7 @@ class NavigationState(
 		} else {
 			listOf(startRoute, topLevelRoute)
 		}
+
 	val currentScreen: NavKey
 		get() = requireNotNull(backStacks[topLevelRoute]?.last()) {
 			"NavigationState.kt переменная currentScreen: NavKey почему-то вернула null"

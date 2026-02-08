@@ -35,7 +35,11 @@ import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetai
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToDashboardDetailed
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToMaterialsForCourse
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEffect.NavigateToStartLesson
-import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEvent
+import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEvent.AttachParams
+import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEvent.CertificateClicked
+import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEvent.DashboardClicked
+import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEvent.MaterialsForCoursesClicked
+import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedEvent.StartLessonClicked
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedState
 import com.example.tutorplace.ui.screens.coursedetailed.presentation.CourseDetailedViewModel
 import com.example.tutorplace.ui.screens.coursedetailed.ui.CourseAction
@@ -52,16 +56,16 @@ import kotlinx.coroutines.flow.Flow
 fun CourseDetailedScreen(navigator: Navigator, params: CourseDetailedParams) {
 	val viewModel = hiltViewModel<CourseDetailedViewModel>()
 	LaunchedEffect(params.courseId) {
-		viewModel.onEvent(CourseDetailedEvent.AttachParams(params))
+		viewModel.onEvent(AttachParams(params))
 	}
 	val state by viewModel.state.collectAsStateWithLifecycle()
 	CollectEffects(viewModel.effect, navigator)
 	CourseDetailedContent(
 		state,
-		onMaterialsForCourseClicked = {},
-		onStartLessonClicked = {},
-		onDashboardClicked = {},
-		onCertificateClicked = {}
+		onMaterialsForCourseClicked = { viewModel.onEvent(MaterialsForCoursesClicked) },
+		onStartLessonClicked = { viewModel.onEvent(StartLessonClicked) },
+		onDashboardClicked = { viewModel.onEvent(DashboardClicked) },
+		onCertificateClicked = { viewModel.onEvent(CertificateClicked) }
 	)
 }
 

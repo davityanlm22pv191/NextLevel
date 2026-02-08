@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -152,17 +154,24 @@ private fun CollectEffects(
 	LaunchedEffect(Unit) {
 		effects.collect { effect ->
 			when (effect) {
-				FortuneWheelInformationEffect.Dismiss ->  navigator.goBack()
+				FortuneWheelInformationEffect.Dismiss -> navigator.goBack()
 			}
 		}
 	}
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun FortuneWheelInformationContentPreview() {
-	FortuneWheelInformationContent(
-		onNextClicked = {},
-		onMoreAboutPromotionClicked = {}
-	)
+	val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+	ModalBottomSheet(
+		sheetState = sheetState,
+		onDismissRequest = {}
+	) {
+		FortuneWheelInformationContent(
+			onNextClicked = {},
+			onMoreAboutPromotionClicked = {}
+		)
+	}
 }

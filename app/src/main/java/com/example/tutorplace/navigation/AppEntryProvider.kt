@@ -49,6 +49,9 @@ fun appEntryProvider(navigator: Navigator) = entryProvider<NavKey> {
 	entry<Destinations.MyCourses> { MyCoursesScreen(navigator) }
 	entry<Destinations.Tasks> { TasksScreen(navigator) }
 	entry<Destinations.Mail> { MailScreen(navigator) }
-	entry<Destinations.MatrixOfFateInputValues> { MatrixOfFateInputValuesScreen(navigator) }
+	entry<Destinations.MatrixOfFateInputValues>(
+		metadata = BottomSheetSceneStrategy.bottomSheet(),
+		content = { MatrixOfFateInputValuesScreen(navigator) },
+	)
 	entry<Destinations.MatrixOfFateDetailed> { MatrixOfFateDetailedScreen(it.params, navigator) }
 }

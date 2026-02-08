@@ -21,8 +21,14 @@ class Navigator(
 
 	fun navigate(vararg routes: NavKey) {
 		routes.forEach { route ->
-			if (route in state.backStacks.keys) {
-				state.topLevelRoute = route
+			val isClickedOnTab = route in state.backStacks.keys
+			if (isClickedOnTab) {
+				val isClickedOnAlreadyActiveTab = state.topLevelRoute == route
+				if (isClickedOnAlreadyActiveTab) {
+					navigateAndClearBackStack(route)
+				} else {
+					state.topLevelRoute = route
+				}
 			} else {
 				state.backStacks[state.topLevelRoute]?.add(route)
 			}

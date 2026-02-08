@@ -9,12 +9,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,8 +43,6 @@ import com.example.tutorplace.ui.screens.matrixoffate.inputvalues.presentation.M
 import com.example.tutorplace.ui.screens.matrixoffate.inputvalues.presentation.MatrixOfFateInputValuesState
 import com.example.tutorplace.ui.screens.matrixoffate.inputvalues.presentation.MatrixOfFateInputValuesViewModel
 import com.example.tutorplace.ui.theme.ContainerColor
-import com.example.tutorplace.ui.theme.ScreenColor
-import com.example.tutorplace.ui.theme.Transparent
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
@@ -75,83 +71,70 @@ private fun MatrixOfFateInputValuesContent(
 	onCalculateButtonClicked: () -> Unit,
 	onBirthDateSelected: (LocalDate) -> Unit
 ) {
-	val sheetState = rememberModalBottomSheetState(
-		skipPartiallyExpanded = true,
-		confirmValueChange = { sheetValue -> sheetValue != SheetValue.Hidden }
-	)
-	ModalBottomSheet(
+
+	Column(
 		modifier = Modifier
 			.fillMaxWidth()
-			.wrapContentHeight(),
-		containerColor = ScreenColor,
-		sheetState = sheetState,
-		scrimColor = Transparent,
-		onDismissRequest = onDismissRequest
+			.verticalScroll(rememberScrollState())
+			.imePadding()
+			.navigationBarsPadding()
 	) {
-		Column(
+		Header(
+			logo = HeaderLogoType.Text(R.string.matrix_of_fate_input_data_title_logo),
+			title = stringResource(R.string.matrix_of_fate_input_data_title),
+			description = null,
+			throwable = null,
+			onBackButtonClicked = onDismissRequest
+		)
+		Spacer(modifier = Modifier.height(20.dp))
+		NameTextField(
 			modifier = Modifier
 				.fillMaxWidth()
-				.verticalScroll(rememberScrollState())
-				.imePadding()
-				.navigationBarsPadding()
+				.padding(horizontal = 16.dp),
+			label = stringResource(R.string.common_user_name),
+			value = state.userName.value,
+			isError = state.userName.isError,
+			onNextClicked = {},
+			onValueChanged = { onUserNameChanged(it) },
+		)
+		DataChoosePicker(
+			modifier = Modifier
+				.fillMaxWidth()
+				.height(48.dp)
+				.padding(horizontal = 16.dp),
+			value = state.birthDate,
+			format = FormatHelper.DATE_MONTH_YEAR,
+			label = stringResource(R.string.matrix_of_fate_field_birthdate_hint),
+			onValueChange = { selectedDate -> onBirthDateSelected(selectedDate) },
+			isError = state.isBirthDateError
+		)
+		SexChoosingMenu(
+			modifier = Modifier
+				.padding(horizontal = 16.dp)
+				.padding(top = 12.dp)
+				.fillMaxWidth()
+				.padding(bottom = 16.dp),
+			selectedSex = state.sex,
+			isError = state.isSexError,
+			onSexChosen = { sex -> onSexChosen(sex) }
+		)
+		Box(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(top = 128.dp)
+				.shadow(8.dp, RoundedTopCornerShape(16.dp))
+				.background(ContainerColor, RoundedTopCornerShape(16.dp))
+				.padding(16.dp)
 		) {
-			Header(
-				logo = HeaderLogoType.Text(R.string.matrix_of_fate_input_data_title_logo),
-				title = stringResource(R.string.matrix_of_fate_input_data_title),
-				description = null,
-				throwable = null,
-				onBackButtonClicked = onDismissRequest
-			)
-			Spacer(modifier = Modifier.height(20.dp))
-			NameTextField(
+			PurpleButton(
 				modifier = Modifier
 					.fillMaxWidth()
-					.padding(horizontal = 16.dp),
-				label = stringResource(R.string.common_user_name),
-				value = state.userName.value,
-				isError = state.userName.isError,
-				onNextClicked = {},
-				onValueChanged = { onUserNameChanged(it) },
+					.height(45.dp),
+				text = stringResource(R.string.common_calculate),
+				isEnabled = state.isCalculateButtonEnabled,
+				isLoading = state.isLoading,
+				onClick = { onCalculateButtonClicked() }
 			)
-			DataChoosePicker(
-				modifier = Modifier
-					.fillMaxWidth()
-					.height(48.dp)
-					.padding(horizontal = 16.dp),
-				value = state.birthDate,
-				format = FormatHelper.DATE_MONTH_YEAR,
-				label = stringResource(R.string.matrix_of_fate_field_birthdate_hint),
-				onValueChange = { selectedDate -> onBirthDateSelected(selectedDate) },
-				isError = state.isBirthDateError
-			)
-			SexChoosingMenu(
-				modifier = Modifier
-					.padding(horizontal = 16.dp)
-					.padding(top = 12.dp)
-					.fillMaxWidth()
-					.padding(bottom = 16.dp),
-				selectedSex = state.sex,
-				isError = state.isSexError,
-				onSexChosen = { sex -> onSexChosen(sex) }
-			)
-			Box(
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(top = 128.dp)
-					.shadow(8.dp, RoundedTopCornerShape(16.dp))
-					.background(ContainerColor, RoundedTopCornerShape(16.dp))
-					.padding(16.dp)
-			) {
-				PurpleButton(
-					modifier = Modifier
-						.fillMaxWidth()
-						.height(45.dp),
-					text = stringResource(R.string.common_calculate),
-					isEnabled = state.isCalculateButtonEnabled,
-					isLoading = state.isLoading,
-					onClick = { onCalculateButtonClicked() }
-				)
-			}
 		}
 	}
 }
@@ -167,15 +150,22 @@ private fun CollectEffects(effect: Flow<MatrixOfFateInputValuesEffect>, navigato
 	}
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 private fun MatrixOfFateInputValuesPreview() {
-	MatrixOfFateInputValuesContent(
-		state = MatrixOfFateInputValuesState(),
-		onDismissRequest = {},
-		onUserNameChanged = {},
-		onSexChosen = {},
-		onCalculateButtonClicked = {},
-		onBirthDateSelected = {}
-	)
+	val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+	ModalBottomSheet(
+		sheetState = sheetState,
+		onDismissRequest = {}
+	) {
+		MatrixOfFateInputValuesContent(
+			state = MatrixOfFateInputValuesState(),
+			onDismissRequest = {},
+			onUserNameChanged = {},
+			onSexChosen = {},
+			onCalculateButtonClicked = {},
+			onBirthDateSelected = {}
+		)
+	}
 }

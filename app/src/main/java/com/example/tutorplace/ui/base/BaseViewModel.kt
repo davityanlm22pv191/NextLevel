@@ -1,7 +1,6 @@
 package com.example.tutorplace.ui.base
 
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,5 +28,9 @@ abstract class BaseViewModel<Event : BaseEvent, State : BaseState, Effect : Base
 		if (newState != _state.value) {
 			_state.tryEmit(newState)
 		}
+	}
+
+	override fun onCleared() {
+		super.onCleared()
 	}
 }
