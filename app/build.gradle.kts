@@ -57,7 +57,7 @@ android {
 		buildConfigField(
 			"String",
 			"SERVER_URL",
-			"\"https://tutorplace.wiremockapi.cloud/\""
+			"\"https://mybackend-aoz8.onrender.com/\""
 		)
 	}
 }
