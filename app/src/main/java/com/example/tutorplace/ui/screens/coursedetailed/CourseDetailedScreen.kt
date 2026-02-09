@@ -26,6 +26,7 @@ import com.example.tutorplace.R
 import com.example.tutorplace.data.courses.course.CourseDetailed
 import com.example.tutorplace.domain.model.DataInfo
 import com.example.tutorplace.navigation.Navigator
+import com.example.tutorplace.navigation.destinations.DestinationWithToolbar
 import com.example.tutorplace.navigation.destinations.Destinations
 import com.example.tutorplace.ui.common.lazyitems.itemWithSkeleton
 import com.example.tutorplace.ui.common.toolbar.TOOLBAR_HEADER_HEIGHT
@@ -169,7 +170,7 @@ private fun CollectEffects(effect: Flow<CourseDetailedEffect>, navigator: Naviga
 			when (effect) {
 				NavigateToCertificateDetailed -> {}
 				NavigateToDashboardDetailed -> navigator.navigate(
-					Destinations.MatrixOfFateInputValues
+					Destinations.MatrixOfFateInputValues((navigator.state.currentScreen as DestinationWithToolbar).config)
 				)
 				NavigateToMaterialsForCourse -> {}
 				NavigateToStartLesson -> {}

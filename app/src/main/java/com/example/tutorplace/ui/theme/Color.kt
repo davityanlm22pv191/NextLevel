@@ -27,6 +27,7 @@ val Grey82 = Color(0xFF828282)
 val GreyF8 = Color(0xFFF8F8F8)
 val GreyAC = Color(0xFFACACAC)
 val GreyD5 = Color(0xFFD5D5D5)
+val Grey58 = Color(0xFF585858)
 
 val PurpleCC = Color(0xFF7200CC)
 val PurpleDE = Color(0xFFA55CDE)

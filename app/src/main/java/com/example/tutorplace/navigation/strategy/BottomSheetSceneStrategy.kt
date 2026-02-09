@@ -10,27 +10,24 @@ import androidx.navigation3.scene.OverlayScene
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.scene.SceneStrategyScope
+import com.example.tutorplace.navigation.strategy.BottomSheetSceneStrategy.Companion.bottomSheet
 import com.example.tutorplace.ui.theme.ScreenColor
 import com.example.tutorplace.ui.theme.Transparent
-import kotlin.collections.dropLast
-import kotlin.collections.lastOrNull
-import kotlin.let
-import kotlin.to
 
 /** An [OverlayScene] that renders an [entry] within a [ModalBottomSheet]. */
 @OptIn(ExperimentalMaterial3Api::class)
 internal class BottomSheetScene<T : Any>(
-    override val key: T,
-    override val previousEntries: List<NavEntry<T>>,
-    override val overlaidEntries: List<NavEntry<T>>,
-    private val entry: NavEntry<T>,
-    private val modalBottomSheetProperties: ModalBottomSheetProperties,
-    private val onBack: () -> Unit,
+	override val key: T,
+	override val previousEntries: List<NavEntry<T>>,
+	override val overlaidEntries: List<NavEntry<T>>,
+	private val entry: NavEntry<T>,
+	private val modalBottomSheetProperties: ModalBottomSheetProperties,
+	private val onBack: () -> Unit,
 ) : OverlayScene<T> {
 
-    override val entries: List<NavEntry<T>> = listOf(entry)
+	override val entries: List<NavEntry<T>> = listOf(entry)
 
-    override val content: @Composable (() -> Unit) = {
+	override val content: @Composable (() -> Unit) = {
 		val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 		ModalBottomSheet(
 			onDismissRequest = onBack,
@@ -40,7 +37,7 @@ internal class BottomSheetScene<T : Any>(
 			containerColor = ScreenColor,
 			content = { entry.Content() },
 		)
-    }
+	}
 }
 
 /**
@@ -52,35 +49,36 @@ internal class BottomSheetScene<T : Any>(
 @OptIn(ExperimentalMaterial3Api::class)
 class BottomSheetSceneStrategy<T : Any> : SceneStrategy<T> {
 
-    override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
-        val lastEntry = entries.lastOrNull()
-        val bottomSheetProperties = lastEntry?.metadata?.get(BOTTOM_SHEET_KEY) as? ModalBottomSheetProperties
-        return bottomSheetProperties?.let { properties ->
-            @Suppress("UNCHECKED_CAST")
-            BottomSheetScene(
-                key = lastEntry.contentKey as T,
-                previousEntries = entries.dropLast(1),
-                overlaidEntries = entries.dropLast(1),
-                entry = lastEntry,
-                modalBottomSheetProperties = properties,
-                onBack = onBack
-            )
-        }
-    }
+	override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
+		val lastEntry = entries.lastOrNull()
+		val bottomSheetProperties =
+			lastEntry?.metadata?.get(BOTTOM_SHEET_KEY) as? ModalBottomSheetProperties
+		return bottomSheetProperties?.let { properties ->
+			@Suppress("UNCHECKED_CAST")
+			BottomSheetScene(
+				key = lastEntry.contentKey as T,
+				previousEntries = entries.dropLast(1),
+				overlaidEntries = entries.dropLast(1),
+				entry = lastEntry,
+				modalBottomSheetProperties = properties,
+				onBack = onBack
+			)
+		}
+	}
 
-    companion object {
-        /**
-         * Function to be called on the [NavEntry.metadata] to mark this entry as something that
-         * should be displayed within a [ModalBottomSheet].
-         *
-         * @param modalBottomSheetProperties properties that should be passed to the containing
-         * [ModalBottomSheet].
-         */
-        @OptIn(ExperimentalMaterial3Api::class)
-        fun bottomSheet(
-            modalBottomSheetProperties: ModalBottomSheetProperties = ModalBottomSheetProperties()
-        ): Map<String, Any> = mapOf(BOTTOM_SHEET_KEY to modalBottomSheetProperties)
+	companion object {
+		/**
+		 * Function to be called on the [NavEntry.metadata] to mark this entry as something that
+		 * should be displayed within a [ModalBottomSheet].
+		 *
+		 * @param modalBottomSheetProperties properties that should be passed to the containing
+		 * [ModalBottomSheet].
+		 */
+		@OptIn(ExperimentalMaterial3Api::class)
+		fun bottomSheet(
+			modalBottomSheetProperties: ModalBottomSheetProperties = ModalBottomSheetProperties()
+		): Map<String, Any> = mapOf(BOTTOM_SHEET_KEY to modalBottomSheetProperties)
 
-        internal const val BOTTOM_SHEET_KEY = "bottomsheet"
-    }
+		internal const val BOTTOM_SHEET_KEY = "bottomsheet"
+	}
 }

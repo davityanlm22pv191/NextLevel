@@ -1,8 +1,10 @@
 package com.example.tutorplace.ui.common.textfield
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,12 +16,17 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndSelectAll
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,6 +50,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tutorplace.R
+import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.ui.theme.Black16
 import com.example.tutorplace.ui.theme.ContainerColor
 import com.example.tutorplace.ui.theme.Grey82
@@ -50,6 +59,9 @@ import com.example.tutorplace.ui.theme.PurpleCC
 import com.example.tutorplace.ui.theme.Red1D
 import com.example.tutorplace.ui.theme.Typography
 import com.example.tutorplace.ui.theme.White
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 private val outlinedTextFieldColors: TextFieldColors
 	@Composable get() = OutlinedTextFieldDefaults.colors(
@@ -86,6 +98,9 @@ fun EmailTextField(
 		isError = isError,
 		label = {
 			Text(
+				modifier = Modifier
+					.clip(RoundedCornerShape(20.dp))
+					.padding(horizontal = 2.dp),
 				text = label,
 				style = Typography.labelSmall,
 				color = Grey82
@@ -120,6 +135,9 @@ fun PasswordTextField(
 		colors = outlinedTextFieldColors,
 		label = {
 			Text(
+				modifier = Modifier
+					.clip(RoundedCornerShape(20.dp))
+					.padding(horizontal = 2.dp),
 				text = label,
 				style = Typography.labelSmall,
 				color = Grey82
@@ -148,9 +166,7 @@ fun PasswordTextField(
 			TextObfuscationMode.Hidden
 		},
 		textObfuscationCharacter = '*',
-		onKeyboardAction = object : KeyboardActionHandler {
-			override fun onKeyboardAction(performDefaultAction: () -> Unit) = onDoneClicked()
-		},
+		onKeyboardAction = KeyboardActionHandler { onDoneClicked() },
 	)
 }
 
@@ -171,6 +187,9 @@ fun NameTextField(
 		value = value,
 		label = {
 			Text(
+				modifier = Modifier
+					.clip(RoundedCornerShape(20.dp))
+					.padding(horizontal = 2.dp),
 				text = label,
 				style = Typography.labelSmall,
 				color = Grey82
@@ -210,6 +229,9 @@ fun PhoneTextField(
 		shape = RoundedCornerShape(12.dp),
 		label = {
 			Text(
+				modifier = Modifier
+					.clip(RoundedCornerShape(20.dp))
+					.padding(horizontal = 2.dp),
 				text = label,
 				style = Typography.labelSmall,
 				color = Grey82
@@ -282,6 +304,9 @@ fun TelegramTextField(
 		shape = RoundedCornerShape(12.dp),
 		label = {
 			Text(
+				modifier = Modifier
+					.clip(RoundedCornerShape(20.dp))
+					.padding(horizontal = 2.dp),
 				text = label,
 				style = Typography.labelSmall,
 				color = Grey82
@@ -304,17 +329,100 @@ fun TelegramTextField(
 	)
 }
 
+@Composable
+fun DateChoosePicker(
+	modifier: Modifier = Modifier,
+	date: LocalDate?,
+	format: String,
+	onValueChanged: (LocalDate) -> Unit,
+	label: String,
+	isError: Boolean,
+) {
+	val textState = rememberTextFieldState(
+		initialText = date
+			?.let { FormatHelper.formatDate(it, format) }
+			.orEmpty()
+	)
+
+	val datePickerState = rememberDatePickerState(
+		initialSelectedDateMillis = date?.toEpochDay()?.let { it * 24 * 60 * 60 * 1000 }
+	)
+
+	var showDialog by remember { mutableStateOf(false) }
+
+	val labelColor by animateColorAsState(if (isError) Red1D else Grey82)
+	val textStyle = remember { Typography.labelMedium.copy(color = Black16) }
+
+	OutlinedTextField(
+		modifier = modifier
+			.fillMaxWidth()
+			.clickable { showDialog = true },
+		state = textState,
+		readOnly = true,
+		label = {
+			Text(
+				modifier = Modifier
+					.clip(RoundedCornerShape(20.dp))
+					.padding(horizontal = 2.dp),
+				text = label,
+				style = Typography.labelSmall,
+				color = labelColor
+			)
+		},
+		textStyle = textStyle,
+		colors = outlinedTextFieldColors,
+		shape = RoundedCornerShape(12.dp),
+		isError = isError,
+	)
+
+	if (showDialog) {
+		DatePickerDialog(
+			onDismissRequest = { showDialog = false },
+			confirmButton = {
+				TextButton(
+					onClick = {
+						val millis = datePickerState.selectedDateMillis
+						if (millis != null) {
+							val localDate = Instant.ofEpochMilli(millis)
+								.atZone(ZoneId.systemDefault())
+								.toLocalDate()
+							textState.setTextAndSelectAll(
+								FormatHelper.formatDate(
+									localDate,
+									format
+								)
+							)
+							onValueChanged(localDate)
+						}
+						showDialog = false
+					}
+				) {
+					Text("OK")
+				}
+			},
+			dismissButton = {
+				TextButton(onClick = { showDialog = false }) {
+					Text("Отмена")
+				}
+			}
+		) {
+			DatePicker(state = datePickerState)
+		}
+	}
+}
+
 @Preview
 @Composable
 private fun TextFieldsPreview() {
 	Column(
 		Modifier
 			.background(White)
-			.focusable(),
+			.focusable()
+			.padding(16.dp),
 		verticalArrangement = Arrangement.spacedBy(8.dp)
 	) {
 		EmailTextField(
-			modifier = Modifier.padding(horizontal = 16.dp),
+			modifier = Modifier,
 			value = "example@google.com",
 			label = stringResource(R.string.common_auth_your_email),
 			isError = true,
@@ -322,7 +430,7 @@ private fun TextFieldsPreview() {
 			onNextClicked = {}
 		)
 		PasswordTextField(
-			modifier = Modifier.padding(horizontal = 16.dp),
+			modifier = Modifier,
 			value = "123456",
 			label = stringResource(R.string.authorization_your_password),
 			isError = false,
@@ -330,7 +438,7 @@ private fun TextFieldsPreview() {
 			onDoneClicked = {}
 		)
 		NameTextField(
-			modifier = Modifier.padding(horizontal = 16.dp),
+			modifier = Modifier,
 			value = "Name",
 			label = stringResource(R.string.registration_your_name),
 			isError = false,
@@ -338,7 +446,7 @@ private fun TextFieldsPreview() {
 			onNextClicked = {}
 		)
 		PhoneTextField(
-			modifier = Modifier.padding(horizontal = 16.dp),
+			modifier = Modifier,
 			value = "79999999999",
 			label = stringResource(R.string.registration_your_phone_number),
 			isError = false,
@@ -346,12 +454,36 @@ private fun TextFieldsPreview() {
 			onValueChanged = {}
 		)
 		TelegramTextField(
-			modifier = Modifier.padding(horizontal = 16.dp),
+			modifier = Modifier,
 			value = "someTelegramAddress",
 			label = stringResource(R.string.registration_your_telegram),
 			isError = false,
 			onValueChanged = {},
 			onDoneClicked = {}
+		)
+		DateChoosePicker(
+			modifier = Modifier,
+			date = LocalDate.now(),
+			format = FormatHelper.DATE_MONTH_YEAR,
+			onValueChanged = {},
+			label = "Дата рождения",
+			isError = false
+		)
+		DateChoosePicker(
+			modifier = Modifier,
+			date = null,
+			format = FormatHelper.DATE_MONTH_YEAR,
+			onValueChanged = {},
+			label = "Дата рождения",
+			isError = false
+		)
+		DateChoosePicker(
+			modifier = Modifier,
+			date = null,
+			format = FormatHelper.DATE_MONTH_YEAR,
+			onValueChanged = {},
+			label = "Дата рождения",
+			isError = true
 		)
 	}
 }

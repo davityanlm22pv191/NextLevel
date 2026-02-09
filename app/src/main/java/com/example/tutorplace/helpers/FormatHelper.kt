@@ -21,6 +21,12 @@ object FormatHelper {
 		return formatter.format(date)
 	}
 
+	fun CharSequence.toLocalDate(format: String): LocalDate {
+		val formatter = DateTimeFormatter.ofPattern(format)
+		return LocalDate.parse(this, formatter)
+	}
+
+
 	// endregion
 
 	// region ==================== E-mail =====================

@@ -129,7 +129,9 @@ sealed interface Destinations : NavKey, Parcelable {
 
 	@Serializable
 	@Parcelize
-	data object MatrixOfFateInputValues : Destinations
+	data class MatrixOfFateInputValues(
+		override val config: ToolbarHeaderConfig
+	) : Destinations, DestinationWithToolbar
 
 	@Serializable
 	@Parcelize

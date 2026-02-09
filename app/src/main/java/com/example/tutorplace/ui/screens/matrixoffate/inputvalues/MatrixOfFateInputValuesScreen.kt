@@ -4,13 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -28,12 +29,12 @@ import com.example.tutorplace.R
 import com.example.tutorplace.domain.model.Sex
 import com.example.tutorplace.helpers.FormatHelper
 import com.example.tutorplace.navigation.Navigator
-import com.example.tutorplace.ui.common.DataChoosePicker
 import com.example.tutorplace.ui.common.PurpleButton
 import com.example.tutorplace.ui.common.RoundedTopCornerShape
 import com.example.tutorplace.ui.common.SexChoosingMenu
 import com.example.tutorplace.ui.common.header.Header
 import com.example.tutorplace.ui.common.header.HeaderLogoType
+import com.example.tutorplace.ui.common.textfield.DateChoosePicker
 import com.example.tutorplace.ui.common.textfield.NameTextField
 import com.example.tutorplace.ui.screens.matrixoffate.inputvalues.presentation.MatrixOfFateInputValuesEffect
 import com.example.tutorplace.ui.screens.matrixoffate.inputvalues.presentation.MatrixOfFateInputValuesEvent.BirthDateSelected
@@ -71,12 +72,10 @@ private fun MatrixOfFateInputValuesContent(
 	onCalculateButtonClicked: () -> Unit,
 	onBirthDateSelected: (LocalDate) -> Unit
 ) {
-
 	Column(
 		modifier = Modifier
 			.fillMaxWidth()
-			.verticalScroll(rememberScrollState())
-			.imePadding()
+			.fillMaxHeight(fraction = 0.75f)
 			.navigationBarsPadding()
 	) {
 		Header(
@@ -88,40 +87,38 @@ private fun MatrixOfFateInputValuesContent(
 		)
 		Spacer(modifier = Modifier.height(20.dp))
 		NameTextField(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(horizontal = 16.dp),
+			modifier = Modifier.padding(horizontal = 16.dp),
 			label = stringResource(R.string.common_user_name),
 			value = state.userName.value,
 			isError = state.userName.isError,
 			onNextClicked = {},
 			onValueChanged = { onUserNameChanged(it) },
 		)
-		DataChoosePicker(
+		DateChoosePicker(
 			modifier = Modifier
-				.fillMaxWidth()
-				.height(48.dp)
 				.padding(horizontal = 16.dp),
-			value = state.birthDate,
+			date = state.birthDate,
 			format = FormatHelper.DATE_MONTH_YEAR,
 			label = stringResource(R.string.matrix_of_fate_field_birthdate_hint),
-			onValueChange = { selectedDate -> onBirthDateSelected(selectedDate) },
+			onValueChanged = { selectedDate -> onBirthDateSelected(selectedDate) },
 			isError = state.isBirthDateError
 		)
 		SexChoosingMenu(
 			modifier = Modifier
 				.padding(horizontal = 16.dp)
-				.padding(top = 12.dp)
-				.fillMaxWidth()
-				.padding(bottom = 16.dp),
+				.padding(top = 12.dp),
 			selectedSex = state.sex,
 			isError = state.isSexError,
 			onSexChosen = { sex -> onSexChosen(sex) }
 		)
+		Spacer(
+			modifier = Modifier
+				.weight(1f, fill = true)
+				.heightIn(max = 128.dp)
+		)
 		Box(
 			modifier = Modifier
 				.fillMaxWidth()
-				.padding(top = 128.dp)
 				.shadow(8.dp, RoundedTopCornerShape(16.dp))
 				.background(ContainerColor, RoundedTopCornerShape(16.dp))
 				.padding(16.dp)
@@ -157,7 +154,8 @@ private fun MatrixOfFateInputValuesPreview() {
 	val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 	ModalBottomSheet(
 		sheetState = sheetState,
-		onDismissRequest = {}
+		onDismissRequest = {},
+		contentWindowInsets = { WindowInsets.ime }
 	) {
 		MatrixOfFateInputValuesContent(
 			state = MatrixOfFateInputValuesState(),
