@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">TutorPlace</string>
+	<string name="app_name">NextLevel</string>
 
 	<!-- 	Tab screens -->
 	<string name="tab_catalog_title">Каталог</string>
@@ -8,6 +8,7 @@
 	<string name="tab_tasks_title">Задания</string>
 
 	<!-- 	Common -->
+	<string name="common_next_level">Next Level</string>
 	<string name="common_or">или</string>
 	<string name="common_next">Далее</string>
 	<string name="common_skip">Пропустить</string>
@@ -72,7 +73,7 @@
 	<string name="onboarding_next_step">Следующий шаг</string>
 	<string name="onboarding_bind">Привязать</string>
 	<string name="onboarding_start_learning">Начать обучение</string>
-	<string name="onboarding_congratulations_welcome_to_tutor_place">Добро пожаловать\n на TutorPlace</string>
+	<string name="onboarding_congratulations_welcome_to_next_level">Добро пожаловать\n на Next Level</string>
 	<string name="onboarding_congratulations_description">Поздравляем с получением доступа к нашей платформе</string>
 	<string name="onboarding_congratulations_new_product_is_available_male_format">%s уже доступен в вашем личном кабинете</string>
 	<string name="onboarding_congratulations_new_product_is_available_female_format">%s уже доступна в вашем личном кабинете</string>
@@ -112,7 +113,7 @@
 	<string name="onboarding_help_you_stay_when_you_want_receive_notifications">В какое время вы хотели бы получать напоминания (промежуток)</string>
 	<string name="onboarding_spend_your_time_productively_logo">🎉</string>
 	<string name="onboarding_spend_your_time_productively_title">Проводите время с пользой</string>
-	<string name="onboarding_spend_your_time_productively_description">чувствуйте себя продуктивным вместе с TutorPlace!</string>
+	<string name="onboarding_spend_your_time_productively_description">чувствуйте себя продуктивным вместе с NextLevel!</string>
 
 	<!-- 	Home -->
 	<string name="home_screen_name">Дом</string>
@@ -144,10 +145,10 @@
 	<string name="course_detailed_certificate">Сертификат</string>
 
 	<!-- 	Mail -->
-	<string name="tutor_mail">TutorПочта</string>
-	<string name="tutor_mail_incoming">Входящие</string>
-	<string name="tutor_mail_here_will_you_mails">Здесь будут находиться ваши письма</string>
-	<string name="tutor_mail_you_do_not_have_messages_right_now">На данный момент у вас нет писем</string>
+	<string name="mail">Почта</string>
+	<string name="mail_incoming">Входящие</string>
+	<string name="mail_here_will_you_mails">Здесь будут находиться ваши письма</string>
+	<string name="mail_you_do_not_have_messages_right_now">На данный момент у вас нет писем</string>
 
 	<!-- Matrix of fate -->
 	<string name="matrix_of_fate_input_data_title_logo">🔮</string>

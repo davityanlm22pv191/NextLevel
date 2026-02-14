@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-	namespace = "com.example.tutorplace"
+	namespace = "com.example.nextlevel"
 	compileSdk = 36
 
 	defaultConfig {
-		applicationId = "com.example.tutorplace"
+		applicationId = "com.example.nextlevel"
 		minSdk = 28
 		targetSdk = 36
 		versionCode = 1
