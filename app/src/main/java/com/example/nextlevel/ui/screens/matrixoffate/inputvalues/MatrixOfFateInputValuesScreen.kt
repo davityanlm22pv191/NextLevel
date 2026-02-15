@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,6 +32,7 @@ import com.example.nextlevel.helpers.FormatHelper
 import com.example.nextlevel.navigation.Navigator
 import com.example.nextlevel.ui.common.PurpleButton
 import com.example.nextlevel.ui.common.RoundedTopCornerShape
+import com.example.nextlevel.ui.common.SelectableDatesPast
 import com.example.nextlevel.ui.common.SexChoosingMenu
 import com.example.nextlevel.ui.common.header.Header
 import com.example.nextlevel.ui.common.header.HeaderLogoType
@@ -76,6 +78,7 @@ private fun MatrixOfFateInputValuesContent(
 		modifier = Modifier
 			.fillMaxWidth()
 			.fillMaxHeight(fraction = 0.75f)
+			.imePadding()
 			.navigationBarsPadding()
 	) {
 		Header(
@@ -96,12 +99,14 @@ private fun MatrixOfFateInputValuesContent(
 		)
 		DateChoosePicker(
 			modifier = Modifier
-				.padding(horizontal = 16.dp),
+				.padding(horizontal = 16.dp)
+				.padding(top = 6.dp),
 			date = state.birthDate,
 			format = FormatHelper.DATE_MONTH_YEAR,
 			label = stringResource(R.string.matrix_of_fate_field_birthdate_hint),
 			onValueChanged = { selectedDate -> onBirthDateSelected(selectedDate) },
-			isError = state.isBirthDateError
+			isError = state.isBirthDateError,
+			selectableDates = SelectableDatesPast()
 		)
 		SexChoosingMenu(
 			modifier = Modifier
@@ -114,7 +119,7 @@ private fun MatrixOfFateInputValuesContent(
 		Spacer(
 			modifier = Modifier
 				.weight(1f, fill = true)
-				.heightIn(max = 128.dp)
+				.heightIn(max = 128.dp, min = 16.dp)
 		)
 		Box(
 			modifier = Modifier

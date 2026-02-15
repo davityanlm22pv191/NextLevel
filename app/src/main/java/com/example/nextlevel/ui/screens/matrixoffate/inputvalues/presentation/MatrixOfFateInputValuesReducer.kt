@@ -1,6 +1,7 @@
 package com.example.nextlevel.ui.screens.matrixoffate.inputvalues.presentation
 
 import com.example.nextlevel.ui.base.BaseReducer
+import com.example.nextlevel.ui.common.textfield.set
 import com.example.nextlevel.ui.screens.matrixoffate.inputvalues.presentation.MatrixOfFateInputValuesEvent.BirthDateSelected
 import com.example.nextlevel.ui.screens.matrixoffate.inputvalues.presentation.MatrixOfFateInputValuesEvent.NameValueChanged
 import com.example.nextlevel.ui.screens.matrixoffate.inputvalues.presentation.MatrixOfFateInputValuesEvent.SexChosen
@@ -14,8 +15,8 @@ object MatrixOfFateInputValuesReducer :
 		event: MatrixOfFateInputValuesEvent
 	): MatrixOfFateInputValuesState {
 		return when (event) {
-			is BirthDateSelected -> TODO()
-			is NameValueChanged -> TODO()
+			is BirthDateSelected -> oldState.copy(birthDate = event.date)
+			is NameValueChanged -> oldState.copy(userName = oldState.userName.set(event.name))
 			is SexChosen -> reduceSexChosen(event, oldState)
 			is SexError -> oldState.copy(isSexError = true)
 			else -> oldState

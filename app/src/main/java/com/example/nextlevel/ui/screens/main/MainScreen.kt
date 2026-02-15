@@ -3,7 +3,6 @@ package com.example.nextlevel.ui.screens.main
 import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Build
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
@@ -117,20 +116,12 @@ private fun MainContent(state: MainScreenState, userIsAuthorized: Boolean) {
 					animationSpec = tween(durationMillis = BAR_ANIMATIONS_DURATION_MS)
 				)
 			) {
-				AnimatedContent(
-					label = "bottomBar",
-					targetState = isBottomBarVisible,
-
-					) { isVisible ->
-					if (isVisible) {
-						BottomNavigationBar(
-							currentTopLevelRoute = navigationState.topLevelRoute,
-							onClick = { bottomNavBarItemDestination ->
-								navigator.navigate(bottomNavBarItemDestination)
-							}
-						)
+				BottomNavigationBar(
+					currentTopLevelRoute = navigationState.topLevelRoute,
+					onClick = { bottomNavBarItemDestination ->
+						navigator.navigate(bottomNavBarItemDestination)
 					}
-				}
+				)
 			}
 		}
 	) { _ ->

@@ -6,7 +6,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,13 +18,15 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.foundation.text.input.setTextAndSelectAll
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldColors
@@ -50,6 +54,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.nextlevel.R
+import com.example.nextlevel.extension.toEpochMillis
+import com.example.nextlevel.extension.toLocalDate
 import com.example.nextlevel.helpers.FormatHelper
 import com.example.nextlevel.ui.theme.Black16
 import com.example.nextlevel.ui.theme.ContainerColor
@@ -59,9 +65,7 @@ import com.example.nextlevel.ui.theme.PurpleCC
 import com.example.nextlevel.ui.theme.Red1D
 import com.example.nextlevel.ui.theme.Typography
 import com.example.nextlevel.ui.theme.White
-import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
 
 private val outlinedTextFieldColors: TextFieldColors
 	@Composable get() = OutlinedTextFieldDefaults.colors(
@@ -126,6 +130,7 @@ fun PasswordTextField(
 	LaunchedEffect(state) {
 		snapshotFlow { state.text }.collect { onValueChanged(it.toString()) }
 	}
+
 	OutlinedSecureTextField(
 		modifier = modifier.fillMaxWidth(),
 		state = state,
@@ -337,43 +342,46 @@ fun DateChoosePicker(
 	onValueChanged: (LocalDate) -> Unit,
 	label: String,
 	isError: Boolean,
+	selectableDates: SelectableDates = DatePickerDefaults.AllDates,
 ) {
 	val textState = rememberTextFieldState(
 		initialText = date
-			?.let { FormatHelper.formatDate(it, format) }
+			?.let { localDate -> FormatHelper.formatDate(localDate, format) }
 			.orEmpty()
 	)
-
 	val datePickerState = rememberDatePickerState(
-		initialSelectedDateMillis = date?.toEpochDay()?.let { it * 24 * 60 * 60 * 1000 }
+		initialSelectedDateMillis = date.toEpochMillis(),
+		selectableDates = selectableDates,
 	)
-
 	var showDialog by remember { mutableStateOf(false) }
-
 	val labelColor by animateColorAsState(if (isError) Red1D else Grey82)
 	val textStyle = remember { Typography.labelMedium.copy(color = Black16) }
-
-	OutlinedTextField(
-		modifier = modifier
-			.fillMaxWidth()
-			.clickable { showDialog = true },
-		state = textState,
-		readOnly = true,
-		label = {
-			Text(
-				modifier = Modifier
-					.clip(RoundedCornerShape(20.dp))
-					.padding(horizontal = 2.dp),
-				text = label,
-				style = Typography.labelSmall,
-				color = labelColor
-			)
-		},
-		textStyle = textStyle,
-		colors = outlinedTextFieldColors,
-		shape = RoundedCornerShape(12.dp),
-		isError = isError,
-	)
+	Box(modifier = modifier.fillMaxWidth()) {
+		OutlinedTextField(
+			modifier = Modifier.fillMaxWidth(),
+			state = textState,
+			readOnly = true,
+			label = {
+				Text(
+					text = label,
+					style = Typography.labelSmall,
+					color = labelColor
+				)
+			},
+			textStyle = textStyle,
+			colors = outlinedTextFieldColors,
+			shape = RoundedCornerShape(12.dp),
+			isError = isError,
+		)
+		Box(
+			modifier = Modifier
+				.matchParentSize()
+				.clickable(
+					indication = null,
+					interactionSource = remember { MutableInteractionSource() }
+				) { showDialog = true }
+		)
+	}
 
 	if (showDialog) {
 		DatePickerDialog(
@@ -381,33 +389,26 @@ fun DateChoosePicker(
 			confirmButton = {
 				TextButton(
 					onClick = {
-						val millis = datePickerState.selectedDateMillis
-						if (millis != null) {
-							val localDate = Instant.ofEpochMilli(millis)
-								.atZone(ZoneId.systemDefault())
-								.toLocalDate()
-							textState.setTextAndSelectAll(
-								FormatHelper.formatDate(
-									localDate,
-									format
-								)
+						datePickerState.selectedDateMillis?.let { millis ->
+							val localDate = millis.toLocalDate()
+							textState.setTextAndPlaceCursorAtEnd(
+								FormatHelper.formatDate(localDate, format)
 							)
 							onValueChanged(localDate)
 						}
 						showDialog = false
-					}
-				) {
-					Text("OK")
-				}
+					},
+					content = { Text(stringResource(R.string.common_ok)) }
+				)
 			},
 			dismissButton = {
-				TextButton(onClick = { showDialog = false }) {
-					Text("Отмена")
-				}
-			}
-		) {
-			DatePicker(state = datePickerState)
-		}
+				TextButton(
+					onClick = { showDialog = false },
+					content = { Text(stringResource(R.string.common_cancel)) }
+				)
+			},
+			content = { DatePicker(state = datePickerState) }
+		)
 	}
 }
 

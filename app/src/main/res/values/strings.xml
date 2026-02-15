@@ -24,6 +24,8 @@
 	<string name="common_sort_progress">По прогрессу</string>
 	<string name="common_sort_date_added">По дате добавления</string>
 	<string name="common_calculate">Рассчитать</string>
+	<string name="common_cancel">Отмена</string>
+	<string name="common_ok">OK</string>
 
 	<plurals name="common_days_format">
 		<item quantity="one">%s день</item>
