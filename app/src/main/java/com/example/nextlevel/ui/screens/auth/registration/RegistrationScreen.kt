@@ -16,7 +16,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,9 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection.Ltr
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.nextlevel.R
-import com.example.nextlevel.navigation.destinations.Destinations
 import com.example.nextlevel.navigation.Navigator
+import com.example.nextlevel.navigation.destinations.Destinations
 import com.example.nextlevel.ui.common.AuthSectionDivider
 import com.example.nextlevel.ui.common.PurpleButton
 import com.example.nextlevel.ui.common.YandexButton
@@ -68,7 +68,7 @@ import kotlinx.coroutines.flow.Flow
 @Composable
 fun RegistrationScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<RegistrationViewModel>()
-	val state by viewModel.state.collectAsState()
+	val state by viewModel.state.collectAsStateWithLifecycle()
 	CollectEffects(viewModel.effect, navigator)
 	RegistrationContent(
 		state,

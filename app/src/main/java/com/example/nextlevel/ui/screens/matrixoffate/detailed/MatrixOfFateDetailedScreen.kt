@@ -2,10 +2,10 @@ package com.example.nextlevel.ui.screens.matrixoffate.detailed
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.nextlevel.navigation.Navigator
 import com.example.nextlevel.ui.screens.matrixoffate.detailed.model.MatrixOfFateDetailedParams
 import com.example.nextlevel.ui.screens.matrixoffate.detailed.presentation.MatrixOfFateDetailedEffect
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 @Composable
 fun MatrixOfFateDetailedScreen(params: MatrixOfFateDetailedParams, navigator: Navigator) {
 	val viewModel = hiltViewModel<MatrixOfFateDetailedViewModel>()
-	val state by viewModel.state.collectAsState()
+	val state by viewModel.state.collectAsStateWithLifecycle()
 	CollectEffects(viewModel.effect, navigator)
 	MatrixOfFateDetailedContent(state)
 }

@@ -11,7 +11,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection.Rtl
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.nextlevel.R
 import com.example.nextlevel.domain.model.DataInfo
 import com.example.nextlevel.navigation.Navigator
@@ -42,7 +42,7 @@ private const val MAIL_SKELETON_ITEM_COUNT = 3
 @Composable
 fun MailScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<MailViewModel>()
-	val state by viewModel.state.collectAsState()
+	val state by viewModel.state.collectAsStateWithLifecycle()
 	CollectEffects(viewModel.effect, navigator)
 	MailContent(state)
 }

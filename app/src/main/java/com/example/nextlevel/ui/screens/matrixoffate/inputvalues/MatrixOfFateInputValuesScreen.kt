@@ -18,7 +18,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -26,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.nextlevel.R
 import com.example.nextlevel.domain.model.Sex
 import com.example.nextlevel.helpers.FormatHelper
@@ -52,7 +52,7 @@ import java.time.LocalDate
 @Composable
 fun MatrixOfFateInputValuesScreen(navigator: Navigator) {
 	val viewModel = hiltViewModel<MatrixOfFateInputValuesViewModel>()
-	val state by viewModel.state.collectAsState()
+	val state by viewModel.state.collectAsStateWithLifecycle()
 	CollectEffects(viewModel.effect, navigator)
 	MatrixOfFateInputValuesContent(
 		state,
