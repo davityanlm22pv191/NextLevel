@@ -1,0 +1,10 @@
+package com.example.nextlevel.ui.screens.auth.registration.presentation
+
+import com.example.nextlevel.ui.base.BaseEffect
+
+sealed interface RegistrationEffect : BaseEffect {
+	data object NavigateToHome : RegistrationEffect
+	data object NavigateToYandexAuthorization : RegistrationEffect
+	data object NavigateToOffer : RegistrationEffect
+	data object NavigateToTerms : RegistrationEffect
+}

@@ -19,6 +19,6 @@ dependencyResolutionManagement {
 	}
 }
 
-rootProject.name = "TutorPlace"
+rootProject.name = "NextLevel"
 include(":app")
  
