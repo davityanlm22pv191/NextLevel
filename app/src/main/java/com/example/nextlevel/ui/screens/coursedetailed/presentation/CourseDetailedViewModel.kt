@@ -39,11 +39,15 @@ class CourseDetailedViewModel @Inject constructor(
 
 	private fun loadCourseDetailed(courseId: String) {
 		viewModelScope.launch {
-			val response = coursesService.getCourseDetailed(courseId)
-			if (response.isSuccessful) {
-				onEvent(CourseDetailedLoaded(response.body()!!))
-			} else {
-				onEvent(CourseDetailedFailed(Throwable(response.message())))
+			try {
+				val response = coursesService.getCourseDetailed(courseId)
+				if (response.isSuccessful) {
+					onEvent(CourseDetailedLoaded(response.body()!!))
+				} else {
+					onEvent(CourseDetailedFailed(Throwable(response.message())))
+				}
+			} catch (e: Exception) {
+				onEvent(CourseDetailedFailed(e))
 			}
 		}
 	}

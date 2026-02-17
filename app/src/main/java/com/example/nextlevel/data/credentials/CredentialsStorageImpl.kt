@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -20,17 +21,21 @@ class CredentialsStorageImpl @Inject constructor(
 		context.dataStore.edit { prefs -> prefs[tokenPreferenceKey] = token }
 	}
 
+	override suspend fun getToken(): String? {
+		return getTokenFlow().firstOrNull()
+	}
+
 	override suspend fun isAuthorized(): Flow<Boolean> {
-		return getToken().map { token -> !token.isNullOrEmpty() }
+		return getTokenFlow().map { token -> !token.isNullOrEmpty() }
 	}
 
 	override suspend fun clearToken() {
 		context.dataStore.edit { prefs -> prefs.remove(tokenPreferenceKey) }
 	}
 
-	private fun getToken(): Flow<String?> = with(context.dataStore) {
+	private fun getTokenFlow(): Flow<String?> = with(context.dataStore) {
 		data.map { prefs -> prefs[tokenPreferenceKey] }
 	}
 
-	override suspend fun collectAuthorized(): Flow<Boolean> = getToken().map { token -> !token.isNullOrEmpty() }
+	override suspend fun collectAuthorized(): Flow<Boolean> = getTokenFlow().map { token -> !token.isNullOrEmpty() }
 }

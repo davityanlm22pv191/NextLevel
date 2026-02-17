@@ -1,8 +1,16 @@
 package com.example.nextlevel.ui.screens.home.presentation
 
+import android.app.Application
 import androidx.lifecycle.viewModelScope
+import com.example.nextlevel.R
 import com.example.nextlevel.data.courses.CoursesService
 import com.example.nextlevel.data.fortunewheel.FortuneWheelService
+import com.example.nextlevel.domain.auth.LogoutHandler
+import com.example.nextlevel.domain.auth.TokenRefresher
+import com.example.nextlevel.domain.model.NetworkError
+import com.example.nextlevel.network.error.ErrorEventBus
+import com.example.nextlevel.network.error.NetworkResult
+import com.example.nextlevel.network.error.safeApiCall
 import com.example.nextlevel.ui.base.BaseViewModel
 import com.example.nextlevel.ui.screens.home.presentation.HomeEvent.Domain
 import com.example.nextlevel.ui.screens.home.presentation.HomeEvent.Domain.FortuneWheelFailed
@@ -23,8 +31,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+	private val application: Application,
 	private val fortuneWheelService: FortuneWheelService,
 	private val coursesService: CoursesService,
+	private val tokenRefresher: TokenRefresher,
+	private val logoutHandler: LogoutHandler,
+	private val errorEventBus: ErrorEventBus,
 ) : BaseViewModel<HomeEvent, HomeState, HomeEffect>() {
 
 	// Квадратные превью курсов
@@ -77,11 +89,19 @@ class HomeViewModel @Inject constructor(
 	private fun loadFortuneWheelLastRotation() {
 		viewModelScope.launch {
 			onDomainEvent(FortuneWheelLoading)
-			val response = fortuneWheelService.getLastRotation()
-			if (response.isSuccessful) {
-				onDomainEvent(FortuneWheelLoaded(response.body()!!.lastSpinTime))
-			} else {
-				onDomainEvent(FortuneWheelFailed(Throwable(response.message())))
+			val result = safeApiCall(
+				onRefreshToken = { tokenRefresher.refresh() },
+				onLogout = { logoutHandler.onLogoutRequested() },
+				apiCall = { fortuneWheelService.getLastRotation() },
+			)
+			when (result) {
+				is NetworkResult.Success -> {
+					onDomainEvent(FortuneWheelLoaded(result.data.lastSpinTime))
+				}
+				is NetworkResult.Error -> {
+					onDomainEvent(FortuneWheelFailed(result.error.asThrowable()))
+					handleNetworkError(result.error)
+				}
 			}
 		}
 	}
@@ -89,11 +109,19 @@ class HomeViewModel @Inject constructor(
 	private fun loadMyCourses() {
 		viewModelScope.launch {
 			onDomainEvent(Domain.MyCoursesLoading)
-			val response = coursesService.getMyCourses()
-			if (response.isSuccessful) {
-				onDomainEvent(Domain.MyCoursesLoaded(response.body()!!.courses))
-			} else {
-				onDomainEvent(Domain.MyCoursesFailed(Throwable(response.message())))
+			val result = safeApiCall(
+				onRefreshToken = { tokenRefresher.refresh() },
+				onLogout = { logoutHandler.onLogoutRequested() },
+				apiCall = { coursesService.getMyCourses() },
+			)
+			when (result) {
+				is NetworkResult.Success -> {
+					onDomainEvent(Domain.MyCoursesLoaded(result.data.courses))
+				}
+				is NetworkResult.Error -> {
+					onDomainEvent(Domain.MyCoursesFailed(result.error.asThrowable()))
+					handleNetworkError(result.error)
+				}
 			}
 		}
 	}
@@ -101,12 +129,29 @@ class HomeViewModel @Inject constructor(
 	private fun loadSpeciallyForYou() {
 		viewModelScope.launch {
 			onDomainEvent(Domain.SpeciallyForYouLoading)
-			val response = coursesService.getSpeciallyForYou()
-			if (response.isSuccessful) {
-				onDomainEvent(Domain.SpeciallyForLoaded(response.body()!!.courses))
-			} else {
-				onDomainEvent(Domain.SpeciallyForFailed(Throwable(response.message())))
+			val result = safeApiCall(
+				onRefreshToken = { tokenRefresher.refresh() },
+				onLogout = { logoutHandler.onLogoutRequested() },
+				apiCall = { coursesService.getSpeciallyForYou() },
+			)
+			when (result) {
+				is NetworkResult.Success -> {
+					onDomainEvent(Domain.SpeciallyForLoaded(result.data.courses))
+				}
+				is NetworkResult.Error -> {
+					onDomainEvent(Domain.SpeciallyForFailed(result.error.asThrowable()))
+					handleNetworkError(result.error)
+				}
 			}
 		}
+	}
+
+	private fun handleNetworkError(error: NetworkError) {
+		errorEventBus.sendForError(
+			error = error,
+			networkConnectionMessage = application.getString(R.string.error_network_connection),
+			timeoutMessage = application.getString(R.string.error_timeout),
+			unknownErrorMessage = application.getString(R.string.error_unknown),
+		)
 	}
 }

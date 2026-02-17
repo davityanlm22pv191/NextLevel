@@ -34,9 +34,16 @@ object NetworkModule {
 
 	@Provides
 	@Singleton
-	fun provideOkHttpClient(chucker: ChuckerInterceptor): OkHttpClient {
+	fun provideOkHttpClient(
+		chucker: ChuckerInterceptor,
+		authInterceptor: AuthInterceptor,
+	): OkHttpClient {
 		return OkHttpClient.Builder()
+			.addInterceptor(authInterceptor)
 			.addInterceptor(chucker)
+			.connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+			.readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+			.writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
 			.build()
 	}
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.nextlevel.data.credentials.CredentialsStorage
 import com.example.nextlevel.data.profile.storage.ProfileStorage
 import com.example.nextlevel.domain.usecases.profile.UpdateProfileShortInfoUseCase
+import com.example.nextlevel.network.error.ErrorEventBus
 import com.example.nextlevel.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -14,6 +15,7 @@ class MainScreenViewModel @Inject constructor(
 	private val credentialsStorage: CredentialsStorage,
 	private val updateProfileShortInfoUseCase: UpdateProfileShortInfoUseCase,
 	private val profileStorage: ProfileStorage,
+	val errorEventBus: ErrorEventBus,
 ) : BaseViewModel<MainScreenEvent, MainScreenState, MainScreenEffect>() {
 
 	init {

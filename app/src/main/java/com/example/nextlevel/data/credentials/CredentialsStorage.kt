@@ -8,6 +8,8 @@ interface CredentialsStorage {
 
 	suspend fun clearToken()
 
+	suspend fun getToken(): String?
+
 	suspend fun isAuthorized(): Flow<Boolean>
 
 	suspend fun collectAuthorized(): Flow<Boolean>
