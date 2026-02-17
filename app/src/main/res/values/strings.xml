@@ -152,6 +152,11 @@
 	<string name="mail_here_will_you_mails">Здесь будут находиться ваши письма</string>
 	<string name="mail_you_do_not_have_messages_right_now">На данный момент у вас нет писем</string>
 
+	<!-- 	Errors -->
+	<string name="error_network_connection">Ошибка интернет соединения</string>
+	<string name="error_timeout">Проверьте ваше интернет-соединение</string>
+	<string name="error_unknown">Произошла неизвестная ошибка</string>
+
 	<!-- Matrix of fate -->
 	<string name="matrix_of_fate_input_data_title_logo">🔮</string>
 	<string name="matrix_of_fate_input_data_title">Персональная матрица судьбы</string>
