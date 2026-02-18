@@ -20,7 +20,7 @@ import androidx.savedstate.compose.serialization.serializers.MutableStateSeriali
 import com.example.nextlevel.navigation.destinations.Destinations
 
 class NavigationState(
-	val startRoute: NavKey,
+	var startRoute: NavKey,
 	topLevelRoute: MutableState<NavKey>,
 	val backStacks: Map<NavKey, NavBackStack<NavKey>>
 ) {

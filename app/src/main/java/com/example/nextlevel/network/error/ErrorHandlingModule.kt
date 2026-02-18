@@ -1,4 +1,4 @@
-package com.example.nextlevel.network
+package com.example.nextlevel.network.error
 
 import com.example.nextlevel.domain.auth.LogoutHandler
 import com.example.nextlevel.domain.auth.LogoutHandlerImpl

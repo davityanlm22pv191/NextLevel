@@ -1,7 +1,7 @@
 package com.example.nextlevel.data.fortunewheel
 
 import com.example.nextlevel.data.fortunewheel.model.FortuneWheelLastSpin
-import retrofit2.Response
+import retrofit2.Response as RetrofitResponse
 import retrofit2.http.GET
 
 interface FortuneWheelService {
@@ -12,5 +12,5 @@ interface FortuneWheelService {
 	}
 
 	@GET(LAST_SPIN_ENDPOINT)
-	suspend fun getLastRotation(): Response<FortuneWheelLastSpin>
+	suspend fun getLastRotation(): RetrofitResponse<FortuneWheelLastSpin>
 }

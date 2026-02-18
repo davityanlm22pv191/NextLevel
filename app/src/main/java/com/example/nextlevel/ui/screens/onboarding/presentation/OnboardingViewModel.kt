@@ -4,9 +4,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.nextlevel.data.onboarding.model.PlatformAccessDataBody
 import com.example.nextlevel.data.onboarding.model.PostNotificationIntervalBody
 import com.example.nextlevel.domain.model.DataInfo
+import com.example.nextlevel.domain.model.NetworkError
 import com.example.nextlevel.domain.usecases.onboarding.GetOnboardingInfoUseCase
 import com.example.nextlevel.domain.usecases.onboarding.PostOnboardingInfoUseCase
 import com.example.nextlevel.helpers.FormatHelper
+import com.example.nextlevel.network.error.NetworkResult
 import com.example.nextlevel.ui.base.BaseViewModel
 import com.example.nextlevel.ui.screens.onboarding.presentation.OnboardingEvent.NameValidError
 import com.example.nextlevel.ui.screens.onboarding.presentation.OnboardingEvent.NextStepClicked
@@ -78,7 +80,8 @@ class OnboardingViewModel @Inject constructor(
 	private fun processProvideDetailsStep() = processStep(
 		isValid = checkProvideDetailsStep(),
 		postAction = {
-			val sex = state.value.sex ?: return@processStep Result.failure(Throwable())
+			val sex = state.value.sex
+				?: return@processStep NetworkResult.Error(NetworkError.UnknownError())
 			postOnboardingInfoUseCase.postPlatformAccessData(
 				PlatformAccessDataBody(
 					userName = state.value.userName.value,
@@ -91,28 +94,19 @@ class OnboardingViewModel @Inject constructor(
 
 	private fun processStep(
 		isValid: Boolean,
-		postAction: suspend () -> Result<Unit>
+		postAction: suspend () -> NetworkResult<Unit>
 	) {
 		if (!isValid) return
 
 		viewModelScope.launch {
 			setState(OnboardingReducer.reduce(state.value, OnboardingInfoLoading))
 			postAction()
-				.onSuccess {
-//					onEvent(OnboardingInfoLoaded(state.value.onboardingInfo))
-//					setState(
-//						OnboardingReducer.reduce(
-//							state.value,
-//							OnboardingInfoLoaded(state.value.onboardingInfo)
-//						)
-//					)
-					setState(OnboardingReducer.reduce(state.value, NextStepClicked))
-				}
-				.onFailure { throwable ->
+				.onSuccess { setState(OnboardingReducer.reduce(state.value, NextStepClicked)) }
+				.onError { error ->
 					setState(
 						OnboardingReducer.reduce(
 							state.value,
-							OnboardingInfoLoadFail(throwable)
+							OnboardingInfoLoadFail(error.asThrowable())
 						)
 					)
 				}
@@ -141,9 +135,12 @@ class OnboardingViewModel @Inject constructor(
 						OnboardingReducer.reduce(state.value, OnboardingInfoLoaded(onboardingInfo))
 					)
 				}
-				.onFailure { throwable ->
+				.onError { error ->
 					setState(
-						OnboardingReducer.reduce(state.value, OnboardingInfoLoadFail(throwable))
+						OnboardingReducer.reduce(
+							state.value,
+							OnboardingInfoLoadFail(error.asThrowable())
+						)
 					)
 				}
 		}

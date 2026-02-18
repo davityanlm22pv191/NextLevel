@@ -1,4 +1,4 @@
-package com.example.nextlevel.data.auth
+package com.example.nextlevel.network.api
 
 import dagger.Binds
 import dagger.Module
@@ -6,11 +6,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Module
 @InstallIn(SingletonComponent::class)
-interface AuthServiceModule {
-
+@Module
+abstract class ApiClientModule {
 	@Binds
 	@Singleton
-	fun bind(impl: AuthServiceImpl): AuthService
+	abstract fun bind(impl: ApiClientImpl): ApiClient
 }

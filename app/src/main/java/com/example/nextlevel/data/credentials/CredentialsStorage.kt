@@ -10,7 +10,5 @@ interface CredentialsStorage {
 
 	suspend fun getToken(): String?
 
-	suspend fun isAuthorized(): Flow<Boolean>
-
-	suspend fun collectAuthorized(): Flow<Boolean>
+	fun isAuthorized(): Flow<Boolean>
 }

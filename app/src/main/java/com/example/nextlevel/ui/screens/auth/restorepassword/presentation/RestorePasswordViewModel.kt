@@ -1,7 +1,7 @@
 package com.example.nextlevel.ui.screens.auth.restorepassword.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.example.nextlevel.data.auth.AuthService
+import com.example.nextlevel.domain.usecases.auth.RestorePasswordUseCase
 import com.example.nextlevel.helpers.FormatHelper
 import com.example.nextlevel.ui.base.BaseViewModel
 import com.example.nextlevel.ui.screens.auth.restorepassword.presentation.RestorePasswordEvent.EmailErrorSending
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RestorePasswordViewModel @Inject constructor(
-	private val authService: AuthService,
+	private val restorePasswordUseCase: RestorePasswordUseCase,
 ) : BaseViewModel<RestorePasswordEvent, RestorePasswordState, RestorePasswordEffect>() {
 
 	private val timer = MutableStateFlow(60)
@@ -44,13 +44,13 @@ class RestorePasswordViewModel @Inject constructor(
 		}
 		viewModelScope.launch {
 			setState(RestorePasswordReducer.reduce(state.value, EmailSending))
-			authService
-				.restorePassword(state.value.email)
+			restorePasswordUseCase
+				.execute(state.value.email)
 				.onSuccess {
 					setState(RestorePasswordReducer.reduce(state.value, EmailSent))
 					startTimer()
 				}
-				.onFailure {
+				.onError {
 					setState(RestorePasswordReducer.reduce(state.value, EmailErrorSending))
 				}
 		}

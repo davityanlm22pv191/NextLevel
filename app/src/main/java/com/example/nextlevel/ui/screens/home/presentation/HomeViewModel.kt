@@ -1,16 +1,9 @@
 package com.example.nextlevel.ui.screens.home.presentation
 
-import android.app.Application
 import androidx.lifecycle.viewModelScope
-import com.example.nextlevel.R
-import com.example.nextlevel.data.courses.CoursesService
-import com.example.nextlevel.data.fortunewheel.FortuneWheelService
-import com.example.nextlevel.domain.auth.LogoutHandler
-import com.example.nextlevel.domain.auth.TokenRefresher
-import com.example.nextlevel.domain.model.NetworkError
-import com.example.nextlevel.network.error.ErrorEventBus
-import com.example.nextlevel.network.error.NetworkResult
-import com.example.nextlevel.network.error.safeApiCall
+import com.example.nextlevel.domain.usecases.courses.GetMyCoursesUseCase
+import com.example.nextlevel.domain.usecases.courses.GetSpeciallyForYouCoursesUseCase
+import com.example.nextlevel.domain.usecases.fortunewheel.GetLastFortuneWheelRotationDateUseCase
 import com.example.nextlevel.ui.base.BaseViewModel
 import com.example.nextlevel.ui.screens.home.presentation.HomeEvent.Domain
 import com.example.nextlevel.ui.screens.home.presentation.HomeEvent.Domain.FortuneWheelFailed
@@ -31,31 +24,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-	private val application: Application,
-	private val fortuneWheelService: FortuneWheelService,
-	private val coursesService: CoursesService,
-	private val tokenRefresher: TokenRefresher,
-	private val logoutHandler: LogoutHandler,
-	private val errorEventBus: ErrorEventBus,
+	private val getMyCoursesUseCase: GetMyCoursesUseCase,
+	private val getLastFortuneWheelRotationDateUseCase: GetLastFortuneWheelRotationDateUseCase,
+	private val getSpeciallyForYouCoursesUseCase: GetSpeciallyForYouCoursesUseCase,
 ) : BaseViewModel<HomeEvent, HomeState, HomeEffect>() {
-
-	// Квадратные превью курсов
-	// https://iili.io/KLGeEua.png
-	// https://iili.io/KLMMUs1.png
-	// https://iili.io/KLMW6Av.png
-	// https://iili.io/KLMjuF1.png
-	// https://iili.io/KLMwO5g.png
-
-	// https://iili.io/KLM3TNt.png
-	// https://iili.io/KLMfdR2.png
-	// https://iili.io/KLMqVYx.png
-	// https://iili.io/KLMCGOQ.png
-	// https://iili.io/KLMxJHb.png
-	// https://iili.io/KLMzcQV.png
-	// https://iili.io/KLMISVV.png
-	// https://iili.io/KLM7Qbn.png
-	// https://iili.io/KLMazGf.png
-	// https://iili.io/KLMl2eI.png
 
 	init {
 		loadFortuneWheelLastRotation()
@@ -89,69 +61,39 @@ class HomeViewModel @Inject constructor(
 	private fun loadFortuneWheelLastRotation() {
 		viewModelScope.launch {
 			onDomainEvent(FortuneWheelLoading)
-			val result = safeApiCall(
-				onRefreshToken = { tokenRefresher.refresh() },
-				onLogout = { logoutHandler.onLogoutRequested() },
-				apiCall = { fortuneWheelService.getLastRotation() },
-			)
-			when (result) {
-				is NetworkResult.Success -> {
-					onDomainEvent(FortuneWheelLoaded(result.data.lastSpinTime))
+			getLastFortuneWheelRotationDateUseCase
+				.execute()
+				.onSuccess { lastSpinTime -> onDomainEvent(FortuneWheelLoaded(lastSpinTime)) }
+				.onError { error ->
+					sendEffect(HomeEffect.ShowErrorMessage(error.getErrorMessage()))
+					onDomainEvent(FortuneWheelFailed(error.asThrowable()))
 				}
-				is NetworkResult.Error -> {
-					onDomainEvent(FortuneWheelFailed(result.error.asThrowable()))
-					handleNetworkError(result.error)
-				}
-			}
 		}
 	}
 
 	private fun loadMyCourses() {
 		viewModelScope.launch {
 			onDomainEvent(Domain.MyCoursesLoading)
-			val result = safeApiCall(
-				onRefreshToken = { tokenRefresher.refresh() },
-				onLogout = { logoutHandler.onLogoutRequested() },
-				apiCall = { coursesService.getMyCourses() },
-			)
-			when (result) {
-				is NetworkResult.Success -> {
-					onDomainEvent(Domain.MyCoursesLoaded(result.data.courses))
+			getMyCoursesUseCase
+				.execute()
+				.onSuccess { courses -> onDomainEvent(Domain.MyCoursesLoaded(courses)) }
+				.onError { error ->
+					sendEffect(HomeEffect.ShowErrorMessage((error.getErrorMessage())))
+					onDomainEvent(Domain.MyCoursesFailed(error.asThrowable()))
 				}
-				is NetworkResult.Error -> {
-					onDomainEvent(Domain.MyCoursesFailed(result.error.asThrowable()))
-					handleNetworkError(result.error)
-				}
-			}
 		}
 	}
 
 	private fun loadSpeciallyForYou() {
 		viewModelScope.launch {
 			onDomainEvent(Domain.SpeciallyForYouLoading)
-			val result = safeApiCall(
-				onRefreshToken = { tokenRefresher.refresh() },
-				onLogout = { logoutHandler.onLogoutRequested() },
-				apiCall = { coursesService.getSpeciallyForYou() },
-			)
-			when (result) {
-				is NetworkResult.Success -> {
-					onDomainEvent(Domain.SpeciallyForLoaded(result.data.courses))
+			getSpeciallyForYouCoursesUseCase
+				.execute()
+				.onSuccess { courses -> onDomainEvent(Domain.SpeciallyForLoaded(courses)) }
+				.onError { error ->
+					sendEffect(HomeEffect.ShowErrorMessage(error.getErrorMessage()))
+					onDomainEvent(Domain.SpeciallyForFailed(error.asThrowable()))
 				}
-				is NetworkResult.Error -> {
-					onDomainEvent(Domain.SpeciallyForFailed(result.error.asThrowable()))
-					handleNetworkError(result.error)
-				}
-			}
 		}
-	}
-
-	private fun handleNetworkError(error: NetworkError) {
-		errorEventBus.sendForError(
-			error = error,
-			networkConnectionMessage = application.getString(R.string.error_network_connection),
-			timeoutMessage = application.getString(R.string.error_timeout),
-			unknownErrorMessage = application.getString(R.string.error_unknown),
-		)
 	}
 }

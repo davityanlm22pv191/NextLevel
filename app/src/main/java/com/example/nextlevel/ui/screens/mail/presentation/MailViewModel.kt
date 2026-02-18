@@ -33,7 +33,7 @@ class MailViewModel @Inject constructor(
 			onEvent(MailEvent.MailsLoading)
 			updateMailsUseCase
 				.execute()
-				.onFailure { throwable -> onEvent(MailEvent.MailsFailed(throwable)) }
+				.onError { throwable -> onEvent(MailEvent.MailsFailed(throwable.asThrowable())) }
 		}
 	}
 

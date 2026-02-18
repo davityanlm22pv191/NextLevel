@@ -1,5 +1,7 @@
 package com.example.nextlevel.domain.model
 
+import com.example.nextlevel.extension.getErrorMessage
+
 sealed class NetworkError {
 
 	data object AuthError401 : NetworkError()
@@ -15,5 +17,9 @@ sealed class NetworkError {
 		is NetworkConnectionError -> Throwable("Network connection error")
 		is TimeoutError -> Throwable("Request timed out")
 		is UnknownError -> Throwable(message ?: "Unknown error")
+	}
+
+	fun getErrorMessage(): String {
+		return this.asThrowable().getErrorMessage()
 	}
 }

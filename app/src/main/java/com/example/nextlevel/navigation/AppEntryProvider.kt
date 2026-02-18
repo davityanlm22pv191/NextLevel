@@ -24,7 +24,7 @@ import com.example.nextlevel.ui.screens.tasks.TasksScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun appEntryProvider(navigator: Navigator) = entryProvider<NavKey> {
+fun appEntryProvider(navigator: Navigator, showError: (Throwable) -> Unit) = entryProvider<NavKey> {
 	entry<Destinations.Authorization> { AuthorizationScreen(navigator) }
 	entry<Destinations.RestorePassword> { RestorePasswordScreen(navigator) }
 	entry<Destinations.Registration> { RegistrationScreen(navigator) }
@@ -45,7 +45,7 @@ fun appEntryProvider(navigator: Navigator) = entryProvider<NavKey> {
 	entry<Destinations.Search> { StubScreen() }
 	entry<Destinations.Profile> { StubScreen() }
 	entry<Destinations.Catalog> { CatalogScreen(navigator) }
-	entry<Destinations.Home> { HomeScreen(navigator) }
+	entry<Destinations.Home> { HomeScreen(navigator, showError) }
 	entry<Destinations.MyCourses> { MyCoursesScreen(navigator) }
 	entry<Destinations.Tasks> { TasksScreen(navigator) }
 	entry<Destinations.Mail> { MailScreen(navigator) }

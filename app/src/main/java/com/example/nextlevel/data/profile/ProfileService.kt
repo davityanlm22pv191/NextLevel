@@ -1,7 +1,7 @@
 package com.example.nextlevel.data.profile
 
 import com.example.nextlevel.data.profile.model.ProfileShortInfo
-import retrofit2.Response
+import retrofit2.Response as RetrofitResponse
 import retrofit2.http.GET
 
 interface ProfileService {
@@ -11,5 +11,5 @@ interface ProfileService {
 	}
 
 	@GET(PROFILE_SHORT_INFO_ENDPOINT)
-	suspend fun getProfileShortInfo(): Response<ProfileShortInfo>
+	suspend fun getProfileShortInfo(): RetrofitResponse<ProfileShortInfo>
 }

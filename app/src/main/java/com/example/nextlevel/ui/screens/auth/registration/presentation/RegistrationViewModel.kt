@@ -57,13 +57,15 @@ class RegistrationViewModel @Inject constructor(
 		if (secondStep.isConfirmPasswordError) return
 		viewModelScope.launch {
 			setState(RegistrationReducer.reduce(state.value, UI.RegisterRequested))
-			val isRegisterSuccess = registerUseCase.execute(
-				firstStep.name,
-				firstStep.phoneNumber,
-				firstStep.telegram,
-				secondStep.email,
-				secondStep.password
-			)
+			val isRegisterSuccess = registerUseCase
+				.execute(
+					firstStep.name,
+					firstStep.phoneNumber,
+					firstStep.telegram,
+					secondStep.email,
+					secondStep.password
+				)
+				.isSuccess
 			if (isRegisterSuccess) {
 				sendEffect(RegistrationEffect.NavigateToHome)
 			}

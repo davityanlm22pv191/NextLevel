@@ -38,7 +38,6 @@ import com.example.nextlevel.navigation.destinations.Destinations
 import com.example.nextlevel.navigation.rememberNavigationState
 import com.example.nextlevel.navigation.strategy.BottomSheetSceneStrategy
 import com.example.nextlevel.navigation.toEntries
-import com.example.nextlevel.network.error.ErrorEventBus
 import com.example.nextlevel.ui.common.BottomNavigationBar
 import com.example.nextlevel.ui.common.RequestPermission
 import com.example.nextlevel.ui.common.errorbanner.ErrorBanner
@@ -52,7 +51,7 @@ private const val BAR_ANIMATIONS_DURATION_MS = 300
 fun MainScreen(userIsAuthorized: Boolean) {
 	val viewModel = hiltViewModel<MainScreenViewModel>()
 	val state by viewModel.state.collectAsStateWithLifecycle()
-	MainContent(state, userIsAuthorized, viewModel.errorEventBus)
+	MainContent(state, userIsAuthorized)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -60,7 +59,6 @@ fun MainScreen(userIsAuthorized: Boolean) {
 private fun MainContent(
 	state: MainScreenState,
 	userIsAuthorized: Boolean,
-	errorEventBus: ErrorEventBus? = null,
 ) {
 	val navigationState = rememberNavigationState(
 		startRoute = if (userIsAuthorized) Destinations.Home else Destinations.Authorization,
@@ -72,6 +70,7 @@ private fun MainContent(
 	val context = LocalContext.current
 	val navigator = remember { Navigator(navigationState, context) }
 	val bottomSheetStrategy = remember { BottomSheetSceneStrategy<NavKey>() }
+	var showError by remember { mutableStateOf<Throwable?>(null) }
 
 	Box(modifier = Modifier.fillMaxSize()) {
 		Scaffold(
@@ -142,7 +141,9 @@ private fun MainContent(
 				modifier = Modifier.fillMaxSize(),
 				onBack = { navigator.goBack() },
 				sceneStrategy = bottomSheetStrategy,
-				entries = navigationState.toEntries(appEntryProvider(navigator)),
+				entries = navigationState.toEntries(
+					appEntryProvider(navigator) { throwable -> showError = throwable }
+				),
 				predictivePopTransitionSpec = {
 					slideInHorizontally(
 						initialOffsetX = { -it },
@@ -156,10 +157,11 @@ private fun MainContent(
 			// OpenOnboardingIfNeeded(navigator, params.isShouldShowOnboarding)
 		}
 
-		errorEventBus?.let { bus ->
+		showError?.let { throwable ->
 			ErrorBanner(
 				modifier = Modifier.align(Alignment.TopCenter),
-				errorEventBus = bus,
+				throwable = throwable,
+				onDismiss = { showError = null }
 			)
 		}
 	}

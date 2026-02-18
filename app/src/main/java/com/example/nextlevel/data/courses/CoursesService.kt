@@ -2,7 +2,7 @@ package com.example.nextlevel.data.courses
 
 import com.example.nextlevel.data.courses.course.CourseDetailed
 import com.example.nextlevel.data.courses.course.CoursesResponse
-import retrofit2.Response
+import retrofit2.Response as RetrofitResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -15,11 +15,11 @@ interface CoursesService {
 	}
 
 	@GET(MY_COURSES_ENDPOINT)
-	suspend fun getMyCourses(): Response<CoursesResponse>
+	suspend fun getMyCourses(): RetrofitResponse<CoursesResponse>
 
 	@GET(SPECIALLY_FOR_YOU_ENDPOINT)
-	suspend fun getSpeciallyForYou(): Response<CoursesResponse>
+	suspend fun getSpeciallyForYou(): RetrofitResponse<CoursesResponse>
 
 	@GET(COURSE_DETAILED_ENDPOINT)
-	suspend fun getCourseDetailed(@Path("courseId") courseId: String): Response<CourseDetailed>
+	suspend fun getCourseDetailed(@Path("courseId") courseId: String): RetrofitResponse<CourseDetailed>
 }

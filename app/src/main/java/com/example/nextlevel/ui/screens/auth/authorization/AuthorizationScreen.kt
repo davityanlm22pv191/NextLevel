@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -31,8 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.nextlevel.R
-import com.example.nextlevel.navigation.destinations.Destinations
 import com.example.nextlevel.navigation.Navigator
+import com.example.nextlevel.navigation.destinations.Destinations
 import com.example.nextlevel.ui.common.AuthSectionDivider
 import com.example.nextlevel.ui.common.PurpleButton
 import com.example.nextlevel.ui.common.YandexButton
@@ -107,7 +108,7 @@ private fun AuthorizationContent(
 					top = paddingValues.calculateTopPadding(),
 					start = paddingValues.calculateStartPadding(Ltr),
 					end = paddingValues.calculateEndPadding(Ltr),
-					bottom = paddingValues.calculateBottomPadding() + 16.dp
+					bottom = 0.dp
 				)
 				.verticalScroll(scrollState),
 			horizontalAlignment = Alignment.CenterHorizontally
@@ -181,6 +182,7 @@ private fun AuthorizationContent(
 				onSupportClick = { onSupportClicked() },
 				onRegisterClick = { onRegistrationClicked() }
 			)
+			Spacer(Modifier.height(paddingValues.calculateBottomPadding() + 16.dp))
 		}
 	}
 }

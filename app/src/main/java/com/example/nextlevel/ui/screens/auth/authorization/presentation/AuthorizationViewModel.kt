@@ -59,13 +59,15 @@ class AuthorizationViewModel @Inject constructor(
 	private fun authorize() {
 		viewModelScope.launch {
 			setState(AuthorizationReducer.reduce(state.value, EnterToProfileRequested))
-			authorizeUseCase.execute(email = state.value.email, password = state.value.password)
+			authorizeUseCase
+				.execute(email = state.value.email, password = state.value.password)
+			// TODO Добавить сюда обработку ошибки
 		}
 	}
 
 	private fun collectCredentials() {
 		viewModelScope.launch {
-			credentialsStorage.collectAuthorized().collect { isAuthorized ->
+			credentialsStorage.isAuthorized().collect { isAuthorized ->
 				if (isAuthorized) {
 					sendEffect(NavigateToHome)
 				}

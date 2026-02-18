@@ -11,4 +11,5 @@ sealed interface HomeEffect : BaseEffect {
 	data object NavigateToCatalog : HomeEffect
 	data object NavigateToMyCourses : HomeEffect
 	data class NavigateToCourseDetailed(val courseId: String) : HomeEffect
+	data class ShowErrorMessage(val message: String) : HomeEffect
 }

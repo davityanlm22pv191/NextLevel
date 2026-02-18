@@ -26,8 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import com.example.nextlevel.network.error.ErrorEvent
-import com.example.nextlevel.network.error.ErrorEventBus
 import com.example.nextlevel.ui.common.RoundedBottomCornerShape
 import com.example.nextlevel.ui.theme.Red33
 import com.example.nextlevel.ui.theme.White
@@ -38,36 +36,31 @@ private const val BANNER_DISPLAY_DURATION_MS = 1000L
 
 @Composable
 fun ErrorBanner(
-	errorEventBus: ErrorEventBus,
 	modifier: Modifier = Modifier,
+	throwable: Throwable?,
+	onDismiss: () -> Unit,
 ) {
-	var currentEvent by remember { mutableStateOf<ErrorEvent?>(null) }
 	var isVisible by remember { mutableStateOf(false) }
 
 	LaunchedEffect(Unit) {
-		errorEventBus.events.collect { event ->
-			if (!isVisible) {
-				currentEvent = event
-				isVisible = true
-
-				delay(BANNER_DISPLAY_DURATION_MS)
-
-				isVisible = false
-				delay(BANNER_ANIMATION_DURATION_MS.toLong())
-				currentEvent = null
-			}
+		if (!isVisible) {
+			isVisible = true
+			delay(BANNER_DISPLAY_DURATION_MS)
+			isVisible = false
+			delay(BANNER_ANIMATION_DURATION_MS.toLong())
+			onDismiss()
 		}
 	}
 
 	ErrorBannerContent(
-		message = currentEvent?.message,
+		message = throwable?.message,
 		isVisible = isVisible,
 		modifier = modifier,
 	)
 }
 
 @Composable
-private fun ErrorBannerContent(
+fun ErrorBannerContent(
 	message: String?,
 	isVisible: Boolean,
 	modifier: Modifier = Modifier,

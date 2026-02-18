@@ -10,14 +10,15 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+private val Context.dataStore by preferencesDataStore(name = "credentials")
+
 class CredentialsStorageImpl @Inject constructor(
 	@ApplicationContext private val context: Context
 ) : CredentialsStorage {
 
-	private val Context.dataStore by preferencesDataStore(name = "credentials")
 	private val tokenPreferenceKey = stringPreferencesKey("TOKEN_PREFERENCE_KEY")
 
-	override suspend fun saveToken(token: String)  {
+	override suspend fun saveToken(token: String) {
 		context.dataStore.edit { prefs -> prefs[tokenPreferenceKey] = token }
 	}
 
@@ -25,7 +26,7 @@ class CredentialsStorageImpl @Inject constructor(
 		return getTokenFlow().firstOrNull()
 	}
 
-	override suspend fun isAuthorized(): Flow<Boolean> {
+	override fun isAuthorized(): Flow<Boolean> {
 		return getTokenFlow().map { token -> !token.isNullOrEmpty() }
 	}
 
@@ -36,6 +37,4 @@ class CredentialsStorageImpl @Inject constructor(
 	private fun getTokenFlow(): Flow<String?> = with(context.dataStore) {
 		data.map { prefs -> prefs[tokenPreferenceKey] }
 	}
-
-	override suspend fun collectAuthorized(): Flow<Boolean> = getTokenFlow().map { token -> !token.isNullOrEmpty() }
 }

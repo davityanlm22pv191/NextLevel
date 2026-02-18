@@ -41,6 +41,7 @@ import com.example.nextlevel.ui.screens.home.presentation.HomeEffect.NavigateToM
 import com.example.nextlevel.ui.screens.home.presentation.HomeEffect.NavigateToMyCourses
 import com.example.nextlevel.ui.screens.home.presentation.HomeEffect.NavigateToProfile
 import com.example.nextlevel.ui.screens.home.presentation.HomeEffect.NavigateToSearch
+import com.example.nextlevel.ui.screens.home.presentation.HomeEffect.ShowErrorMessage
 import com.example.nextlevel.ui.screens.home.presentation.HomeEvent.UI
 import com.example.nextlevel.ui.screens.home.presentation.HomeState
 import com.example.nextlevel.ui.screens.home.presentation.HomeViewModel
@@ -51,10 +52,10 @@ import com.example.nextlevel.ui.theme.ScreenColor
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun HomeScreen(navigator: Navigator) {
+fun HomeScreen(navigator: Navigator, showError: (Throwable) -> Unit) {
 	val viewModel = hiltViewModel<HomeViewModel>()
 	val state by viewModel.state.collectAsStateWithLifecycle()
-	CollectEffects(viewModel.effect, navigator)
+	CollectEffects(viewModel.effect, navigator, showError)
 	HomeContent(
 		state = state,
 		onFortuneWheelClicked = { viewModel.onEvent(UI.FortuneWheelClicked) },
@@ -94,9 +95,7 @@ private fun HomeContent(
 					)
 				},
 				skeletonContent = {
-					FortuneWheelShortItemSkeleton(
-						modifier = Modifier.padding(horizontal = 4.dp)
-					)
+					FortuneWheelShortItemSkeleton(modifier = Modifier.padding(horizontal = 4.dp))
 				}
 			)
 			itemWithSkeleton(
@@ -150,7 +149,11 @@ private fun HomeContent(
 }
 
 @Composable
-private fun CollectEffects(effect: Flow<HomeEffect>, navigator: Navigator) {
+private fun CollectEffects(
+	effect: Flow<HomeEffect>,
+	navigator: Navigator,
+	showError: (Throwable) -> Unit
+) {
 	LaunchedEffect(Unit) {
 		effect.collect { homeEffect ->
 			when (homeEffect) {
@@ -167,6 +170,7 @@ private fun CollectEffects(effect: Flow<HomeEffect>, navigator: Navigator) {
 				is NavigateToMyCourses -> navigator.navigate(Destinations.MyCourses)
 				is NavigateToProfile -> navigator.navigate(Destinations.Profile)
 				is NavigateToSearch -> navigator.navigate(Destinations.Search)
+				is ShowErrorMessage -> showError(Throwable(homeEffect.message))
 			}
 		}
 	}
