@@ -21,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -74,10 +75,13 @@ private fun MatrixOfFateInputValuesContent(
 	onCalculateButtonClicked: () -> Unit,
 	onBirthDateSelected: (LocalDate) -> Unit
 ) {
+	val density = LocalDensity.current
+	val imeBottom = WindowInsets.ime.getBottom(density)
+	val isKeyboardOpen = imeBottom > 0
 	Column(
 		modifier = Modifier
 			.fillMaxWidth()
-			.fillMaxHeight(fraction = 0.75f)
+			.fillMaxHeight(fraction = if (isKeyboardOpen) 1f else 0.75f)
 			.imePadding()
 			.navigationBarsPadding()
 	) {
@@ -119,7 +123,7 @@ private fun MatrixOfFateInputValuesContent(
 		Spacer(
 			modifier = Modifier
 				.weight(1f, fill = true)
-				.heightIn(max = 128.dp, min = 16.dp)
+				.heightIn(max = imeBottom.dp, min = 16.dp)
 		)
 		Box(
 			modifier = Modifier

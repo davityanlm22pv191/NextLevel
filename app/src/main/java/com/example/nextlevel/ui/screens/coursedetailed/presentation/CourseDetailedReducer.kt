@@ -13,7 +13,7 @@ object CourseDetailedReducer : BaseReducer<CourseDetailedState, CourseDetailedEv
 	): CourseDetailedState {
 		return when (event) {
 			is CourseDetailedLoaded -> reduceCourseDetailedLoadedEvent(oldState, event)
-			is CourseDetailedFailed -> reduceCourseDetailedFailed(oldState, event)
+			is CourseDetailedFailed -> reduceCourseDetailedFailed(oldState)
 			else -> oldState
 		}
 	}
@@ -26,9 +26,8 @@ object CourseDetailedReducer : BaseReducer<CourseDetailedState, CourseDetailedEv
 	}
 
 	private fun reduceCourseDetailedFailed(
-		oldState: CourseDetailedState,
-		event: CourseDetailedFailed
+		oldState: CourseDetailedState
 	): CourseDetailedState = with(oldState) {
-		return copy(courseDetailed = DataInfo.Error(event.throwable))
+		return copy(courseDetailed = DataInfo.Error)
 	}
 }
