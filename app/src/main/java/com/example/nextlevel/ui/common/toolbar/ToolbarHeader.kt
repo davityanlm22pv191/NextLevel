@@ -382,7 +382,7 @@ fun ToolbarHeaderPreview() {
 		)
 		ToolbarHeader(
 			screenName = "Уроки",
-			profileShortInfo = DataInfo.Error(Throwable()),
+			profileShortInfo = DataInfo.Error,
 			theme = ToolbarHeaderTheme.Light,
 			isArrowVisible = true,
 			onBackClicked = {},

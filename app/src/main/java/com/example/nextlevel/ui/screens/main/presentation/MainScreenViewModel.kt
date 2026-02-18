@@ -30,7 +30,7 @@ class MainScreenViewModel @Inject constructor(
 
 	private fun collectAuthorized() {
 		viewModelScope.launch {
-			credentialsStorage.collectAuthorized().collect {isAuthorized ->
+			credentialsStorage.collectAuthorized().collect { isAuthorized ->
 				if (isAuthorized) {
 					updateProfileShortInfo()
 					collectProfileShortInfo()
@@ -51,7 +51,10 @@ class MainScreenViewModel @Inject constructor(
 
 	private fun updateProfileShortInfo() {
 		viewModelScope.launch {
-			updateProfileShortInfoUseCase.execute()
+			val result = updateProfileShortInfoUseCase.execute()
+			if (result.isFailure) {
+				onEvent(MainScreenEvent.ProfileInfoLoadFail)
+			}
 		}
 	}
 }

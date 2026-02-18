@@ -10,13 +10,11 @@ fun <T> LazyListScope.itemsWithSkeletons(
 	content: @Composable (item: T, index: Int) -> Unit,
 	skeletonItem: @Composable (index: Int) -> Unit,
 	emptyStateContent: @Composable () -> Unit,
-	errorStateContent: @Composable (String) -> Unit
+	errorStateContent: @Composable () -> Unit
 ) {
 	when (dataInfo) {
 		is DataInfo.Error -> {
-			item(key = "errorState") {
-				errorStateContent(dataInfo.throwable.message!!)
-			}
+			item(key = "errorState") { errorStateContent() }
 		}
 		is DataInfo.Loading -> {
 			items(

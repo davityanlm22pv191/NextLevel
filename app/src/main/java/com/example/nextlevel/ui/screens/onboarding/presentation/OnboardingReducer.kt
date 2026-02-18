@@ -34,7 +34,7 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 		is NextStepClicked, is SkipButtonClicked -> reduceNextStep(oldState)
 		is PreviousStepClicked -> reducePreviousStep(oldState)
 		is OnboardingInfoLoading -> oldState.copy(onboardingInfo = DataInfo.Loading)
-		is OnboardingInfoLoadFail -> reduceOnboardingInfoLoadFail(oldState, event.throwable)
+		is OnboardingInfoLoadFail -> reduceOnboardingInfoLoadFail(oldState)
 		is OnboardingInfoLoaded -> reduceOnboardingInfoLoaded(oldState, event.onboardingInfo)
 		is NameValidError -> reduceNameValidError(oldState)
 		is NameValueChanged -> reduceNameValueChanged(oldState, event)
@@ -207,9 +207,8 @@ object OnboardingReducer : BaseReducer<OnboardingState, OnboardingEvent> {
 
 	private fun reduceOnboardingInfoLoadFail(
 		oldState: OnboardingState,
-		throwable: Throwable
 	): OnboardingState = oldState.copy(
-		onboardingInfo = DataInfo.Error(throwable),
+		onboardingInfo = DataInfo.Error,
 		isMainButtonEnabled = true
 	)
 }
