@@ -114,7 +114,8 @@ fun ToolbarHeader(
 				shape = RoundedBottomCornerShape(20.dp)
 			)
 			.statusBarsPadding()
-			.padding(horizontal = 16.dp),
+			.padding(horizontal = 16.dp)
+			.clickable(enabled = false){},
 		verticalAlignment = Alignment.CenterVertically
 	) {
 		AnimatedContent(
