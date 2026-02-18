@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,23 +28,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.nextlevel.network.error.ErrorEvent
 import com.example.nextlevel.network.error.ErrorEventBus
+import com.example.nextlevel.ui.common.RoundedBottomCornerShape
+import com.example.nextlevel.ui.theme.Red33
+import com.example.nextlevel.ui.theme.White
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
 
 private const val BANNER_ANIMATION_DURATION_MS = 400
-private const val BANNER_DISPLAY_DURATION_MS = 3000L
+private const val BANNER_DISPLAY_DURATION_MS = 1000L
 
-private val BannerBackgroundColor = Color(0xFFD63333)
-private val BannerTextColor = Color.White
-
-/**
- * A reusable animated error banner that slides down from the top of the screen,
- * stays visible for [BANNER_DISPLAY_DURATION_MS], then slides back up.
- *
- * Collects error events from [ErrorEventBus] and shows each one.
- * Place this composable at the top of your screen hierarchy (e.g. inside a Box
- * that wraps Scaffold) so it overlays all content.
- */
 @Composable
 fun ErrorBanner(
 	errorEventBus: ErrorEventBus,
@@ -56,21 +45,17 @@ fun ErrorBanner(
 	var isVisible by remember { mutableStateOf(false) }
 
 	LaunchedEffect(Unit) {
-		errorEventBus.events.collectLatest { event ->
-			// If a banner is already showing, hide it first
-			if (isVisible) {
+		errorEventBus.events.collect { event ->
+			if (!isVisible) {
+				currentEvent = event
+				isVisible = true
+
+				delay(BANNER_DISPLAY_DURATION_MS)
+
 				isVisible = false
 				delay(BANNER_ANIMATION_DURATION_MS.toLong())
+				currentEvent = null
 			}
-
-			currentEvent = event
-			isVisible = true
-
-			delay(BANNER_DISPLAY_DURATION_MS)
-
-			isVisible = false
-			delay(BANNER_ANIMATION_DURATION_MS.toLong())
-			currentEvent = null
 		}
 	}
 
@@ -81,11 +66,8 @@ fun ErrorBanner(
 	)
 }
 
-/**
- * Stateless error banner content — can be used directly if you manage visibility yourself.
- */
 @Composable
-fun ErrorBannerContent(
+private fun ErrorBannerContent(
 	message: String?,
 	isVisible: Boolean,
 	modifier: Modifier = Modifier,
@@ -107,14 +89,14 @@ fun ErrorBannerContent(
 		Box(
 			modifier = Modifier
 				.fillMaxWidth()
-				.background(BannerBackgroundColor, shape = RoundedCornerShape(12.dp))
+				.background(Red33, shape = RoundedBottomCornerShape(20.dp))
 				.statusBarsPadding()
-				.padding(horizontal = 16.dp, vertical = 12.dp),
+				.padding(horizontal = 8.dp, vertical = 14.dp),
 			contentAlignment = Alignment.Center,
 		) {
 			Text(
 				text = message.orEmpty(),
-				color = BannerTextColor,
+				color = White,
 				fontSize = 14.sp,
 				fontWeight = FontWeight.Medium,
 				textAlign = TextAlign.Center,
@@ -127,13 +109,7 @@ fun ErrorBannerContent(
 @Composable
 private fun ErrorBannerPreview() {
 	Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-		ErrorBannerContent(
-			message = "Ошибка интернет соединения",
-			isVisible = true,
-		)
-		ErrorBannerContent(
-			message = "Произошла неизвестная ошибка",
-			isVisible = true,
-		)
+		ErrorBannerContent(message = "Ошибка интернет соединения", isVisible = true)
+		ErrorBannerContent(message = "Произошла неизвестная ошибка", isVisible = true)
 	}
 }
