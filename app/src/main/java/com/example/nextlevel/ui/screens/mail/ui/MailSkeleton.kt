@@ -24,10 +24,10 @@ import com.example.nextlevel.ui.theme.GreyF8
 @Composable
 fun MailSkeleton(modifier: Modifier = Modifier) {
 	SkeletonShimmer(
-		modifier = Modifier.clip(RoundedCornerShape(20.dp))
+		modifier = modifier.clip(RoundedCornerShape(20.dp))
 	) {
 		Box(
-			modifier = modifier
+			modifier = Modifier
 				.fillMaxWidth()
 				.height(80.dp)
 				.background(GreyF8, shape = RoundedCornerShape(20.dp))
@@ -64,8 +64,17 @@ fun MailSkeleton(modifier: Modifier = Modifier) {
 	}
 }
 
-@Preview
+@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 private fun MailSkeletonPreview() {
-	MailSkeleton()
+	Column(
+		modifier = Modifier.fillMaxSize(),
+		verticalArrangement = Arrangement.spacedBy(16.dp)
+	) {
+		MailSkeleton()
+		MailSkeleton()
+		MailSkeleton()
+		MailSkeleton()
+		MailSkeleton()
+	}
 }

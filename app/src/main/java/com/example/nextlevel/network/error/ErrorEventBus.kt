@@ -10,7 +10,8 @@ import javax.inject.Singleton
 /**
  * Holds the user-visible error message shown in the banner.
  */
-data class ErrorEvent(val message: String)
+data class ErrorEvent(val message: String) {
+}
 
 /**
  * Application-wide event bus for error banner display.
@@ -26,7 +27,7 @@ data class ErrorEvent(val message: String)
 @Singleton
 class ErrorEventBus @Inject constructor() {
 
-	private val _events = Channel<ErrorEvent>(capacity = Channel.BUFFERED)
+	private val _events = Channel<ErrorEvent>(capacity = Channel.RENDEZVOUS)
 	val events = _events.receiveAsFlow()
 
 	private val _isBannerShowing = AtomicBoolean(false)

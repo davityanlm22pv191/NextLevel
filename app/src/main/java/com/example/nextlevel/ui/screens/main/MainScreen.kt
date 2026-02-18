@@ -158,11 +158,11 @@ private fun MainContent(
 
 		errorEventBus?.let { bus ->
 			ErrorBanner(
-				errorEventBus = bus,
 				modifier = Modifier.align(Alignment.TopCenter),
+				errorEventBus = bus,
 			)
 		}
-	} // Box
+	}
 }
 
 @Composable

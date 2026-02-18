@@ -2,6 +2,7 @@ package com.example.nextlevel.ui.common.toolbar
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -83,6 +84,13 @@ fun ToolbarHeader(
 ) {
 	val window = LocalActivity.current?.window
 	val screenColor = ScreenColor
+	val tintColor by animateColorAsState(
+		when {
+			profileShortInfo is DataInfo.Error -> Red33
+			theme == ToolbarHeaderTheme.Light -> Black16
+			else -> White
+		}
+	)
 	SideEffect {
 		if (window == null) return@SideEffect
 		val windowController = WindowInsetsControllerCompat(window, window.decorView)
@@ -106,7 +114,8 @@ fun ToolbarHeader(
 				shape = RoundedBottomCornerShape(20.dp)
 			)
 			.statusBarsPadding()
-			.padding(horizontal = 16.dp),
+			.padding(horizontal = 16.dp)
+			.clickable(enabled = false){},
 		verticalAlignment = Alignment.CenterVertically
 	) {
 		AnimatedContent(
@@ -143,7 +152,7 @@ fun ToolbarHeader(
 		) {
 			Text(
 				text = it,
-				style = Typography.titleMedium.copy(color = if (theme == ToolbarHeaderTheme.Light) Black16 else White)
+				style = Typography.titleMedium.copy(color = tintColor)
 			)
 		}
 		Spacer(Modifier.weight(1f))
@@ -157,7 +166,7 @@ fun ToolbarHeader(
 				modifier = Modifier.align(Alignment.Center),
 				painter = painterResource(R.drawable.ic_email),
 				contentDescription = null,
-				tint = if (theme == ToolbarHeaderTheme.Light) Black16 else White
+				tint = tintColor
 			)
 			AnimatedContent(
 				modifier = Modifier.align(Alignment.TopEnd),
@@ -188,7 +197,7 @@ fun ToolbarHeader(
 			Icon(
 				painter = painterResource(R.drawable.ic_search),
 				contentDescription = null,
-				tint = if (theme == ToolbarHeaderTheme.Light) Black16 else White
+				tint = tintColor
 			)
 		}
 		Surface(
@@ -207,7 +216,7 @@ fun ToolbarHeader(
 					modifier = Modifier.rotate(270f),
 					painter = painterResource(R.drawable.ic_arrow_down_black_16),
 					contentDescription = null,
-					tint = if (theme == ToolbarHeaderTheme.Light) Black16 else White
+					tint = tintColor
 				)
 			}
 		}
@@ -238,6 +247,18 @@ private fun ProfileWithProgressAndLevel(
 					trackColor = GreyD5,
 					strokeWidth = 2.dp,
 					color = PurpleDE,
+					gapSize = 0.dp
+				)
+			}
+			is DataInfo.Error -> {
+				CircularProgressIndicator(
+					modifier = Modifier
+						.size(28.dp)
+						.align(Alignment.Center),
+					trackColor = if (theme == ToolbarHeaderTheme.Light) GreyD5 else Black49,
+					strokeWidth = 2.dp,
+					progress = { 1f },
+					color = Red33,
 					gapSize = 0.dp
 				)
 			}
@@ -352,6 +373,16 @@ fun ToolbarHeaderPreview() {
 					profileThumbUrl = ""
 				)
 			),
+			theme = ToolbarHeaderTheme.Light,
+			isArrowVisible = true,
+			onBackClicked = {},
+			onNotificationClicked = {},
+			onSearchClicked = {},
+			onProfileClicked = {},
+		)
+		ToolbarHeader(
+			screenName = "Уроки",
+			profileShortInfo = DataInfo.Error(Throwable()),
 			theme = ToolbarHeaderTheme.Light,
 			isArrowVisible = true,
 			onBackClicked = {},
