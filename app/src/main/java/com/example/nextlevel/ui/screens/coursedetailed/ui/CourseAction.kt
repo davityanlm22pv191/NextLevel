@@ -89,7 +89,8 @@ fun CourseAction(
 				if (tagLeadingIcon != null) {
 					Icon(
 						painterResource(tagLeadingIcon),
-						contentDescription = null
+						contentDescription = null,
+						tint = Black16
 					)
 				}
 				Text(

@@ -13,5 +13,6 @@ object MainScreenReducer : BaseReducer<MainScreenState, MainScreenEvent> {
 	): MainScreenState = when (event) {
 		is ProfileInfoLoaded -> oldState.copy(profileShortInfo = Success(event.data))
 		is MainScreenEvent.ProfileInfoLoadFail -> oldState.copy(profileShortInfo = DataInfo.Error)
+		is MainScreenEvent.ProfileInfoLoading -> oldState.copy(profileShortInfo = DataInfo.Loading)
 	}
 }

@@ -39,12 +39,17 @@ private const val BANNER_ANIMATION_DURATION_MS = 400
 fun UpScreenMessage(
 	modifier: Modifier = Modifier,
 	message: UpScreenMessages,
+	isShouldStopAnimation: Boolean ,
 	onDismiss: () -> Unit,
 ) {
 	var isVisible by remember { mutableStateOf(false) }
 
 	LaunchedEffect(Unit) {
 		if (!isVisible) {
+			if (isShouldStopAnimation) {
+				isVisible = false
+				onDismiss()
+			}
 			isVisible = true
 			delay(BANNER_DISPLAY_DURATION_MS)
 			isVisible = false

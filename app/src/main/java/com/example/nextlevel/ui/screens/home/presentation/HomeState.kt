@@ -10,5 +10,6 @@ data class HomeState(
 	val throwable: Throwable? = null,
 	val fortuneWheelLastRotation: DataInfo<LocalDateTime> = DataInfo.Loading,
 	val myCourses: DataInfo<List<Course>> = DataInfo.Loading,
-	val speciallyForYou: DataInfo<List<Course>> = DataInfo.Loading
+	val speciallyForYou: DataInfo<List<Course>> = DataInfo.Loading,
+	val isRefreshing: Boolean = false
 ) : BaseState

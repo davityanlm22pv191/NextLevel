@@ -40,9 +40,9 @@ class MainScreenViewModel @Inject constructor(
 	private fun collectProfileShortInfo() {
 		viewModelScope.launch {
 			profileStorage.profileShortInfo.collect { value ->
-				value?.let {
-					onEvent(MainScreenEvent.ProfileInfoLoaded(it))
-				}
+				value
+					?.let { onEvent(MainScreenEvent.ProfileInfoLoaded(it)) }
+					?: onEvent(MainScreenEvent.ProfileInfoLoading)
 			}
 		}
 	}

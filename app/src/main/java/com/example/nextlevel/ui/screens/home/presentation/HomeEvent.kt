@@ -28,5 +28,6 @@ sealed interface HomeEvent : BaseEvent {
 		data object MyCoursesClicked : UI
 		data object CatalogClicked : UI
 		data class CourseClicked(val courseId: String): UI
+		data object Refresh : UI
 	}
 }

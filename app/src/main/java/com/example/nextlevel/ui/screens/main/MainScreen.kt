@@ -40,9 +40,9 @@ import com.example.nextlevel.navigation.strategy.BottomSheetSceneStrategy
 import com.example.nextlevel.navigation.toEntries
 import com.example.nextlevel.ui.common.BottomNavigationBar
 import com.example.nextlevel.ui.common.RequestPermission
+import com.example.nextlevel.ui.common.toolbar.ToolbarHeader
 import com.example.nextlevel.ui.common.upscreenmessage.UpScreenMessage
 import com.example.nextlevel.ui.common.upscreenmessage.UpScreenMessages
-import com.example.nextlevel.ui.common.toolbar.ToolbarHeader
 import com.example.nextlevel.ui.screens.main.presentation.MainScreenState
 import com.example.nextlevel.ui.screens.main.presentation.MainScreenViewModel
 
@@ -159,12 +159,18 @@ private fun MainContent(
 		}
 
 		showMessage?.let { message ->
+			val isShouldStop = when (navigationState.currentScreen) {
+				is Destinations.Authorization, is Destinations.Home -> false
+				else -> true
+			}
 			UpScreenMessage(
 				modifier = Modifier.align(Alignment.TopCenter),
 				message = message,
+				isShouldStopAnimation = isShouldStop,
 				onDismiss = { showMessage = null }
 			)
 		}
+
 	}
 }
 

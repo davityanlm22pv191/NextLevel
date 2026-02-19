@@ -9,12 +9,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,6 +59,8 @@ import com.example.nextlevel.ui.screens.home.presentation.HomeViewModel
 import com.example.nextlevel.ui.screens.home.ui.fortunewheel.FortuneWheelShortItem
 import com.example.nextlevel.ui.screens.home.ui.fortunewheel.FortuneWheelShortItemSkeleton
 import com.example.nextlevel.ui.screens.home.ui.mycourses.MyCoursesEmptyItem
+import com.example.nextlevel.ui.theme.ContainerColor
+import com.example.nextlevel.ui.theme.PurpleCC
 import com.example.nextlevel.ui.theme.ScreenColor
 import kotlinx.coroutines.flow.Flow
 
@@ -71,7 +77,8 @@ fun HomeScreen(navigator: Navigator, showMessage: (UpScreenMessages) -> Unit) {
 		onFortuneWheelInformationClicked = { viewModel.onEvent(UI.FortuneWheelInformationClicked) },
 		onMyCoursesClicked = { viewModel.onEvent(UI.MyCoursesClicked) },
 		onCatalogClicked = { viewModel.onEvent(UI.CatalogClicked) },
-		onCourseClicked = { courseId -> viewModel.onEvent(UI.CourseClicked(courseId)) }
+		onCourseClicked = { courseId -> viewModel.onEvent(UI.CourseClicked(courseId)) },
+		onRefresh = { viewModel.onEvent(UI.Refresh) }
 	)
 }
 
@@ -83,76 +90,93 @@ private fun HomeContent(
 	onMyCoursesClicked: () -> Unit,
 	onCatalogClicked: () -> Unit,
 	onCourseClicked: (courseId: String) -> Unit,
+	onRefresh: () -> Unit,
 ) {
+	val pullToRefreshState = rememberPullToRefreshState()
 	Scaffold(containerColor = ScreenColor) { paddingValues ->
-		LazyColumn(
-			modifier = Modifier
-				.fillMaxSize()
-				.padding(paddingValues)
+		PullToRefreshBox(
+			modifier = Modifier.padding(paddingValues),
+			isRefreshing = state.isRefreshing,
+			onRefresh = onRefresh,
+			state = pullToRefreshState,
+			indicator = {
+				PullToRefreshDefaults.Indicator(
+					modifier = Modifier.padding(paddingValues).align(Alignment.TopCenter),
+					state = pullToRefreshState,
+					isRefreshing = state.isRefreshing,
+					containerColor = ContainerColor,
+					color = PurpleCC,
+				)
+			}
 		) {
-			item { Spacer(Modifier.height(TOOLBAR_HEADER_HEIGHT.dp)) }
-			itemWithSkeleton(
-				key = "FortuneWheelShort",
-				dataInfo = state.fortuneWheelLastRotation,
-				paddingValues = PaddingValues(top = 8.dp),
-				content = { lastRotationTime ->
-					FortuneWheelShortItem(
-						modifier = Modifier.padding(horizontal = 4.dp),
-						lastRotationTime = lastRotationTime,
-						onInformationClick = { onFortuneWheelInformationClicked() },
-						onItemClick = { onFortuneWheelClicked() }
-					)
-				},
-				skeletonContent = {
-					FortuneWheelShortItemSkeleton(modifier = Modifier.padding(horizontal = 4.dp))
-				}
-			)
-			itemWithSkeleton(
-				key = "MyCourses",
-				dataInfo = state.myCourses,
-				paddingValues = PaddingValues(top = 8.dp),
-				content = { courses ->
-					CardPagerWithTitleAndSort(
-						sectionTitle = SectionTitle.Clickable(
-							text = stringResource(R.string.home_my_courses_section_title),
-							onClick = { onMyCoursesClicked() }
-						),
-						sort = SectionSortInfo(
-							selectedSort = Sort(type = DATE_ADDED, order = SortOrder.DESC),
-							sorts = listOf(),
-							onClick = {}
-						),
-						courses = courses,
-						shape = SQUARE,
-						onCourseClick = { course -> onCourseClicked(course.id) }
-					)
-				},
-				skeletonContent = {
-					CardPagerWithTitleAndSortSkeleton(shape = SQUARE, withSort = true)
-				},
-				emptyStateContent = {
-					MyCoursesEmptyItem(onCatalogClick = { onCatalogClicked() })
-				}
-			)
-			itemWithSkeleton(
-				key = "SpeciallyForYou",
-				dataInfo = state.speciallyForYou,
-				paddingValues = PaddingValues(top = 8.dp),
-				content = { courses ->
-					CardPagerWithTitleAndSort(
-						sectionTitle = SectionTitle.NonClickable(text = stringResource(R.string.home_specially_for_you)),
-						sort = null,
-						courses = courses,
-						shape = LARGE,
-						onCourseClick = { course -> onCourseClicked(course.id) }
-					)
-				},
-				skeletonContent = {
-					CardPagerWithTitleAndSortSkeleton(shape = LARGE, withSort = false)
-				},
-				emptyStateContent = {}
-			)
-			item { Spacer(Modifier.height(BOTTOM_NAVIGATION_BAR_HEIGHT.dp)) }
+			LazyColumn(
+				modifier = Modifier
+					.fillMaxSize()
+			) {
+				item { Spacer(Modifier.height(TOOLBAR_HEADER_HEIGHT.dp)) }
+				itemWithSkeleton(
+					key = "FortuneWheelShort",
+					dataInfo = state.fortuneWheelLastRotation,
+					paddingValues = PaddingValues(top = 8.dp),
+					content = { lastRotationTime ->
+						FortuneWheelShortItem(
+							modifier = Modifier.padding(horizontal = 4.dp),
+							lastRotationTime = lastRotationTime,
+							onInformationClick = { onFortuneWheelInformationClicked() },
+							onItemClick = { onFortuneWheelClicked() }
+						)
+					},
+					skeletonContent = {
+						FortuneWheelShortItemSkeleton(modifier = Modifier.padding(horizontal = 4.dp))
+					}
+				)
+				itemWithSkeleton(
+					key = "MyCourses",
+					dataInfo = state.myCourses,
+					paddingValues = PaddingValues(top = 8.dp),
+					content = { courses ->
+						CardPagerWithTitleAndSort(
+							sectionTitle = SectionTitle.Clickable(
+								text = stringResource(R.string.home_my_courses_section_title),
+								onClick = { onMyCoursesClicked() }
+							),
+							sort = SectionSortInfo(
+								selectedSort = Sort(type = DATE_ADDED, order = SortOrder.DESC),
+								sorts = listOf(),
+								onClick = {}
+							),
+							courses = courses,
+							shape = SQUARE,
+							onCourseClick = { course -> onCourseClicked(course.id) }
+						)
+					},
+					skeletonContent = {
+						CardPagerWithTitleAndSortSkeleton(shape = SQUARE, withSort = true)
+					},
+					emptyStateContent = {
+						MyCoursesEmptyItem(onCatalogClick = { onCatalogClicked() })
+					}
+				)
+				itemWithSkeleton(
+					key = "SpeciallyForYou",
+					dataInfo = state.speciallyForYou,
+					paddingValues = PaddingValues(top = 8.dp),
+					content = { courses ->
+						CardPagerWithTitleAndSort(
+							sectionTitle = SectionTitle.NonClickable(text = stringResource(R.string.home_specially_for_you)),
+							sort = null,
+							courses = courses,
+							shape = LARGE,
+							onCourseClick = { course -> onCourseClicked(course.id) }
+						)
+					},
+					skeletonContent = {
+						CardPagerWithTitleAndSortSkeleton(shape = LARGE, withSort = false)
+					},
+					emptyStateContent = {}
+				)
+				item { Spacer(Modifier.height(BOTTOM_NAVIGATION_BAR_HEIGHT.dp)) }
+			}
 		}
 	}
 }
@@ -208,11 +232,12 @@ private fun HandleBackPress(showMessage: (UpScreenMessages) -> Unit) {
 @Composable
 private fun HomePreview() {
 	HomeContent(
-		state = HomeState(),
+		state = HomeState(isRefreshing = true),
 		onFortuneWheelClicked = {},
 		onFortuneWheelInformationClicked = {},
 		onMyCoursesClicked = {},
 		onCatalogClicked = {},
-		onCourseClicked = {}
+		onCourseClicked = {},
+		onRefresh = {}
 	)
 }
