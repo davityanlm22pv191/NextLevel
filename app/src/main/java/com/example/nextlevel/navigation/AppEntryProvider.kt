@@ -6,6 +6,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import com.example.nextlevel.navigation.destinations.Destinations
 import com.example.nextlevel.navigation.strategy.BottomSheetSceneStrategy
+import com.example.nextlevel.ui.common.upscreenmessage.UpScreenMessages
 import com.example.nextlevel.ui.screens.auth.authorization.AuthorizationScreen
 import com.example.nextlevel.ui.screens.auth.registration.RegistrationScreen
 import com.example.nextlevel.ui.screens.auth.restorepassword.RestorePasswordScreen
@@ -24,8 +25,11 @@ import com.example.nextlevel.ui.screens.tasks.TasksScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun appEntryProvider(navigator: Navigator, showError: (Throwable) -> Unit) = entryProvider<NavKey> {
-	entry<Destinations.Authorization> { AuthorizationScreen(navigator) }
+fun appEntryProvider(
+	navigator: Navigator,
+	showMessage: (UpScreenMessages) -> Unit
+) = entryProvider<NavKey> {
+	entry<Destinations.Authorization> { AuthorizationScreen(navigator, showMessage) }
 	entry<Destinations.RestorePassword> { RestorePasswordScreen(navigator) }
 	entry<Destinations.Registration> { RegistrationScreen(navigator) }
 	entry<Destinations.YandexAuthorization> { StubScreen() }
@@ -45,7 +49,7 @@ fun appEntryProvider(navigator: Navigator, showError: (Throwable) -> Unit) = ent
 	entry<Destinations.Search> { StubScreen() }
 	entry<Destinations.Profile> { StubScreen() }
 	entry<Destinations.Catalog> { CatalogScreen(navigator) }
-	entry<Destinations.Home> { HomeScreen(navigator, showError) }
+	entry<Destinations.Home> { HomeScreen(navigator, showMessage) }
 	entry<Destinations.MyCourses> { MyCoursesScreen(navigator) }
 	entry<Destinations.Tasks> { TasksScreen(navigator) }
 	entry<Destinations.Mail> { MailScreen(navigator) }

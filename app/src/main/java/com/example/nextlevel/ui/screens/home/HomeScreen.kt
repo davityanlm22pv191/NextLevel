@@ -1,5 +1,7 @@
 package com.example.nextlevel.ui.screens.home
 
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +12,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,6 +36,8 @@ import com.example.nextlevel.ui.common.lazyitems.itemWithSkeleton
 import com.example.nextlevel.ui.common.sectiontitle.model.SectionSortInfo
 import com.example.nextlevel.ui.common.sectiontitle.model.SectionTitle
 import com.example.nextlevel.ui.common.toolbar.TOOLBAR_HEADER_HEIGHT
+import com.example.nextlevel.ui.common.upscreenmessage.UpScreenMessages
+import com.example.nextlevel.ui.common.upscreenmessage.UpScreenMessages.Companion.BANNER_DISPLAY_DURATION_MS
 import com.example.nextlevel.ui.screens.coursedetailed.model.CourseDetailedParams
 import com.example.nextlevel.ui.screens.home.presentation.HomeEffect
 import com.example.nextlevel.ui.screens.home.presentation.HomeEffect.NavigateToCatalog
@@ -52,10 +59,12 @@ import com.example.nextlevel.ui.theme.ScreenColor
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun HomeScreen(navigator: Navigator, showError: (Throwable) -> Unit) {
+fun HomeScreen(navigator: Navigator, showMessage: (UpScreenMessages) -> Unit) {
 	val viewModel = hiltViewModel<HomeViewModel>()
 	val state by viewModel.state.collectAsStateWithLifecycle()
-	CollectEffects(viewModel.effect, navigator, showError)
+	CollectEffects(viewModel.effect, navigator, showMessage)
+	HandleBackPress(showMessage)
+
 	HomeContent(
 		state = state,
 		onFortuneWheelClicked = { viewModel.onEvent(UI.FortuneWheelClicked) },
@@ -152,7 +161,7 @@ private fun HomeContent(
 private fun CollectEffects(
 	effect: Flow<HomeEffect>,
 	navigator: Navigator,
-	showError: (Throwable) -> Unit
+	showError: (UpScreenMessages) -> Unit
 ) {
 	LaunchedEffect(Unit) {
 		effect.collect { homeEffect ->
@@ -170,8 +179,27 @@ private fun CollectEffects(
 				is NavigateToMyCourses -> navigator.navigate(Destinations.MyCourses)
 				is NavigateToProfile -> navigator.navigate(Destinations.Profile)
 				is NavigateToSearch -> navigator.navigate(Destinations.Search)
-				is ShowErrorMessage -> showError(Throwable(homeEffect.message))
+				is ShowErrorMessage -> showError(UpScreenMessages.Error(homeEffect.message))
 			}
+		}
+	}
+}
+
+@Composable
+private fun HandleBackPress(showMessage: (UpScreenMessages) -> Unit) {
+	val activity = LocalActivity.current
+	var lastBackPressedTime by remember { mutableLongStateOf(0L) }
+	val upScreenMessagesInfo = UpScreenMessages.Info(
+		stringResource(R.string.common_back_again_to_close_app)
+	)
+
+	BackHandler {
+		val currentTime = System.currentTimeMillis()
+		if (currentTime - lastBackPressedTime <= BANNER_DISPLAY_DURATION_MS) {
+			activity?.finish()
+		} else {
+			lastBackPressedTime = currentTime
+			showMessage(upScreenMessagesInfo)
 		}
 	}
 }

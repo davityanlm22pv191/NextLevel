@@ -26,6 +26,7 @@
 	<string name="common_calculate">Рассчитать</string>
 	<string name="common_cancel">Отмена</string>
 	<string name="common_ok">OK</string>
+	<string name="common_back_again_to_close_app">Нажмите ещё раз, чтобы закрыть приложение</string>
 
 	<plurals name="common_days_format">
 		<item quantity="one">%s день</item>

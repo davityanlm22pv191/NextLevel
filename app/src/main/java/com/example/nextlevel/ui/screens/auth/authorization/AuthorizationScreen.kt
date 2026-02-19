@@ -1,5 +1,7 @@
 package com.example.nextlevel.ui.screens.auth.authorization
 
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -18,7 +20,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -43,6 +47,8 @@ import com.example.nextlevel.ui.common.spannabletext.SpanClickableText
 import com.example.nextlevel.ui.common.spannabletext.SpanLinkData
 import com.example.nextlevel.ui.common.textfield.EmailTextField
 import com.example.nextlevel.ui.common.textfield.PasswordTextField
+import com.example.nextlevel.ui.common.upscreenmessage.UpScreenMessages
+import com.example.nextlevel.ui.common.upscreenmessage.UpScreenMessages.Companion.BANNER_DISPLAY_DURATION_MS
 import com.example.nextlevel.ui.screens.auth.authorization.presentation.AuthorizationEffect
 import com.example.nextlevel.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToHome
 import com.example.nextlevel.ui.screens.auth.authorization.presentation.AuthorizationEffect.NavigateToRegistration
@@ -65,10 +71,11 @@ import com.example.nextlevel.ui.theme.Typography
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun AuthorizationScreen(navigator: Navigator) {
+fun AuthorizationScreen(navigator: Navigator, showMessage: (UpScreenMessages) -> Unit) {
 	val viewModel = hiltViewModel<AuthorizationViewModel>()
 	val state by viewModel.state.collectAsStateWithLifecycle()
 	CollectEffects(viewModel.effect, navigator)
+	HandleBackPress(showMessage)
 	AuthorizationContent(
 		state,
 		onEmailChanged = { email -> viewModel.onEvent(EmailChanged(email)) },
@@ -239,6 +246,24 @@ private fun CollectEffects(
 				NavigateToSupport -> navigator.navigate(Destinations.Support)
 				NavigateToYandexAuthorization -> navigator.navigate(Destinations.YandexAuthorization)
 			}
+		}
+	}
+}
+
+@Composable
+private fun HandleBackPress(showMessage: (UpScreenMessages) -> Unit) {
+	val activity = LocalActivity.current
+	var lastBackPressedTime by remember { mutableLongStateOf(0L) }
+	val upScreenMessageInfo = UpScreenMessages.Info(
+		stringResource(R.string.common_back_again_to_close_app)
+	)
+	BackHandler {
+		val currentTime = System.currentTimeMillis()
+		if (currentTime - lastBackPressedTime <= BANNER_DISPLAY_DURATION_MS) {
+			activity?.finish()
+		} else {
+			lastBackPressedTime = currentTime
+			showMessage(upScreenMessageInfo)
 		}
 	}
 }

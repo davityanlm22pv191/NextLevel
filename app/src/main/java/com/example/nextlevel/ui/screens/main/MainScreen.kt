@@ -40,7 +40,8 @@ import com.example.nextlevel.navigation.strategy.BottomSheetSceneStrategy
 import com.example.nextlevel.navigation.toEntries
 import com.example.nextlevel.ui.common.BottomNavigationBar
 import com.example.nextlevel.ui.common.RequestPermission
-import com.example.nextlevel.ui.common.errorbanner.ErrorBanner
+import com.example.nextlevel.ui.common.upscreenmessage.UpScreenMessage
+import com.example.nextlevel.ui.common.upscreenmessage.UpScreenMessages
 import com.example.nextlevel.ui.common.toolbar.ToolbarHeader
 import com.example.nextlevel.ui.screens.main.presentation.MainScreenState
 import com.example.nextlevel.ui.screens.main.presentation.MainScreenViewModel
@@ -70,7 +71,7 @@ private fun MainContent(
 	val context = LocalContext.current
 	val navigator = remember { Navigator(navigationState, context) }
 	val bottomSheetStrategy = remember { BottomSheetSceneStrategy<NavKey>() }
-	var showError by remember { mutableStateOf<Throwable?>(null) }
+	var showMessage by remember { mutableStateOf<UpScreenMessages?>(null) }
 
 	Box(modifier = Modifier.fillMaxSize()) {
 		Scaffold(
@@ -142,7 +143,7 @@ private fun MainContent(
 				onBack = { navigator.goBack() },
 				sceneStrategy = bottomSheetStrategy,
 				entries = navigationState.toEntries(
-					appEntryProvider(navigator) { throwable -> showError = throwable }
+					appEntryProvider(navigator, showMessage = { message -> showMessage = message })
 				),
 				predictivePopTransitionSpec = {
 					slideInHorizontally(
@@ -157,11 +158,11 @@ private fun MainContent(
 			// OpenOnboardingIfNeeded(navigator, params.isShouldShowOnboarding)
 		}
 
-		showError?.let { throwable ->
-			ErrorBanner(
+		showMessage?.let { message ->
+			UpScreenMessage(
 				modifier = Modifier.align(Alignment.TopCenter),
-				throwable = throwable,
-				onDismiss = { showError = null }
+				message = message,
+				onDismiss = { showMessage = null }
 			)
 		}
 	}

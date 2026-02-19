@@ -1,4 +1,4 @@
-package com.example.nextlevel.ui.common.errorbanner
+package com.example.nextlevel.ui.common.upscreenmessage
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -20,24 +20,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import com.example.nextlevel.R
 import com.example.nextlevel.ui.common.RoundedBottomCornerShape
-import com.example.nextlevel.ui.theme.Red33
+import com.example.nextlevel.ui.common.upscreenmessage.UpScreenMessages.Companion.BANNER_DISPLAY_DURATION_MS
+import com.example.nextlevel.ui.theme.Typography
 import com.example.nextlevel.ui.theme.White
 import kotlinx.coroutines.delay
 
 private const val BANNER_ANIMATION_DURATION_MS = 400
-private const val BANNER_DISPLAY_DURATION_MS = 1000L
 
 @Composable
-fun ErrorBanner(
+fun UpScreenMessage(
 	modifier: Modifier = Modifier,
-	throwable: Throwable?,
+	message: UpScreenMessages,
 	onDismiss: () -> Unit,
 ) {
 	var isVisible by remember { mutableStateOf(false) }
@@ -52,16 +53,18 @@ fun ErrorBanner(
 		}
 	}
 
-	ErrorBannerContent(
-		message = throwable?.message,
+	UpScreenMessageContent(
+	 	message = message.text,
+		backgroundColor = message.backgroundColor,
 		isVisible = isVisible,
 		modifier = modifier,
 	)
 }
 
 @Composable
-fun ErrorBannerContent(
+fun UpScreenMessageContent(
 	message: String?,
+	backgroundColor: Brush,
 	isVisible: Boolean,
 	modifier: Modifier = Modifier,
 ) {
@@ -82,17 +85,16 @@ fun ErrorBannerContent(
 		Box(
 			modifier = Modifier
 				.fillMaxWidth()
-				.background(Red33, shape = RoundedBottomCornerShape(20.dp))
+				.background(backgroundColor, shape = RoundedBottomCornerShape(20.dp))
 				.statusBarsPadding()
-				.padding(horizontal = 8.dp, vertical = 14.dp),
+				.padding(horizontal = 8.dp, vertical = 16.dp),
 			contentAlignment = Alignment.Center,
 		) {
 			Text(
 				text = message.orEmpty(),
+				style = Typography.labelMedium,
 				color = White,
-				fontSize = 14.sp,
 				fontWeight = FontWeight.Medium,
-				textAlign = TextAlign.Center,
 			)
 		}
 	}
@@ -100,9 +102,20 @@ fun ErrorBannerContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun ErrorBannerPreview() {
+private fun UpScreenMessagePreview() {
+	val error = UpScreenMessages.Error("Ошибка интернет соединения")
+	val info = UpScreenMessages.Info(stringResource(R.string.common_back_again_to_close_app))
+
 	Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-		ErrorBannerContent(message = "Ошибка интернет соединения", isVisible = true)
-		ErrorBannerContent(message = "Произошла неизвестная ошибка", isVisible = true)
+		UpScreenMessageContent(
+			message = error.text,
+			backgroundColor = error.backgroundColor,
+			isVisible = true
+		)
+		UpScreenMessageContent(
+			message = info.text,
+			backgroundColor = info.backgroundColor,
+			isVisible = true
+		)
 	}
 }

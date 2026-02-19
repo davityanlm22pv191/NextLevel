@@ -1,17 +1,12 @@
 package com.example.nextlevel.network.error
 
 import com.example.nextlevel.domain.model.NetworkError
-import com.example.nextlevel.extension.getErrorMessage
 
 sealed class NetworkResult<out T> {
 
 	data class Success<T>(val data: T) : NetworkResult<T>()
 
-	data class Error(val error: NetworkError) : NetworkResult<Nothing>() {
-		fun getErrorMessage(): String {
-			return error.asThrowable().getErrorMessage()
-		}
-	}
+	data class Error(val error: NetworkError) : NetworkResult<Nothing>()
 
 	val isSuccess: Boolean get() = this is Success
 
