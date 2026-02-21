@@ -122,7 +122,8 @@ fun FortuneWheelShortItem(
 					modifier = Modifier
 						.padding(top = 4.dp)
 						.alpha(alpha.value),
-					remainingTime = durationTime
+					remainingTime = durationTime,
+					onPlayClicked = onItemClick
 				)
 			}
 
@@ -140,7 +141,11 @@ fun FortuneWheelShortItem(
 }
 
 @Composable
-private fun FreeSpinThrough(modifier: Modifier = Modifier, remainingTime: Duration) {
+private fun FreeSpinThrough(
+	modifier: Modifier = Modifier,
+	remainingTime: Duration,
+	onPlayClicked: () -> Unit
+) {
 	Row(
 		modifier = modifier
 			.fillMaxWidth()
@@ -185,7 +190,8 @@ private fun FreeSpinThrough(modifier: Modifier = Modifier, remainingTime: Durati
 					),
 					textAlign = TextAlign.Center
 				)
-			}
+			},
+			onClick = onPlayClicked
 		)
 	}
 }
